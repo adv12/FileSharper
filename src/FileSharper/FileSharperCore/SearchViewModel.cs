@@ -37,6 +37,8 @@ namespace FileSharperCore
             set => SetField(ref m_ExceptionText, value);
         }
 
+        public IProgress<FileProgressInfo> TestedProgress { get; private set; }
+
         public IProgress<FileProgressInfo> MatchedProgress { get; private set; }
 
         public IProgress<ExceptionInfo> ExceptionProgress { get; private set; }
@@ -76,6 +78,10 @@ namespace FileSharperCore
                 DataColumn column = new DataColumn(columnHeader);
                 SearchResults.Columns.Add(column);
             }
+            TestedProgress = new Progress<FileProgressInfo>(info =>
+            {
+
+            });
             MatchedProgress = new Progress<FileProgressInfo>(info =>
             {
                 if (SearchResults.Rows.Count <= maxResults)
@@ -125,7 +131,7 @@ namespace FileSharperCore
 
         public void Search()
         {
-            Engine.Run(TokenSource.Token, null, MatchedProgress, ExceptionProgress, null);
+            Engine.Run(TokenSource.Token, TestedProgress, MatchedProgress, ExceptionProgress, null);
         }
 
         public Task SearchAsync()

@@ -31,6 +31,7 @@ full text of the license.
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <GroupBox x:Name="fileSourceGroupBox" Grid.Row="0" Header="File Source" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
                     <local:FileSourceNodeControl x:Name="fileSourceNodeControl" DataContext="{Binding FileSourceNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
@@ -41,7 +42,10 @@ full text of the license.
                 <GroupBox x:Name="outputsGroupBox" Grid.Row="2" Header="Outputs" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
                     <local:OutputsNodeControl x:Name="outputsNodeControl" Grid.Row="2" DataContext="{Binding OutputsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 </GroupBox>
-                <GroupBox x:Name="matchedProcessorsGroupBox" Grid.Row="3" Header="When Matched..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+                <GroupBox x:Name="testedProcessorsGroupBox" Grid.Row="3" Header="When Tested..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+                    <local:ProcessorsNodeControl x:Name="testedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding TestedProcessorsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </GroupBox>
+                <GroupBox x:Name="matchedProcessorsGroupBox" Grid.Row="4" Header="When Matched..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
                     <local:ProcessorsNodeControl x:Name="matchedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding MatchedProcessorsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 </GroupBox>
             </Grid>

@@ -24,7 +24,7 @@ namespace FileSharperCore
             private set;
         }
 
-        public IProcessor[] FoundProcessors
+        public IProcessor[] TestedProcessors
         {
             get;
             private set;
@@ -37,12 +37,12 @@ namespace FileSharperCore
         }
 
         public RunInfo(IFileSource fileSource, ICondition condition,
-            IOutput[] outputs, IProcessor[] foundProcessors, IProcessor[] matchedProcessors)
+            IOutput[] outputs, IProcessor[] testedProcessors, IProcessor[] matchedProcessors)
         {
             FileSource = fileSource;
             Condition = condition;
             Outputs = outputs;
-            FoundProcessors = foundProcessors;
+            TestedProcessors = testedProcessors;
             MatchedProcessors = matchedProcessors;
         }
     }

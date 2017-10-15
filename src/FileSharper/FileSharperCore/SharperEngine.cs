@@ -21,17 +21,17 @@ namespace FileSharperCore
 
         public IOutput[] Outputs => RunInfo.Outputs;
 
-        public IProcessor[] FoundProcessors => RunInfo.FoundProcessors;
+        public IProcessor[] TestedProcessors => RunInfo.TestedProcessors;
 
         public IProcessor[] MatchedProcessors => RunInfo.MatchedProcessors;
 
         public SharperEngine(IFileSource fileSource, ICondition condition, IOutput[] outputs,
-            IProcessor[] foundProcessors, IProcessor[] matchedProcessors)
+            IProcessor[] testedProcessors, IProcessor[] matchedProcessors)
         {
-            RunInfo = new RunInfo(fileSource, condition, outputs, foundProcessors, matchedProcessors);
+            RunInfo = new RunInfo(fileSource, condition, outputs, testedProcessors, matchedProcessors);
         }
 
-        public void Run(CancellationToken token, IProgress<FileProgressInfo> foundProgress,
+        public void Run(CancellationToken token, IProgress<FileProgressInfo> testedProgress,
             IProgress<FileProgressInfo> matchedProgress, IProgress<ExceptionInfo> exceptionProgress,
             IProgress<bool> completeProgress)
         {
@@ -48,7 +48,7 @@ namespace FileSharperCore
                     token.ThrowIfCancellationRequested();
                     output.Init(RunInfo, exceptionProgress);
                 }
-                foreach (IProcessor processor in FoundProcessors)
+                foreach (IProcessor processor in TestedProcessors)
                 {
                     token.ThrowIfCancellationRequested();
                     processor.Init(RunInfo, exceptionProgress);
@@ -61,17 +61,15 @@ namespace FileSharperCore
             }
             catch (OperationCanceledException ex)
             {
+                Cleanup(exceptionProgress);
                 throw ex;
             }
             catch(Exception ex)
             {
+                Cleanup(exceptionProgress);
                 exceptionProgress?.Report(new ExceptionInfo(ex));
                 completeProgress?.Report(false);
                 return;
-            }
-            finally
-            {
-                Cleanup(exceptionProgress);
             }
             try
             {
@@ -96,7 +94,7 @@ namespace FileSharperCore
                         try
                         {
                             result = Condition.Matches(file, caches, token);
-                            if (result.Values != null)
+                            if (result?.Values != null)
                             {
                                 values.AddRange(result.Values);
                             }
@@ -115,13 +113,6 @@ namespace FileSharperCore
                         }
 
                         if (result != null)
-                        {
-                            foundProgress?.Report(new FileProgressInfo(file, result.Type, result.Values));
-                        }
-
-                        RunProcessors(FoundProcessors, file, result.Values, exceptionProgress, token);
-                        
-                        if (result != null && result.Type == MatchResultType.Yes)
                         {
                             foreach (IOutput output in Outputs)
                             {
@@ -148,9 +139,14 @@ namespace FileSharperCore
 
                             string[] allValues = values.ToArray();
 
-                            matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
+                            testedProgress.Report(new FileProgressInfo(file, result.Type, allValues));
+                            RunProcessors(TestedProcessors, file, allValues, exceptionProgress, token);
 
-                            RunProcessors(MatchedProcessors, file, result.Values, exceptionProgress, token);
+                            if (result.Type == MatchResultType.Yes)
+                            {
+                                matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
+                                RunProcessors(MatchedProcessors, file, allValues, exceptionProgress, token);
+                            }
                         }
                     }
                     catch (OperationCanceledException ex)
@@ -288,7 +284,7 @@ namespace FileSharperCore
                     exceptionProgress?.Report(new ExceptionInfo(ex));
                 }
             }
-            foreach (IProcessor processor in FoundProcessors)
+            foreach (IProcessor processor in TestedProcessors)
             {
                 try
                 {

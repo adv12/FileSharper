@@ -48,7 +48,7 @@ namespace FileSharperCore
         public FileSourceNode FileSourceNode { get; set; } = new FileSourceNode();
         public ConditionNode ConditionNode { get; set; } = new ConditionNode();
         public OutputsNode OutputsNode { get; set; } = new OutputsNode();
-        public ProcessorsNode FoundProcessorsNode { get; set; } = new ProcessorsNode();
+        public ProcessorsNode TestedProcessorsNode { get; set; } = new ProcessorsNode();
         public ProcessorsNode MatchedProcessorsNode { get; set; } = new ProcessorsNode();
 
         private SearchViewModel m_SearchViewModel = null;
@@ -103,7 +103,7 @@ namespace FileSharperCore
             if (addStarterNodes)
             {
                 OutputsNode.OutputNodes.Add(new OutputNode());
-                FoundProcessorsNode.ProcessorNodes.Add(new ProcessorNode());
+                TestedProcessorsNode.ProcessorNodes.Add(new ProcessorNode());
                 MatchedProcessorsNode.ProcessorNodes.Add(new ProcessorNode());
             }
             Loaded = true;
@@ -119,7 +119,7 @@ namespace FileSharperCore
         {
             return new SharperEngine(FileSourceNode.GetFileSource(),
                 ConditionNode.BuildCondition(), OutputsNode.GetOutputs(),
-                FoundProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors());
+                TestedProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors());
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
