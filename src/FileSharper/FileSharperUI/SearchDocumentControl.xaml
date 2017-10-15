@@ -1,0 +1,71 @@
+<!--
+Copyright (c) 2017 Andrew Vardeman.  Published under the MIT license.
+See license.txt in the FileSharper distribution or repository for the
+full text of the license.
+-->
+<UserControl x:Class="FileSharperUI.SearchDocumentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharperUI"
+             xmlns:helpers="clr-namespace:FileSharperUIHelpers;assembly=FileSharperUIHelpers"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <helpers:SearchViewModelToDynamicGridViewConverter x:Key="listViewGridViewConverter" />
+        <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <sys:Boolean x:Key="True">True</sys:Boolean>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="250"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Padding="10">
+            <Grid Height="Auto" Width="Auto">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <GroupBox x:Name="fileSourceGroupBox" Grid.Row="0" Header="File Source" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+                    <local:FileSourceNodeControl x:Name="fileSourceNodeControl" DataContext="{Binding FileSourceNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </GroupBox>
+                <GroupBox x:Name="conditionGroupBox" Grid.Row="1" Header="Condition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+                    <local:ConditionNodeControl x:Name="conditionNodeControl" DataContext="{Binding ConditionNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </GroupBox>
+                <GroupBox x:Name="outputsGroupBox" Grid.Row="2" Header="Outputs" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+                    <local:OutputsNodeControl x:Name="outputsNodeControl" Grid.Row="2" DataContext="{Binding OutputsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </GroupBox>
+                <GroupBox x:Name="matchedProcessorsGroupBox" Grid.Row="3" Header="When Matched..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+                    <local:ProcessorsNodeControl x:Name="matchedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding MatchedProcessorsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </GroupBox>
+            </Grid>
+        </ScrollViewer>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
+            <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
+            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <TabItem Header="Results">
+                    <ListView  VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" />
+                </TabItem>
+                <TabItem Header="Exceptions">
+                    <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</UserControl>

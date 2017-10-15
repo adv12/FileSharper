@@ -1,0 +1,50 @@
+<!--
+Copyright (c) 2017 Andrew Vardeman.  Published under the MIT license.
+See license.txt in the FileSharper distribution or repository for the
+full text of the license.
+-->
+<UserControl x:Class="FileSharperUI.OutputNodeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharperUI"
+             xmlns:helpers="clr-namespace:FileSharperUIHelpers;assembly=FileSharperUIHelpers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="300">
+    <UserControl.Resources>
+        <helpers:ObjectToVisibilityConverter x:Key="converter"/>
+        <helpers:TypeNameToOutputConverter x:Key="typeConverter"/>
+    </UserControl.Resources>
+    <Border BorderThickness="1" CornerRadius="4" Padding="4" BorderBrush="LightGray" VerticalAlignment="Top" Width="Auto" Height="Auto">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox x:Name="comboBox" Grid.Row ="0" Grid.Column="0" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" Width="200" ItemsSource="{Binding Outputs}" SelectedItem="{Binding Path=OutputTypeName, Converter={StaticResource typeConverter}}">
+                <ComboBox.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ComboBox.GroupStyle>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
+        </Grid>
+    </Border>
+</UserControl>

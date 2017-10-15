@@ -1,0 +1,32 @@
+<!--
+Copyright (c) 2017 Andrew Vardeman.  Published under the MIT license.
+See license.txt in the FileSharper distribution or repository for the
+full text of the license.
+-->
+<UserControl x:Class="FileSharperUI.ProcessorNodeRowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharperUI"
+             xmlns:helpers="clr-namespace:FileSharperUIHelpers;assembly=FileSharperUIHelpers"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <helpers:CountToVisibilityConverter x:Key="removeVisibilityConverter"/>
+        <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Margin="4" Width="Auto" Height="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <local:ProcessorNodeControl Margin="4" Width="Auto" Height="Auto" Grid.Column="0" />
+        <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Column="1" Command="{Binding Path=DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=local:ProcessorsNodeControl}}" CommandParameter="{Binding}" Visibility="{Binding Path=DataContext.ProcessorNodes.Count, RelativeSource={RelativeSource AncestorType=local:ProcessorsNodeControl}, Converter={StaticResource removeVisibilityConverter}, TargetNullValue=Collapsed }">−</Button>
+        <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Column="2" Command="{Binding Path=DataContext.AddCommand, RelativeSource={RelativeSource AncestorType=local:ProcessorsNodeControl}}" Visibility="{Binding Last, Converter={StaticResource boolToVisibilityConverter}}">+</Button>
+    </Grid>
+</UserControl>

@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/FileSharper/FileSharper/bin
+/src/FileSharper/FileSharper/obj
+/src/FileSharper/.vs
+/src/FileSharper/FileSharperCore/bin
+/src/FileSharper/FileSharperCore/obj
+/src/FileSharper/FileSharperUI/bin
+/src/FileSharper/FileSharperUI/obj
+/src/FileSharper/FileSharperUIHelpers/bin
+/src/FileSharper/FileSharperUIHelpers/obj
+/src/FileSharper/packages
+*.csproj.user
