@@ -76,6 +76,7 @@ namespace FileSharperCore
             set => SetField(ref m_Not, value);
         }
 
+        [JsonIgnore]
         public bool Loaded
         {
             get
