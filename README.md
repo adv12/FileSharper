@@ -4,7 +4,7 @@ FileSharper is a C#/WPF file search and processing application designed to be qu
 
 You can extend FileSharper's functionality by writing classes that implement any of the four main interfaces:
 
-1. **IFileSource** - an object capable of producing an **IEnumerable<FileInfo>** that acts as the source of filenames that will be tested and processed by the application.
+1. **IFileSource** - an object capable of producing an **IEnumerable&lt;FileInfo&gt;** that acts as the source of filenames that will be tested and processed by the application.
 2. **ICondition** - an object capable of testing whether a certain condition is true or false for a given file.
 3. **IOutput** - an object capable of producing one or more pieces of information about a file.
 4. **IProcessor** - an object that takes some action given an input file.
