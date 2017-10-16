@@ -100,6 +100,7 @@ namespace FileSharper
             public void Execute(object parameter)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "FileSharper files (*.fsh)|*.fsh";
                 bool? success = openFileDialog.ShowDialog();
                 if (success.HasValue && success.Value)
                 {
