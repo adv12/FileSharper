@@ -4,7 +4,7 @@ FileSharper is a C#/WPF file search and processing application designed to be qu
 
 You can extend FileSharper's functionality by writing classes that implement any of the four main interfaces:
 
-1. **IFileSource** - an object capable of producing an *IEnumerable<FileInfo>* that acts as the source of filenames that will be tested and processed by the application.
+1. **IFileSource** - an object capable of producing an **IEnumerable<FileInfo>** that acts as the source of filenames that will be tested and processed by the application.
 2. **ICondition** - an object capable of testing whether a certain condition is true or false for a given file.
 3. **IOutput** - an object capable of producing one or more pieces of information about a file.
 4. **IProcessor** - an object that takes some action given an input file.
@@ -13,6 +13,6 @@ When you add a class implementing one of these interfaces to the FileSharperCore
 
 A search in FileSharper is essentially a small script that iterates over a group of files, testing whether they match certain conditions, generating information about them, and taking action when they are tested or matched.  FileSharper can be used to emulate the functionality of UNIX workflows based on `find`, `grep`, and so on, but if you don't use those tools often enough to remember their syntax, or you need functionality that you could write more quickly in C#/.NET than in some shell scripting language, FileSharper may save you time.  Searches can be saved for reuse, and I may get around to making a console app for running saved searches without the GUI.
 
-If you're adding file sources, conditions, outputs, or processors, I recommend inheriting from the base classes FileSourceBase, ConditionBase, OutputBase, and SingleFileProcessorBase (or ProcessorBase if you know what you're doing).
+If you're adding file sources, conditions, outputs, or processors, I recommend inheriting from the base classes **FileSourceBase**, **ConditionBase**, **OutputBase**, and **SingleFileProcessorBase** (or **ProcessorBase** if you know what you're doing).
 
 If you download FileSharper and start adding classes that would benefit others, consider submitting pull requests so I can pull them in and make FileSharper better for everyone.  Right now the code is marked as (c) Andrew Vardeman, but if I actually get contributions I'll adopt a contributor's license agreement so it can become more of a community project.
