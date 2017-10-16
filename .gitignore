@@ -13,3 +13,4 @@
 /src/FileSharper/FileSharperUIHelpers/obj
 /src/FileSharper/packages
 *.csproj.user
+/README.md.bak
