@@ -5,11 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace FileSharperCore.Conditions
 {
@@ -24,6 +21,20 @@ namespace FileSharperCore.Conditions
         public override string Description => "Whether the file path contains the specified text";
 
         public override object Parameters => m_Parameters;
+
+        public override int ColumnCount => 1;
+
+        public override string[] ColumnHeaders
+        {
+            get
+            {
+                if (m_Parameters.UseRegex)
+                {
+                    return new string[] { "File Path Matches Regex \"" + m_Parameters.Text + "\"" };
+                }
+                return new string[] { "File Path Contains \"" + m_Parameters.Text + "\"" };
+            }
+        }
 
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
@@ -54,7 +65,7 @@ namespace FileSharperCore.Conditions
             {
                 if (m_Regex.IsMatch(path))
                 {
-                    return new MatchResult(MatchResultType.Yes, null);
+                    return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
                 }
             }
             else
@@ -63,18 +74,18 @@ namespace FileSharperCore.Conditions
                 {
                     if (path.Contains(m_Parameters.Text))
                     {
-                        return new MatchResult(MatchResultType.Yes, null);
+                        return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
                     }
                 }
                 else
                 {
                     if (path.ToLower().Contains(m_LowerCaseText))
                     {
-                        return new MatchResult(MatchResultType.Yes, null);
+                        return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
                     }
                 }
             }
-            return new MatchResult(MatchResultType.No, null);
+            return new MatchResult(MatchResultType.No, new string[] { "No" });
         }
     }
 }

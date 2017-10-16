@@ -201,6 +201,7 @@ namespace FileSharper
                     if (save)
                     {
                         doc.Save(path);
+                        doc.FileName = path;
                     }
                 }
             }

@@ -27,8 +27,15 @@ namespace FileSharperCore
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private string m_DisplayName = "New Search";
         [JsonIgnore]
-        public string DisplayName { get; private set; } = "New Search";
+        public string DisplayName {
+            get => m_DisplayName;
+            private set
+            {
+                SetField(ref m_DisplayName, value);
+            }
+        }
 
         private string m_FileName = null;
         [JsonIgnore]

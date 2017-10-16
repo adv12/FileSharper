@@ -13,9 +13,9 @@ namespace FileSharperCore.Outputs.Filesystem
     {
         public override int ColumnCount => 1;
 
-        public override string[] ColumnHeaders => new string[] { "ReadOnly" };
+        public override string[] ColumnHeaders => new string[] { "Read-Only" };
 
-        public override string Name => "Read Only";
+        public override string Name => "Read-Only";
 
         public override string Description => "Whether the file is read-only";
 
@@ -25,7 +25,9 @@ namespace FileSharperCore.Outputs.Filesystem
 
         public override string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> cacheTypes, CancellationToken token)
         {
-            return new string[] { file.IsReadOnly.ToString() };
+            string output = file.IsReadOnly ? "Yes" : "No";
+            string[] outputs = new string[] { output };
+            return new string[] { output };
         }
     }
 }

@@ -11,7 +11,7 @@ namespace FileSharperCore.Conditions.Filesystem
 {
     public class ReadOnlyCondition : ConditionBase
     {
-        public override string Name => "Read Only";
+        public override string Name => "Read-Only";
 
         public override string Description => "File is read-only";
 
@@ -21,11 +21,12 @@ namespace FileSharperCore.Conditions.Filesystem
 
         public override int ColumnCount => 1;
 
-        public override string[] ColumnHeaders => new string[] { "ReadOnly" };
+        public override string[] ColumnHeaders => new string[] { "Read-Only" };
 
         public override MatchResult Matches(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)
         {
-            string[] outputs = new string[] { file.IsReadOnly.ToString() };
+            string output = file.IsReadOnly ? "Yes" : "No";
+            string[] outputs = new string[] { output };
             if (file.IsReadOnly)
             {
                 return new MatchResult(MatchResultType.Yes, outputs);

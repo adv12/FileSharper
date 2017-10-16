@@ -34,6 +34,20 @@ namespace FileSharperCore.Conditions
 
         public override object Parameters => m_Parameters;
 
+        public override int ColumnCount => 1;
+
+        public override string[] ColumnHeaders
+        {
+            get
+            {
+                if (m_Parameters.UseRegex)
+                {
+                    return new string[] { "Matches Regex \"" + m_Parameters.Text + "\"" };
+                }
+                return new string[] { "Contains \"" + m_Parameters.Text + "\"" };
+            }
+        }
+
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
             base.LocalInit(exceptionProgress);
@@ -71,7 +85,7 @@ namespace FileSharperCore.Conditions
                     {
                         if (m_Regex.IsMatch(line))
                         {
-                            return new MatchResult(MatchResultType.Yes, null);
+                            return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
                         }
                     }
                     else
@@ -80,19 +94,19 @@ namespace FileSharperCore.Conditions
                         {
                             if (line.Contains(m_Parameters.Text))
                             {
-                                return new MatchResult(MatchResultType.Yes, null);
+                                return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
                             }
                         }
                         else
                         {
                             if (line.ToLower().Contains(m_LowerCaseText))
                             {
-                                return new MatchResult(MatchResultType.Yes, null);
+                                return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
                             }
                         }
                     }
                 }
-                return new MatchResult(MatchResultType.No, null);
+                return new MatchResult(MatchResultType.No, new string[] { "No" });
             }
         }
     }
