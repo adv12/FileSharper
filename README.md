@@ -16,3 +16,7 @@ A search in FileSharper is essentially a small script that iterates over a group
 If you're adding file sources, conditions, outputs, or processors, I recommend inheriting from the base classes **FileSourceBase**, **ConditionBase**, **OutputBase**, and **SingleFileProcessorBase** (or **ProcessorBase** if you know what you're doing).
 
 If you download FileSharper and start adding classes that would benefit others, consider submitting pull requests so I can pull them in and make FileSharper better for everyone.  Right now the code is marked as (c) Andrew Vardeman, but if I actually get contributions I'll adopt a contributor's license agreement so it can become more of a community project.
+
+Caveat Emptor: FileSharper is currently roughly alpha quality.  And there are no unit tests.  So you may find it very broken in spots.
+
+Oh.  Also.  There is *kind of* support for plugins, but I don't recommend using it.  There's a lot I don't know about code signing, security, and all that.
