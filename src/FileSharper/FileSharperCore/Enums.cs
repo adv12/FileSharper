@@ -11,6 +11,13 @@ namespace FileSharperCore
         NotApplicable
     }
 
+    public enum ProcessingResultType
+    {
+        Success,
+        Failure,
+        NotApplicable
+    }
+
     public enum FileDateType
     {
         Created,

@@ -5,12 +5,16 @@
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Processors
 {
     public class CopyFileParameters
     {
+        [PropertyOrder(1, UsageContextEnum.Both)]
         public string NewPath { get; set; } = @"{Desktop}\{Name}";
+        [PropertyOrder(2, UsageContextEnum.Both)]
+        public bool Overwrite { get; set; } = false;
     }
 
     public class CopyFileProcessor : SingleFileProcessorBase
@@ -25,11 +29,11 @@ namespace FileSharperCore.Processors
 
         public override bool ProducesFiles => true;
 
-        public override FileInfo[] Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {
             string newPath = ReplaceUtil.Replace(m_Parameters.NewPath, file);
-            file.CopyTo(newPath);
-            return new FileInfo[] { new FileInfo(newPath) };
+            file.CopyTo(newPath, m_Parameters.Overwrite);
+            return new ProcessingResult(ProcessingResultType.Success, new FileInfo[] { new FileInfo(newPath) });
         }
     }
 }

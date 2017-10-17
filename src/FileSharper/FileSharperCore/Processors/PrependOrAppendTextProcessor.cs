@@ -27,7 +27,7 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override FileInfo[] Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {
             string tmpFile = Path.GetTempFileName();
             using (StreamWriter writer = new StreamWriter(tmpFile))
@@ -56,7 +56,7 @@ namespace FileSharperCore.Processors
             }
             File.Copy(tmpFile, file.FullName, true);
             File.Delete(tmpFile);
-            return null;
+            return new ProcessingResult(ProcessingResultType.Success, null);
         }
     }
 }

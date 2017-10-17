@@ -128,6 +128,7 @@
     <Compile Include="PluggableItemBase.cs" />
     <Compile Include="PluggableItemWithColumnsAndCacheTypesBase.cs" />
     <Compile Include="PluggableItemWithColumnsBase.cs" />
+    <Compile Include="ProcessingResult.cs" />
     <Compile Include="ProcessorsNode.cs" />
     <Compile Include="Processors\CopyFileProcessor.cs" />
     <Compile Include="Processors\CsvProcessor.cs" />

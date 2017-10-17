@@ -11,6 +11,6 @@ namespace FileSharperCore
     {
         bool ChainFromPrevious { get; set; }
         bool ProducesFiles { get; }
-        FileInfo[] Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
+        ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
     }
 }

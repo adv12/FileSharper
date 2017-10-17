@@ -17,9 +17,9 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => null;
 
-        public override FileInfo[] Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
         {
-            return null;
+            return new ProcessingResult(ProcessingResultType.Success, null);
         }
     }
 }

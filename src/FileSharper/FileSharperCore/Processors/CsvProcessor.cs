@@ -67,7 +67,7 @@ namespace FileSharperCore.Processors
             m_CsvWriter.NextRecord();
         }
 
-        public override FileInfo[] Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {
             m_CsvWriter.WriteField(file.Name);
             m_CsvWriter.WriteField(file.DirectoryName);
@@ -76,7 +76,7 @@ namespace FileSharperCore.Processors
                 m_CsvWriter.WriteField(value);
             }
             m_CsvWriter.NextRecord();
-            return null;
+            return new ProcessingResult(ProcessingResultType.Success, null);
         }
 
         public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)

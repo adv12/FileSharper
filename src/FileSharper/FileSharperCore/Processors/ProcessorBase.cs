@@ -13,6 +13,6 @@ namespace FileSharperCore.Processors
 
         public bool ChainFromPrevious { get; set; }
 
-        public abstract FileInfo[] Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
+        public abstract ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
     }
 }
