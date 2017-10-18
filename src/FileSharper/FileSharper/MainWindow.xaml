@@ -28,7 +28,7 @@ full text of the license.
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}"/>
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" />
                 <Separator />
-                <MenuItem Header="_Exit" />
+                <MenuItem Header="_Exit" Command="{Binding ExitCommand}" />
             </MenuItem>
         </Menu>
         <TabControl ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch">

@@ -187,8 +187,8 @@ namespace FileSharperCore
                 }
                 try
                 {
-                    ProcessingResult result = processor?.Process(file, values, lastOutputs, token);
-                    lastOutputs = result.OutputFiles ?? new FileInfo[0];
+                    ProcessingResult result = processor?.Process(file, values, lastOutputs ?? new FileInfo[0], token);
+                    lastOutputs = result.OutputFiles;
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -196,6 +196,7 @@ namespace FileSharperCore
                 }
                 catch (Exception ex)
                 {
+                    lastOutputs = new FileInfo[0];
                     exceptionProgress?.Report(new ExceptionInfo(ex, file));
                 }
             }

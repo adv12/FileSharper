@@ -37,6 +37,7 @@ namespace FileSharper
         public ICommand OpenSearchCommand { get; private set; }
         public ICommand CloseSearchCommand { get; private set; }
         public ICommand SaveSearchCommand { get; private set; }
+        public ICommand ExitCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -45,6 +46,7 @@ namespace FileSharper
             OpenSearchCommand = new SearchOpener(this);
             CloseSearchCommand = new SearchCloser(this);
             SaveSearchCommand = new SearchSaver(this);
+            ExitCommand = new ApplicationExiter(this);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -206,6 +208,32 @@ namespace FileSharper
                     }
                 }
             }
+        }
+    }
+
+    public class ApplicationExiter : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+
+        public MainViewModel ViewModel
+        {
+            get; set;
+        }
+
+        public ApplicationExiter(MainViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            System.Windows.Application.Current.Shutdown();
         }
     }
 }
