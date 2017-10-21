@@ -158,6 +158,8 @@ namespace FileSharperCore
                         exceptionProgress?.Report(new ExceptionInfo(ex, file));
                     }
                 }
+                AggregateProcessors(TestedProcessors, exceptionProgress, token);
+                AggregateProcessors(MatchedProcessors, exceptionProgress, token);
             }
             catch (OperationCanceledException ex)
             {
@@ -181,14 +183,10 @@ namespace FileSharperCore
             foreach (IProcessor processor in processors)
             {
                 token.ThrowIfCancellationRequested();
-                if (processor == null)
-                {
-                    continue;
-                }
                 try
                 {
                     ProcessingResult result = processor?.Process(file, values, lastOutputs ?? new FileInfo[0], token);
-                    lastOutputs = result.OutputFiles;
+                    lastOutputs = result != null ? result.OutputFiles : new FileInfo[0]; 
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -198,6 +196,27 @@ namespace FileSharperCore
                 {
                     lastOutputs = new FileInfo[0];
                     exceptionProgress?.Report(new ExceptionInfo(ex, file));
+                }
+            }
+        }
+
+        private void AggregateProcessors(IProcessor[] processors, IProgress<ExceptionInfo> exceptionProgress,
+            CancellationToken token)
+        {
+            foreach (IProcessor processor in processors)
+            {
+                token.ThrowIfCancellationRequested();
+                try
+                {
+                    processor?.Aggregate(token);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    exceptionProgress?.Report(new ExceptionInfo(ex, null));
                 }
             }
         }

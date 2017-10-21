@@ -62,4 +62,14 @@ namespace FileSharperCore
         Append
     }
 
+    public enum SearchOrder
+    {
+        SystemDefault,
+        Alphabetical,
+        ReverseAlphabetical,
+        ModifiedDate,
+        ReverseModifiedDate,
+        Random
+    }
+
 }

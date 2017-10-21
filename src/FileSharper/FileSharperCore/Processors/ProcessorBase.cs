@@ -14,5 +14,10 @@ namespace FileSharperCore.Processors
         public bool ChainFromPrevious { get; set; }
 
         public abstract ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
+
+        public virtual void Aggregate(CancellationToken token)
+        {
+
+        }
     }
 }
