@@ -12,24 +12,28 @@ namespace FileSharperCore.Util
 {
     public class ReplaceUtil
     {
-        public static Regex ReplacementRegex = new Regex(@"\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}");
-        public static string FilenameDateFormat = "yyyy-MM-dd-HH-mm-ss";
+        private static readonly Regex ReplacementRegex = new Regex(@"\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}");
+        private static readonly string FilenameDateFormat = "yyyy-MM-dd-HH-mm-ss";
 
         public static string Replace(string input, FileInfo file)
         {
             Dictionary<string, string> replacements = new Dictionary<string, string>();
-            replacements[nameof(file.Name)] = file.Name;
-            replacements[nameof(file.FullName)] = file.FullName;
-            replacements[nameof(file.DirectoryName)] = file.DirectoryName;
-            replacements[nameof(file.Extension)] = file.Extension;
-            replacements["NameMinusExtension"] = Path.GetFileNameWithoutExtension(file.Name);
-            replacements[nameof(file.Length)] = file.Length.ToString();
-            replacements[nameof(file.CreationTime)] = file.CreationTime.ToString(FilenameDateFormat);
-            replacements[nameof(file.CreationTimeUtc)] = file.CreationTimeUtc.ToString(FilenameDateFormat);
-            replacements[nameof(file.LastWriteTime)] = file.LastWriteTime.ToString(FilenameDateFormat);
-            replacements[nameof(file.LastWriteTimeUtc)] = file.LastWriteTimeUtc.ToString(FilenameDateFormat);
-            replacements[nameof(file.LastAccessTime)] = file.LastAccessTime.ToString(FilenameDateFormat);
-            replacements[nameof(file.LastAccessTimeUtc)] = file.LastAccessTimeUtc.ToString(FilenameDateFormat);
+            if (file != null)
+            {
+                replacements[nameof(file.Name)] = file.Name;
+                replacements[nameof(file.FullName)] = file.FullName;
+                replacements[nameof(file.DirectoryName)] = file.DirectoryName;
+                replacements[nameof(file.Extension)] = file.Extension;
+                replacements["NameWithoutExtension"] = Path.GetFileNameWithoutExtension(file.Name);
+                replacements["NameMinusExtension"] = replacements["NameWithoutExtension"];
+                replacements[nameof(file.Length)] = file.Length.ToString();
+                replacements[nameof(file.CreationTime)] = file.CreationTime.ToString(FilenameDateFormat);
+                replacements[nameof(file.CreationTimeUtc)] = file.CreationTimeUtc.ToString(FilenameDateFormat);
+                replacements[nameof(file.LastWriteTime)] = file.LastWriteTime.ToString(FilenameDateFormat);
+                replacements[nameof(file.LastWriteTimeUtc)] = file.LastWriteTimeUtc.ToString(FilenameDateFormat);
+                replacements[nameof(file.LastAccessTime)] = file.LastAccessTime.ToString(FilenameDateFormat);
+                replacements[nameof(file.LastAccessTimeUtc)] = file.LastAccessTimeUtc.ToString(FilenameDateFormat);
+            }
             replacements[nameof(DateTime.Now)] = DateTime.Now.ToString(FilenameDateFormat);
             foreach (Environment.SpecialFolder folder in Enum.GetValues(typeof(Environment.SpecialFolder)))
             {

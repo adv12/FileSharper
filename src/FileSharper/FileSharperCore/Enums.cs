@@ -72,4 +72,11 @@ namespace FileSharperCore
         Random
     }
 
+    public enum ProcessorScope
+    {
+        Search,
+        InputFile,
+        PreviousProcessorOutputFile
+    }
+
 }
