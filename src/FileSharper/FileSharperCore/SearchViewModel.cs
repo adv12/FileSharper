@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Windows.Input;
 
 namespace FileSharperCore
 {
@@ -30,7 +31,7 @@ namespace FileSharperCore
         public ObservableCollection<ExceptionInfo> ExceptionInfos { get; } = new ObservableCollection<ExceptionInfo>();
 
         private int m_ExceptionCount = 0;
-        [JsonIgnore]
+
         public int ExceptionCount
         {
             get => m_ExceptionCount;
@@ -41,7 +42,6 @@ namespace FileSharperCore
             }
         }
 
-        [JsonIgnore]
         public string ExceptionsHeader
         {
             get
@@ -55,7 +55,6 @@ namespace FileSharperCore
         }
 
         private int m_testedCount = 0;
-        [JsonIgnore]
         public int TestedCount
         {
             get => m_testedCount;
@@ -67,7 +66,6 @@ namespace FileSharperCore
         }
 
         private int m_matchedCount = 0;
-        [JsonIgnore]
         public int MatchedCount
         {
             get => m_matchedCount;
@@ -120,6 +118,8 @@ namespace FileSharperCore
 
         public CancellationTokenSource TokenSource { get; private set; }
 
+        public ICommand CopyPathCommand { get; }
+
         public SearchViewModel(SharperEngine engine, int maxResults, int maxExceptions)
         {
             Engine = engine;
@@ -127,6 +127,7 @@ namespace FileSharperCore
             MaxExceptions = maxExceptions;
             ExceptionCount = 0;
             TokenSource = new CancellationTokenSource();
+            CopyPathCommand = new PathCopier(this);
             foreach (string columnHeader in ColumnHeaders)
             {
                 DataColumn column = new DataColumn(columnHeader);
@@ -199,6 +200,44 @@ namespace FileSharperCore
         public void Cancel()
         {
             TokenSource.Cancel();
+        }
+
+        public class PathCopier : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public SearchViewModel ViewModel { get; private set; }
+
+            public PathCopier(SearchViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;// parameter != null;
+            }
+
+            public void Execute(object parameter)
+            {
+                System.Collections.IList rowViews = (System.Collections.IList)parameter;
+                if (rowViews != null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    bool first = true;
+                    foreach (DataRowView rowView in rowViews)
+                    {
+                        DataRow row = rowView.Row;
+                        if (!first)
+                        {
+                            sb.AppendLine();
+                        }
+                        sb.Append(Path.Combine((string)row[1], (string)row[0]));
+                        first = false;
+                    }
+                    System.Windows.Clipboard.SetText(sb.ToString());
+                }
+            }
         }
 
     }

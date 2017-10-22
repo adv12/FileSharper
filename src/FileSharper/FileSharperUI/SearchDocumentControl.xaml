@@ -66,7 +66,13 @@ full text of the license.
             <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
             <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <TabItem Header="Results">
-                    <ListView  VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" />
+                    <ListView  VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}">
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy Path(s)" Command="{Binding SearchViewModel.CopyPathCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
                 </TabItem>
                 <TabItem Header="{Binding SearchViewModel.ExceptionsHeader, FallbackValue=Exceptions}">
                     <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>
