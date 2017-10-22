@@ -56,21 +56,15 @@ full text of the license.
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
             <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
-            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Visibility="{Binding SearchViewModel, Converter={StaticResource objectToVisibilityConverter}}">
-                <Label>Matched </Label>
-                <Label Content="{Binding SearchViewModel.MatchedCount, FallbackValue=0}" />
-                <Label> of </Label>
-                <Label Content="{Binding SearchViewModel.TestedCount, FallbackValue=0}" />
-            </StackPanel>
-            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <TabItem Header="Results">
                     <ListView  VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" />
                 </TabItem>
@@ -78,6 +72,24 @@ full text of the license.
                     <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>
                 </TabItem>
             </TabControl>
+            <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem Height="Auto" Width="Auto" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Visibility="{Binding SearchViewModel, Converter={StaticResource objectToVisibilityConverter}}">
+                    <Label Content="{Binding SearchViewModel.StatusText, FallbackValue=Ready}" />
+                </StatusBarItem>
+                <StatusBarItem Height="Auto" Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Stretch" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">
+                    <ProgressBar Height="15" IsIndeterminate="True"/>
+                </StatusBarItem>
+            </StatusBar>
         </Grid>
     </Grid>
 </UserControl>

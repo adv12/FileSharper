@@ -59,7 +59,11 @@ namespace FileSharperCore
         public int TestedCount
         {
             get => m_testedCount;
-            private set => SetField(ref m_testedCount, value);
+            private set
+            {
+                SetField(ref m_testedCount, value);
+                OnPropertyChanged(nameof(StatusText));
+            }
         }
 
         private int m_matchedCount = 0;
@@ -67,7 +71,16 @@ namespace FileSharperCore
         public int MatchedCount
         {
             get => m_matchedCount;
-            private set => SetField(ref m_matchedCount, value);
+            private set
+            {
+                SetField(ref m_matchedCount, value);
+                OnPropertyChanged(nameof(StatusText));
+            }
+        }
+
+        public string StatusText
+        {
+            get => "Matched " + MatchedCount + " of " + TestedCount;
         }
 
         private string m_ExceptionText = string.Empty;
