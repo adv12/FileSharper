@@ -81,6 +81,7 @@ namespace FileSharperCore
         }
 
         private bool m_Searching = false;
+        [JsonIgnore]
         public bool Searching
         {
             get => m_Searching;

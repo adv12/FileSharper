@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace FileSharperCore
 {
@@ -28,7 +29,46 @@ namespace FileSharperCore
 
         public ObservableCollection<ExceptionInfo> ExceptionInfos { get; } = new ObservableCollection<ExceptionInfo>();
 
-        public int ExceptionCount { get; set; }
+        private int m_ExceptionCount = 0;
+        [JsonIgnore]
+        public int ExceptionCount
+        {
+            get => m_ExceptionCount;
+            private set
+            {
+                SetField(ref m_ExceptionCount, value);
+                OnPropertyChanged(nameof(ExceptionsHeader));
+            }
+        }
+
+        [JsonIgnore]
+        public string ExceptionsHeader
+        {
+            get
+            {
+                if (m_ExceptionCount == 0)
+                {
+                    return "Exceptions";
+                }
+                return $"Exceptions ({ExceptionCount})";
+            }
+        }
+
+        private int m_testedCount = 0;
+        [JsonIgnore]
+        public int TestedCount
+        {
+            get => m_testedCount;
+            private set => SetField(ref m_testedCount, value);
+        }
+
+        private int m_matchedCount = 0;
+        [JsonIgnore]
+        public int MatchedCount
+        {
+            get => m_matchedCount;
+            private set => SetField(ref m_matchedCount, value);
+        }
 
         private string m_ExceptionText = string.Empty;
         public string ExceptionText
@@ -72,6 +112,7 @@ namespace FileSharperCore
             Engine = engine;
             MaxResults = maxResults;
             MaxExceptions = maxExceptions;
+            ExceptionCount = 0;
             TokenSource = new CancellationTokenSource();
             foreach (string columnHeader in ColumnHeaders)
             {
@@ -80,10 +121,11 @@ namespace FileSharperCore
             }
             TestedProgress = new Progress<FileProgressInfo>(info =>
             {
-
+                TestedCount++;
             });
             MatchedProgress = new Progress<FileProgressInfo>(info =>
             {
+                MatchedCount++;
                 if (SearchResults.Rows.Count <= maxResults)
                 {
                     string[] values = info.Values;

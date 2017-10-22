@@ -16,6 +16,7 @@ full text of the license.
     <UserControl.Resources>
         <helpers:SearchViewModelToDynamicGridViewConverter x:Key="listViewGridViewConverter" />
         <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <helpers:ObjectToVisibilityConverter x:Key="objectToVisibilityConverter" />
         <sys:Boolean x:Key="True">True</sys:Boolean>
     </UserControl.Resources>
     <Grid>
@@ -58,15 +59,22 @@ full text of the license.
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
             <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
-            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Visibility="{Binding SearchViewModel, Converter={StaticResource objectToVisibilityConverter}}">
+                <Label>Matched </Label>
+                <Label Content="{Binding SearchViewModel.MatchedCount, FallbackValue=0}" />
+                <Label> of </Label>
+                <Label Content="{Binding SearchViewModel.TestedCount, FallbackValue=0}" />
+            </StackPanel>
+            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
                 <TabItem Header="Results">
                     <ListView  VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" />
                 </TabItem>
-                <TabItem Header="Exceptions">
+                <TabItem Header="{Binding SearchViewModel.ExceptionsHeader, FallbackValue=Exceptions}">
                     <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>
                 </TabItem>
             </TabControl>
