@@ -11,6 +11,6 @@ namespace FileSharperCore
 {
     public interface IOutput: IPluggableItemWithColumnsAndCacheTypes
     {
-        string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> cacheTypes, CancellationToken token);
+        string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token);
     }
 }

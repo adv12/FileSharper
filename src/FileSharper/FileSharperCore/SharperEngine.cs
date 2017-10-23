@@ -87,66 +87,65 @@ namespace FileSharperCore
                         {
                             continue;
                         }
-                        else
-                        {
-                            GetFileCaches(Condition, file, caches, exceptionProgress);
-                        }
                         try
                         {
-                            result = Condition.Matches(file, caches, token);
-                            if (result?.Values != null)
+                            GetFileCaches(Condition, Outputs, file, caches, exceptionProgress);
+                            try
                             {
-                                values.AddRange(result.Values);
+                                result = Condition.Matches(file, caches, token);
+                                if (result?.Values != null)
+                                {
+                                    values.AddRange(result.Values);
+                                }
                             }
-                        }
-                        catch (OperationCanceledException ex)
-                        {
-                            throw ex;
-                        }
-                        catch (Exception ex)
-                        {
-                            exceptionProgress?.Report(new ExceptionInfo(ex, file));
+                            catch (OperationCanceledException ex)
+                            {
+                                throw ex;
+                            }
+                            catch (Exception ex)
+                            {
+                                exceptionProgress?.Report(new ExceptionInfo(ex, file));
+                            }
+                            if (result != null)
+                            {
+                                foreach (IOutput output in Outputs)
+                                {
+                                    if (output != null)
+                                    {
+                                        try
+                                        {
+                                            string[] vals = output.GetValues(file, caches, token);
+                                            if (vals != null)
+                                            {
+                                                values.AddRange(vals);
+                                            }
+                                        }
+                                        catch (OperationCanceledException ex)
+                                        {
+                                            throw ex;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            exceptionProgress?.Report(new ExceptionInfo(ex, file));
+                                        }
+                                    }
+                                }
+
+                                string[] allValues = values.ToArray();
+
+                                testedProgress.Report(new FileProgressInfo(file, result.Type, allValues));
+                                RunProcessors(TestedProcessors, file, allValues, exceptionProgress, token);
+
+                                if (result.Type == MatchResultType.Yes)
+                                {
+                                    matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
+                                    RunProcessors(MatchedProcessors, file, allValues, exceptionProgress, token);
+                                }
+                            }
                         }
                         finally
                         {
                             DisposeFileCaches(caches, exceptionProgress);
-                        }
-
-                        if (result != null)
-                        {
-                            foreach (IOutput output in Outputs)
-                            {
-                                if (output != null)
-                                {
-                                    try
-                                    {
-                                        string[] vals = output.GetValues(file, caches, token);
-                                        if (vals != null)
-                                        {
-                                            values.AddRange(vals);
-                                        }
-                                    }
-                                    catch (OperationCanceledException ex)
-                                    {
-                                        throw ex;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        exceptionProgress?.Report(new ExceptionInfo(ex, file));
-                                    }
-                                }
-                            }
-
-                            string[] allValues = values.ToArray();
-
-                            testedProgress.Report(new FileProgressInfo(file, result.Type, allValues));
-                            RunProcessors(TestedProcessors, file, allValues, exceptionProgress, token);
-
-                            if (result.Type == MatchResultType.Yes)
-                            {
-                                matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
-                                RunProcessors(MatchedProcessors, file, allValues, exceptionProgress, token);
-                            }
                         }
                     }
                     catch (OperationCanceledException ex)
@@ -221,10 +220,15 @@ namespace FileSharperCore
             }
         }
 
-        private void GetFileCaches(ICondition condition, FileInfo file, Dictionary<Type, IFileCache> cacheLookup,
+        private void GetFileCaches(ICondition condition, IOutput[] outputs, FileInfo file, Dictionary<Type, IFileCache> cacheLookup,
             IProgress<ExceptionInfo> exceptionProgress)
         {
-            Type[] cacheTypes = condition.CacheTypes;
+            List<Type> cacheTypes = new List<Type>();
+            cacheTypes.AddRange(condition.CacheTypes);
+            foreach (IOutput output in outputs)
+            {
+                cacheTypes.AddRange(output.CacheTypes);
+            }
             foreach (Type type in cacheTypes)
             {
                 Type[] interfaces = type.GetInterfaces();

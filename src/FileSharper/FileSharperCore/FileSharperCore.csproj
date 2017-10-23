@@ -49,6 +49,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -102,6 +103,7 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="ExceptionInfo.cs" />
+    <Compile Include="FileCaches\BitmapFileCache.cs" />
     <Compile Include="FileProgressInfo.cs" />
     <Compile Include="FileSources\DirectorySearchFileSource.cs" />
     <Compile Include="FileSources\FileSourceBase.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="OutputsNode.cs" />
     <Compile Include="Outputs\Filesystem\FileDateOutput.cs" />
     <Compile Include="Outputs\Filesystem\FileLengthOutput.cs" />
+    <Compile Include="Outputs\Image\ImageDimensionsOutput.cs" />
     <Compile Include="Outputs\NothingOutput.cs" />
     <Compile Include="Outputs\OutputBase.cs" />
     <Compile Include="Outputs\Filesystem\ReadOnlyOutput.cs" />

@@ -11,6 +11,6 @@ namespace FileSharperCore.Outputs
 {
     public abstract class OutputBase : PluggableItemWithColumnsAndCacheTypesBase, IOutput
     {
-        public abstract string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> cacheTypes, CancellationToken token);
+        public abstract string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token);
     }
 }
