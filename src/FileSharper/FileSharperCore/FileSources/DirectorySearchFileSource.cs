@@ -33,6 +33,7 @@ namespace FileSharperCore.FileSources
         private Func<DirectoryInfo, IComparable> m_DirectorySorter;
         private bool m_Reverse = false;
         private Random m_Random = new Random();
+        private string[] m_FilePatterns;
 
         public override object Parameters => m_Parameters;
 
@@ -53,19 +54,31 @@ namespace FileSharperCore.FileSources
 
         private IEnumerable<FileInfo> SearchDirectory(DirectoryInfo directoryInfo)
         {
-            FileInfo[] files = new FileInfo[0];
+            List<FileInfo> files = new List<FileInfo>();
             try
             {
-                files = directoryInfo.GetFiles(m_Parameters.FilePattern);
+                HashSet<FileInfo> fileSet = new HashSet<FileInfo>();
+                foreach (string filePattern in m_FilePatterns)
+                {
+                    FileInfo[] results = directoryInfo.GetFiles(filePattern);
+                    foreach (FileInfo file in results)
+                    {
+                        if (!fileSet.Contains(file))
+                        {
+                            fileSet.Add(file);
+                            files.Add(file);
+                        }
+                    }
+                }
                 if (m_FileSorter != null)
                 {
                     if (m_Reverse)
                     {
-                        files = files.OrderByDescending(m_FileSorter).ToArray();
+                        files = files.OrderByDescending(m_FileSorter).ToList();
                     }
                     else
                     {
-                        files = files.OrderBy(m_FileSorter).ToArray();
+                        files = files.OrderBy(m_FileSorter).ToList();
                     }
                 }
             }
@@ -112,6 +125,7 @@ namespace FileSharperCore.FileSources
         {
             m_Reverse = false;
             SearchOrder order = m_Parameters.SearchOrder;
+            m_FilePatterns = m_Parameters.FilePattern.Split('|');
             switch (order)
             {
                 case SearchOrder.SystemDefault:
