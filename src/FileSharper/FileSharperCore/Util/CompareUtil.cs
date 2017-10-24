@@ -23,5 +23,24 @@ namespace FileSharperCore.Util
             }
             return MatchResultType.Yes;
         }
+
+        public static MatchResultType Compare(int value1, ComparisonType comparisonType, int value2)
+        {
+            switch (comparisonType)
+            {
+                case ComparisonType.LessThan:
+                    return value1 < value2 ? MatchResultType.Yes : MatchResultType.No;
+                case ComparisonType.LessThanOrEqualTo:
+                    return value1 <= value2 ? MatchResultType.Yes : MatchResultType.No;
+                case ComparisonType.EqualTo:
+                    return value1 == value2 ? MatchResultType.Yes : MatchResultType.No;
+                case ComparisonType.GreaterThanOrEqualTo:
+                    return value1 >= value2 ? MatchResultType.Yes : MatchResultType.No;
+                case ComparisonType.GreaterThan:
+                    return value1 > value2 ? MatchResultType.Yes : MatchResultType.No;
+            }
+            return MatchResultType.Yes;
+        }
+
     }
 }

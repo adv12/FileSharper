@@ -19,7 +19,7 @@ namespace FileSharperCore
             private set;
         }
 
-        public MatchResult(MatchResultType type, string[] values)
+        public MatchResult(MatchResultType type, params string[] values)
         {
             Type = type;
             Values = values;

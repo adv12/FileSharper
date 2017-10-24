@@ -90,6 +90,7 @@
     <Compile Include="Conditions\Filesystem\FileDateCondition.cs" />
     <Compile Include="Conditions\Filesystem\FileLengthCondition.cs" />
     <Compile Include="Conditions\Filesystem\ReadOnlyCondition.cs" />
+    <Compile Include="Conditions\Image\ImageDimensionCondition.cs" />
     <Compile Include="Conditions\MatchEverythingCondition.cs" />
     <Compile Include="Editors\DateTimePickerEditor.cs" />
     <Compile Include="Editors\FolderChooserEditor.xaml.cs">
