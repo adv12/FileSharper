@@ -10,7 +10,7 @@ namespace FileSharperCore.Util
     {
         public static bool operator ==(PositiveFraction a, PositiveFraction b)
         {
-            return a.Numerator == b.Numerator && a.Denominator == b.Denominator;
+            return (a == null && b == null) || (a != null && a.Equals(b));
         }
 
         public static bool operator !=(PositiveFraction a, PositiveFraction b)
@@ -25,7 +25,7 @@ namespace FileSharperCore.Util
 
         public static bool operator <=(PositiveFraction a, PositiveFraction b)
         {
-            return a != b && a.DoubleValue <= b.DoubleValue;
+            return a == b || a.DoubleValue < b.DoubleValue;
         }
 
         public static bool operator >(PositiveFraction a, PositiveFraction b)
@@ -35,7 +35,7 @@ namespace FileSharperCore.Util
 
         public static bool operator >=(PositiveFraction a, PositiveFraction b)
         {
-            return a != b && a.DoubleValue >= b.DoubleValue;
+            return a == b || a.DoubleValue > b.DoubleValue;
         }
 
         public static uint GCD(uint a, uint b)
