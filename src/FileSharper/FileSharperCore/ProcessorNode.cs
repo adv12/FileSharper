@@ -110,13 +110,13 @@ namespace FileSharperCore
             }
         }
 
-        public bool ProducesFiles
+        public HowOften ProducesFiles
         {
             get
             {
                 if (m_ProcessorInternal == null)
                 {
-                    return false;
+                    return HowOften.Never;
                 }
                 return m_ProcessorInternal.ProducesFiles;
             }
@@ -137,6 +137,7 @@ namespace FileSharperCore
                 if (m_ProcessorInternal != null)
                 {
                     m_ProcessorInternal.ChainFromPrevious = value;
+                    OnPropertyChanged();
                 }
             }
         }

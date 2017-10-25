@@ -15,7 +15,7 @@ namespace FileSharperCore.Outputs.Image
     public class ImageDimensionsParameters
     {
         [DisplayName("Dimension(s)")]
-        public ImageDimensionOrDimensions Dimension { get; set; } = ImageDimensionOrDimensions.WidthHeight;
+        public MediaDimensionOrDimensions Dimension { get; set; } = MediaDimensionOrDimensions.WidthHeight;
     }
 
     public class ImageDimensionsOutput : OutputBase
@@ -28,8 +28,8 @@ namespace FileSharperCore.Outputs.Image
             {
                 switch (m_Parameters.Dimension)
                 {
-                    case ImageDimensionOrDimensions.Height:
-                    case ImageDimensionOrDimensions.Width:
+                    case MediaDimensionOrDimensions.Height:
+                    case MediaDimensionOrDimensions.Width:
                         return 1;
                     default:
                         return 2;
@@ -43,13 +43,13 @@ namespace FileSharperCore.Outputs.Image
             {
                 switch (m_Parameters.Dimension)
                 {
-                    case ImageDimensionOrDimensions.Width:
+                    case MediaDimensionOrDimensions.Width:
                         return new string[] { "Width" };
-                    case ImageDimensionOrDimensions.Height:
+                    case MediaDimensionOrDimensions.Height:
                         return new string[] { "Height" };
-                    case ImageDimensionOrDimensions.WidthHeight:
+                    case MediaDimensionOrDimensions.WidthHeight:
                         return new string[] { "Width", "Height" };
-                    case ImageDimensionOrDimensions.HeightWidth:
+                    case MediaDimensionOrDimensions.HeightWidth:
                         return new string[] { "Height", "Width" };
                 }
                 return new string[] { "N/A" };
@@ -80,13 +80,13 @@ namespace FileSharperCore.Outputs.Image
             Bitmap bitmap = cache.Bitmap;
             switch (m_Parameters.Dimension)
             {
-                case ImageDimensionOrDimensions.Width:
+                case MediaDimensionOrDimensions.Width:
                     return new string[] { bitmap.Width.ToString() };
-                case ImageDimensionOrDimensions.Height:
+                case MediaDimensionOrDimensions.Height:
                     return new string[] { bitmap.Height.ToString() };
-                case ImageDimensionOrDimensions.WidthHeight:
+                case MediaDimensionOrDimensions.WidthHeight:
                     return new string[] { bitmap.Width.ToString(), bitmap.Height.ToString() };
-                case ImageDimensionOrDimensions.HeightWidth:
+                case MediaDimensionOrDimensions.HeightWidth:
                     return new string[] { bitmap.Height.ToString(), bitmap.Width.ToString() };
             }
             return new string[ColumnCount];

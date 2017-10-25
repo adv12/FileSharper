@@ -27,7 +27,7 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override bool ProducesFiles => true;
+        public override HowOften ProducesFiles => HowOften.Always;
 
         public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {

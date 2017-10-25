@@ -13,26 +13,29 @@ namespace FileSharperCore.Processors
     {
         public abstract ProcessingResult Process(FileInfo file, string[] values, CancellationToken token);
 
-        public override ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
+        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
         {
             List<FileInfo> resultFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
             if (ChainFromPrevious)
             {
-                foreach (FileInfo f in filesFromPrevious)
+                if (filesFromPrevious != null)
                 {
-                    token.ThrowIfCancellationRequested();
-                    try
+                    foreach (FileInfo f in filesFromPrevious)
                     {
-                        resultFiles.AddRange(Process(f, values, token).OutputFiles);
-                    }
-                    catch (OperationCanceledException ex)
-                    {
-                        throw ex;
-                    }
-                    catch
-                    {
-                        resultType = ProcessingResultType.Failure;
+                        token.ThrowIfCancellationRequested();
+                        try
+                        {
+                            resultFiles.AddRange(Process(f, values, token).OutputFiles);
+                        }
+                        catch (OperationCanceledException ex)
+                        {
+                            throw ex;
+                        }
+                        catch
+                        {
+                            resultType = ProcessingResultType.Failure;
+                        }
                     }
                 }
             }
@@ -41,7 +44,7 @@ namespace FileSharperCore.Processors
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    ProcessingResult tmp = Process(file, values, token);
+                    ProcessingResult tmp = Process(originalFile, values, token);
                     if (tmp.Type == ProcessingResultType.Failure)
                     {
                         resultType = ProcessingResultType.Failure;

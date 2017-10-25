@@ -207,7 +207,7 @@ namespace FileSharperCore
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    processor?.Aggregate(token);
+                    processor?.ProcessAggregated(token);
                 }
                 catch (OperationCanceledException ex)
                 {

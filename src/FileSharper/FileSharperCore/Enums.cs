@@ -79,18 +79,25 @@ namespace FileSharperCore
         PreviousProcessorOutputFile
     }
 
-    public enum ImageDimension
+    public enum MediaDimension
     {
         Width,
         Height
     }
 
-    public enum ImageDimensionOrDimensions
+    public enum MediaDimensionOrDimensions
     {
         WidthHeight,
         HeightWidth,
         Width,
         Height
+    }
+
+    public enum HowOften
+    {
+        Never,
+        Sometimes,
+        Always
     }
 
 }

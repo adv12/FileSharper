@@ -36,7 +36,7 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override bool ProducesFiles => m_Parameters.OneZipFilePer != ProcessorScope.Search;
+        public override HowOften ProducesFiles => HowOften.Sometimes;
 
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
@@ -84,9 +84,9 @@ namespace FileSharperCore.Processors
             return new ProcessingResult(ProcessingResultType.Success, outputFiles.ToArray());
         }
 
-        public override void Aggregate(CancellationToken token)
+        public override void ProcessAggregated(CancellationToken token)
         {
-            base.Aggregate(token);
+            base.ProcessAggregated(token);
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)
             {
                 GenerateZip(null, token);

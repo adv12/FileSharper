@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="CountToVisibilityConverter.cs" />
+    <Compile Include="HowOftenToVisibilityConverter.cs" />
     <Compile Include="SearchViewModelToDynamicGridViewConverter.cs" />
     <Compile Include="TypeNameToConditionConverter.cs" />
     <Compile Include="ObjectToVisibilityConverter.cs" />

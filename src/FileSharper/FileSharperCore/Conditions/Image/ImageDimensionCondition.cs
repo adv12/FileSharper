@@ -16,7 +16,7 @@ namespace FileSharperCore.Conditions.Image
     public class ImageDimensionComparisonParameters
     {
         [PropertyOrder(1, UsageContextEnum.Both)]
-        public ImageDimension Dimension { get; set; }
+        public MediaDimension Dimension { get; set; }
         [PropertyOrder(2, UsageContextEnum.Both)]
         public ComparisonType ComparisonType { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
@@ -49,7 +49,7 @@ namespace FileSharperCore.Conditions.Image
                 return new MatchResult(MatchResultType.NotApplicable, "N/A");
             }
             Bitmap bitmap = cache.Bitmap;
-            int imageSize = m_Parameters.Dimension == ImageDimension.Height ? bitmap.Height : bitmap.Width;
+            int imageSize = m_Parameters.Dimension == MediaDimension.Height ? bitmap.Height : bitmap.Width;
             MatchResultType resultType = CompareUtil.Compare(imageSize, m_Parameters.ComparisonType, m_Parameters.Size);
             return new MatchResult(resultType, imageSize.ToString());
         }

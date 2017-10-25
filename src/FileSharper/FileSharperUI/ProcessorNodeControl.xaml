@@ -16,7 +16,7 @@ full text of the license.
     <UserControl.Resources>
         <helpers:ObjectToVisibilityConverter x:Key="converter"/>
         <helpers:TypeNameToProcessorConverter x:Key="typeConverter"/>
-        <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+        <helpers:HowOftenToVisibilityConverter x:Key="howOftenToVisibilityConverter"/>
     </UserControl.Resources>
     <Border BorderThickness="1" CornerRadius="4" Padding="4" BorderBrush="LightGray" VerticalAlignment="Top" Width="Auto" Height="Auto">
         <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
@@ -53,7 +53,7 @@ full text of the license.
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <CheckBox x:Name="checkBox" Grid.Row="0" Grid.Column="0" IsChecked="{Binding ChainFromPrevious}" Margin="8" Visibility="{Binding Path=Previous.ProducesFiles, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed, TargetNullValue=Collapsed}">Chain from Previous</CheckBox>
+                <CheckBox x:Name="checkBox" Grid.Row="0" Grid.Column="0" IsChecked="{Binding ChainFromPrevious}" Margin="8" Visibility="{Binding Path=Previous.ProducesFiles, Converter={StaticResource howOftenToVisibilityConverter}, FallbackValue=Collapsed, TargetNullValue=Collapsed}">Chain from Previous</CheckBox>
             </Grid>
             <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
         </Grid>

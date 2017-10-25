@@ -9,13 +9,13 @@ namespace FileSharperCore.Processors
 {
     public abstract class ProcessorBase : PluggableItemBase, IProcessor
     {
-        public virtual bool ProducesFiles { get => false; }
+        public virtual HowOften ProducesFiles { get => HowOften.Never; }
 
         public bool ChainFromPrevious { get; set; }
 
-        public abstract ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
+        public abstract ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
 
-        public virtual void Aggregate(CancellationToken token)
+        public virtual void ProcessAggregated(CancellationToken token)
         {
 
         }

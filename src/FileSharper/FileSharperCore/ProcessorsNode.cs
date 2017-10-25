@@ -31,6 +31,7 @@ namespace FileSharperCore
                 foreach (ProcessorNode newNode in e.NewItems)
                 {
                     newNode.Owner = this;
+                    newNode.PropertyChanged += NodePropertyChanged;
                 }
             }
             if (e.Action == NotifyCollectionChangedAction.Remove ||
@@ -42,12 +43,32 @@ namespace FileSharperCore
                     foreach (ProcessorNode oldNode in e.OldItems)
                     {
                         oldNode.Owner = null;
+                        oldNode.PropertyChanged -= NodePropertyChanged;
                     }
                 }
             }
             for (int i = 0; i < ProcessorNodes.Count; i++)
             {
-                ProcessorNodes[i].Index = i;
+                ProcessorNode node = ProcessorNodes[i];
+                node.Index = i;
+                if (i == 0)
+                {
+                    node.ChainFromPrevious = false;
+                }
+            }
+        }
+
+        private void NodePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            ProcessorNode node = (ProcessorNode)sender;
+            int idx = node.Index;
+            int nextIdx = idx + 1;
+            if (e.PropertyName == nameof(ProcessorNode.ProcessorTypeName))
+            {
+                if (node.ProducesFiles == HowOften.Never && nextIdx < ProcessorNodes.Count)
+                {
+                    ProcessorNodes[nextIdx].ChainFromPrevious = false;
+                }
             }
         }
 

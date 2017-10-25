@@ -10,8 +10,8 @@ namespace FileSharperCore
     public interface IProcessor: IPluggableItem
     {
         bool ChainFromPrevious { get; set; }
-        bool ProducesFiles { get; }
-        ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
-        void Aggregate(CancellationToken token);
+        HowOften ProducesFiles { get; }
+        ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
+        void ProcessAggregated(CancellationToken token);
     }
 }
