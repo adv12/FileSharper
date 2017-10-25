@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using FileSharperCore.Processors;
 
 namespace FileSharperCore
 {
@@ -17,6 +18,8 @@ namespace FileSharperCore
         private string m_ProcessorTypeName;
         private ProcessorsNode m_Owner;
         private int m_Index;
+        private ProcessorsNode m_ChildProcessorsNode;
+        private bool m_Loaded;
 
         private IProcessor m_ProcessorInternal;
 
@@ -36,8 +39,37 @@ namespace FileSharperCore
                     else
                     {
                         ProcessorInternal = ProcessorCatalog.Instance.CreateProcessor(m_ProcessorTypeName);
+                        if (ProcessorInternal is MultiProcessor)
+                        {
+                            ChildProcessorsNode = new ProcessorsNode();
+                            ChildProcessorsNode.Loaded = this.Loaded;
+                        }
+                        else
+                        {
+                            ChildProcessorsNode = null;
+                        }
                     }
                     OnPropertyChanged();
+                }
+            }
+        }
+
+        [JsonIgnore]
+        public bool Loaded
+        {
+            get
+            {
+                return m_Loaded;
+            }
+            set
+            {
+                if (m_Loaded != value)
+                {
+                    m_Loaded = value;
+                    if (m_ChildProcessorsNode != null)
+                    {
+                        m_ChildProcessorsNode.Loaded = value;
+                    }
                 }
             }
         }
@@ -150,6 +182,12 @@ namespace FileSharperCore
             }
         }
 
+        public ProcessorsNode ChildProcessorsNode
+        {
+            get => m_ChildProcessorsNode;
+            set => SetField(ref m_ChildProcessorsNode, value);
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -157,7 +195,14 @@ namespace FileSharperCore
 
         public IProcessor GetProcessor()
         {
-            return ProcessorInternal;
+            IProcessor processor = ProcessorInternal;
+            if (processor is MultiProcessor)
+            {
+                MultiProcessor mp = (MultiProcessor)processor;
+                mp.Processors.Clear();
+                mp.Processors.AddRange(ChildProcessorsNode.GetProcessors());
+            }
+            return processor;
         }
 
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)

@@ -97,6 +97,8 @@ namespace FileSharperCore
             {
                 SetField(ref m_Loaded, value);
                 ConditionNode.Loaded = value;
+                TestedProcessorsNode.Loaded = value;
+                MatchedProcessorsNode.Loaded = value;
             }
         }
 

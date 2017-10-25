@@ -13,15 +13,40 @@ namespace FileSharperCore
 {
     public class ProcessorsNode
     {
-        
+        private bool m_Loaded;
+
         public ObservableCollection<ProcessorNode> ProcessorNodes
         {
             get;
         } = new ObservableCollection<ProcessorNode>();
 
+        [JsonIgnore]
+        public bool Loaded
+        {
+            get
+            {
+                return m_Loaded;
+            }
+            set
+            {
+                if (m_Loaded != value)
+                {
+                    m_Loaded = value;
+                    foreach (ProcessorNode processor in ProcessorNodes)
+                    {
+                        processor.Loaded = Loaded;
+                    }
+                }
+            }
+        }
+
         public ProcessorsNode()
         {
             ProcessorNodes.CollectionChanged += ProcessorNodes_CollectionChanged;
+            if (Loaded)
+            {
+                ProcessorNodes.Add(new ProcessorNode());
+            }
         }
 
         private void ProcessorNodes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

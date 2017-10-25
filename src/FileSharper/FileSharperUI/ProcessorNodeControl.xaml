@@ -56,6 +56,7 @@ full text of the license.
                 <CheckBox x:Name="checkBox" Grid.Row="0" Grid.Column="0" IsChecked="{Binding ChainFromPrevious}" Margin="8" Visibility="{Binding Path=Previous.ProducesFiles, Converter={StaticResource howOftenToVisibilityConverter}, FallbackValue=Collapsed, TargetNullValue=Collapsed}">Chain from Previous</CheckBox>
             </Grid>
             <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
+            <local:ProcessorsNodeControl DataContext="{Binding ChildProcessorsNode}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" Width="Auto" Height="Auto" Visibility="{Binding Path=ChildProcessorsNode, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
         </Grid>
     </Border>
 </UserControl>

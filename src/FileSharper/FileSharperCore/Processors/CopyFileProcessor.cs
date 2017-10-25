@@ -32,6 +32,8 @@ namespace FileSharperCore.Processors
         public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {
             string newPath = ReplaceUtil.Replace(m_Parameters.NewPath, file);
+            string dirPath = Path.GetDirectoryName(newPath);
+            Directory.CreateDirectory(dirPath);
             file.CopyTo(newPath, m_Parameters.Overwrite);
             return new ProcessingResult(ProcessingResultType.Success, new FileInfo[] { new FileInfo(newPath) });
         }
