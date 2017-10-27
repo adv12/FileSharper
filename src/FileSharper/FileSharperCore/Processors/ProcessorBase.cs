@@ -11,9 +11,9 @@ namespace FileSharperCore.Processors
     {
         public virtual HowOften ProducesFiles { get => HowOften.Never; }
 
-        public bool ChainFromPrevious { get; set; }
+        public InputFileSource InputFileSource { get; set; }
 
-        public abstract ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] filesFromPrevious, CancellationToken token);
+        public abstract ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token);
 
         public virtual void ProcessAggregated(CancellationToken token)
         {

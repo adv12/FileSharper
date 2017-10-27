@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using FileSharperCore.Processors;
+using System.Collections.ObjectModel;
 
 namespace FileSharperCore
 {
@@ -17,6 +18,7 @@ namespace FileSharperCore
 
         private string m_ProcessorTypeName;
         private ProcessorsNode m_Owner;
+        private ProcessorNode m_Parent;
         private int m_Index;
         private ProcessorsNode m_ChildProcessorsNode;
         private bool m_Loaded;
@@ -42,10 +44,19 @@ namespace FileSharperCore
                         if (ProcessorInternal is MultiProcessor)
                         {
                             ChildProcessorsNode = new ProcessorsNode();
+                            ChildProcessorsNode.Owner = this;
                             ChildProcessorsNode.Loaded = this.Loaded;
+                            if (Loaded)
+                            {
+                                ChildProcessorsNode.AddCommand.Execute(null);
+                            }
                         }
                         else
                         {
+                            if (ChildProcessorsNode != null)
+                            {
+                                ChildProcessorsNode.Owner = null;
+                            }
                             ChildProcessorsNode = null;
                         }
                     }
@@ -84,6 +95,18 @@ namespace FileSharperCore
                 OnPropertyChanged(nameof(First));
                 OnPropertyChanged(nameof(Last));
                 OnPropertyChanged(nameof(Previous));
+                UpdateInputFileSources();
+            }
+        }
+
+        [JsonIgnore]
+        public ProcessorNode Parent
+        {
+            get => m_Parent;
+            set
+            {
+                SetField(ref m_Parent, value);
+                UpdateInputFileSources();
             }
         }
 
@@ -97,6 +120,7 @@ namespace FileSharperCore
                 OnPropertyChanged(nameof(First));
                 OnPropertyChanged(nameof(Last));
                 OnPropertyChanged(nameof(Previous));
+                UpdateInputFileSources();
             }
         }
 
@@ -125,6 +149,9 @@ namespace FileSharperCore
             }
         }
 
+        [JsonIgnore]
+        public ObservableCollection<InputFileSource> InputFileSources { get; } = new ObservableCollection<InputFileSource>();
+
         private IProcessor ProcessorInternal
         {
             get => m_ProcessorInternal;
@@ -136,7 +163,7 @@ namespace FileSharperCore
                     m_ProcessorInternal = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
-                    OnPropertyChanged(nameof(ChainFromPrevious));
+                    OnPropertyChanged(nameof(InputFileSource));
                     OnPropertyChanged(nameof(ProducesFiles));
                 }
             }
@@ -154,21 +181,21 @@ namespace FileSharperCore
             }
         }
 
-        public bool ChainFromPrevious
+        public InputFileSource InputFileSource
         {
             get
             {
                 if (m_ProcessorInternal == null)
                 {
-                    return false;
+                    return InputFileSource.OriginalFile;
                 }
-                return m_ProcessorInternal.ChainFromPrevious;
+                return m_ProcessorInternal.InputFileSource;
             }
             set
             {
                 if (m_ProcessorInternal != null)
                 {
-                    m_ProcessorInternal.ChainFromPrevious = value;
+                    m_ProcessorInternal.InputFileSource = value;
                     OnPropertyChanged();
                 }
             }
@@ -186,6 +213,34 @@ namespace FileSharperCore
         {
             get => m_ChildProcessorsNode;
             set => SetField(ref m_ChildProcessorsNode, value);
+        }
+
+        public ProcessorNode()
+        {
+            InputFileSources.Add(InputFileSource.OriginalFile);
+        }
+
+        private void UpdateInputFileSources()
+        {
+            if (m_Parent != null)
+            {
+                if (!InputFileSources.Contains(InputFileSource.ParentInput))
+                {
+                    InputFileSources.Add(InputFileSource.ParentInput);
+                }
+                InputFileSources.Remove(InputFileSource.PreviousOutput);
+            }
+            else
+            {
+                if (!InputFileSources.Contains(InputFileSource.PreviousOutput))
+                {
+                    if (!First)
+                    {
+                        InputFileSources.Add(InputFileSource.PreviousOutput);
+                    }
+                }
+                InputFileSources.Remove(InputFileSource.ParentInput);
+            }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

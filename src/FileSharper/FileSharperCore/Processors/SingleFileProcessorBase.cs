@@ -13,15 +13,15 @@ namespace FileSharperCore.Processors
     {
         public abstract ProcessingResult Process(FileInfo file, string[] values, CancellationToken token);
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
+        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token)
         {
             List<FileInfo> resultFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
-            if (ChainFromPrevious)
+            if (InputFileSource == InputFileSource.PreviousOutput || InputFileSource == InputFileSource.ParentInput)
             {
-                if (filesFromPrevious != null)
+                if (generatedFiles != null)
                 {
-                    foreach (FileInfo f in filesFromPrevious)
+                    foreach (FileInfo f in generatedFiles)
                     {
                         token.ThrowIfCancellationRequested();
                         try

@@ -49,11 +49,13 @@ full text of the license.
             <Grid Grid.Row="0" Grid.Column="1" Visibility="{Binding Path=ProcessorTypeName, Converter={StaticResource converter}, TargetNullValue=Collapsed}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <CheckBox x:Name="checkBox" Grid.Row="0" Grid.Column="0" IsChecked="{Binding ChainFromPrevious}" Margin="8" Visibility="{Binding Path=Previous.ProducesFiles, Converter={StaticResource howOftenToVisibilityConverter}, FallbackValue=Collapsed, TargetNullValue=Collapsed}">Chain from Previous</CheckBox>
+                <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top">Input: </Label>
+                <ComboBox x:Name="inputSourceComboBox" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" ItemsSource="{Binding InputFileSources}" SelectedItem="{Binding Path=InputFileSource}" />
             </Grid>
             <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
             <local:ProcessorsNodeControl DataContext="{Binding ChildProcessorsNode}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" Width="Auto" Height="Auto" Visibility="{Binding Path=ChildProcessorsNode, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>

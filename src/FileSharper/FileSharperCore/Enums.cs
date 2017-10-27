@@ -76,7 +76,7 @@ namespace FileSharperCore
     {
         Search,
         InputFile,
-        PreviousProcessorOutputFile
+        GeneratedOutputFile
     }
 
     public enum MediaDimension
@@ -98,6 +98,13 @@ namespace FileSharperCore
         Never,
         Sometimes,
         Always
+    }
+
+    public enum InputFileSource
+    {
+        OriginalFile,
+        PreviousOutput,
+        ParentInput
     }
 
 }

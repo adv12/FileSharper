@@ -46,22 +46,22 @@ namespace FileSharperCore.Processors
             }
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, FileInfo[] generatedFiles, CancellationToken token)
         {
             ProcessorScope scope = m_Parameters.OneZipFilePer;
             bool perInput = scope == ProcessorScope.InputFile;
-            bool perPreviousOutput = scope == ProcessorScope.PreviousProcessorOutputFile;
+            bool perPreviousOutput = scope == ProcessorScope.GeneratedOutputFile;
             bool scopedToMethod = perInput || perPreviousOutput;
             List<FileInfo> outputFiles = new List<FileInfo>();
             if (scopedToMethod)
             {
                 m_Files.Clear();
             }
-            if (this.ChainFromPrevious)
+            if (this.InputFileSource != InputFileSource.OriginalFile)
             {
                 if (perPreviousOutput)
                 {
-                    foreach (FileInfo previousFile in filesFromPrevious)
+                    foreach (FileInfo previousFile in generatedFiles)
                     {
                         m_Files.Clear();
                         m_Files.Add(previousFile);
@@ -70,7 +70,7 @@ namespace FileSharperCore.Processors
                 }
                 else
                 {
-                    m_Files.AddRange(filesFromPrevious);
+                    m_Files.AddRange(generatedFiles);
                 }
             }
             else

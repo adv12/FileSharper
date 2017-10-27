@@ -21,6 +21,12 @@ namespace FileSharperCore
         } = new ObservableCollection<ProcessorNode>();
 
         [JsonIgnore]
+        public ProcessorNode Owner
+        {
+            get; set;
+        }
+
+        [JsonIgnore]
         public bool Loaded
         {
             get
@@ -45,7 +51,7 @@ namespace FileSharperCore
             ProcessorNodes.CollectionChanged += ProcessorNodes_CollectionChanged;
             if (Loaded)
             {
-                ProcessorNodes.Add(new ProcessorNode());
+                AddCommand.Execute(null);
             }
         }
 
@@ -56,6 +62,7 @@ namespace FileSharperCore
                 foreach (ProcessorNode newNode in e.NewItems)
                 {
                     newNode.Owner = this;
+                    newNode.Parent = Owner;
                     newNode.PropertyChanged += NodePropertyChanged;
                 }
             }
@@ -68,6 +75,7 @@ namespace FileSharperCore
                     foreach (ProcessorNode oldNode in e.OldItems)
                     {
                         oldNode.Owner = null;
+                        oldNode.Parent = null;
                         oldNode.PropertyChanged -= NodePropertyChanged;
                     }
                 }
@@ -76,9 +84,9 @@ namespace FileSharperCore
             {
                 ProcessorNode node = ProcessorNodes[i];
                 node.Index = i;
-                if (i == 0)
+                if (i == 0 && node.InputFileSource == InputFileSource.PreviousOutput)
                 {
-                    node.ChainFromPrevious = false;
+                    node.InputFileSource = InputFileSource.OriginalFile;
                 }
             }
         }
@@ -92,7 +100,11 @@ namespace FileSharperCore
             {
                 if (node.ProducesFiles == HowOften.Never && nextIdx < ProcessorNodes.Count)
                 {
-                    ProcessorNodes[nextIdx].ChainFromPrevious = false;
+                    ProcessorNode tmp = ProcessorNodes[nextIdx];
+                    if (tmp.InputFileSource == InputFileSource.PreviousOutput)
+                    {
+                        tmp.InputFileSource = InputFileSource.OriginalFile;
+                    }
                 }
             }
         }
@@ -154,7 +166,9 @@ namespace FileSharperCore
 
             public void Execute(object parameter)
             {
-                Node.ProcessorNodes.Add(new ProcessorNode());
+                ProcessorNode node = new ProcessorNode();
+                node.Loaded = this.Node.Loaded;
+                Node.ProcessorNodes.Add(node);
             }
         }
     }

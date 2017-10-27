@@ -22,47 +22,38 @@ namespace FileSharperCore.Processors
 
         public List<IProcessor> Processors { get; } = new List<IProcessor>();
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] filesFromPrevious, CancellationToken token)
+        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token)
         {
-            FileInfo[] filesToProcess = ChainFromPrevious ? filesFromPrevious : new FileInfo[] { originalFile };
-            if (filesToProcess == null)
-            {
-                return new ProcessingResult(ProcessingResultType.NotApplicable, new FileInfo[0]);
-            }
             List<FileInfo> outputFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
-            foreach (FileInfo file in filesToProcess)
+            
+            foreach (IProcessor processor in Processors)
             {
-                FileInfo[] lastOutputs = new FileInfo[0];
-                foreach (IProcessor processor in Processors)
+                token.ThrowIfCancellationRequested();
+                try
                 {
-                    token.ThrowIfCancellationRequested();
-                    try
+                    ProcessingResult result = processor?.Process(originalFile, values, generatedFiles ?? new FileInfo[0], token);
+                    if (result != null)
                     {
-                        ProcessingResult result = processor?.Process(file, values, lastOutputs ?? new FileInfo[0], token);
-                        if (result != null)
+                        if (result.OutputFiles != null)
                         {
-                            if (result.Type == ProcessingResultType.Failure)
-                            {
-                                resultType = ProcessingResultType.Failure;
-                            }
+                            outputFiles.AddRange(result.OutputFiles);
                         }
-                        lastOutputs = result != null ? result.OutputFiles : new FileInfo[0];
-                    }
-                    catch (OperationCanceledException ex)
-                    {
-                        throw ex;
-                    }
-                    catch (Exception ex)
-                    {
-                        lastOutputs = new FileInfo[0];
-                    }
-                    if (lastOutputs != null)
-                    {
-                        outputFiles.AddRange(lastOutputs);
+                        if (result.Type == ProcessingResultType.Failure)
+                        {
+                            resultType = ProcessingResultType.Failure;
+                        }
                     }
                 }
+                catch (OperationCanceledException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                }
             }
+            
             return new ProcessingResult(resultType, outputFiles.ToArray());
         }
     }
