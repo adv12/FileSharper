@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using CsvHelper;
 using FileSharperCore.Editors;
+using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Processors
@@ -36,14 +37,15 @@ namespace FileSharperCore.Processors
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
             base.LocalInit(exceptionProgress);
-            TextWriter tw = new StreamWriter(m_Parameters.Filename);
+            string filename = ReplaceUtil.Replace(m_Parameters.Filename, (FileInfo)null);
+            TextWriter tw = new StreamWriter(filename);
             string lineEnding = System.Environment.NewLine;
             switch (m_Parameters.LineEndings)
             {
                 case LineEndings.Windows:
                     lineEnding = "\r\n";
                     break;
-                case LineEndings.UNIX:
+                case LineEndings.Unix:
                     lineEnding = "\n";
                     break;
                 case LineEndings.OldMacOS:

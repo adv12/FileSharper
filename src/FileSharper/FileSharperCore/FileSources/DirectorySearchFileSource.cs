@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using FileSharperCore.Editors;
+using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.FileSources
@@ -45,7 +46,8 @@ namespace FileSharperCore.FileSources
         public override IEnumerable<FileInfo> Files {
             get
             {
-                foreach (FileInfo fi in SearchDirectory(new DirectoryInfo(m_Parameters.Directory)))
+                string directory = ReplaceUtil.Replace(m_Parameters.Directory, (FileInfo)null);
+                foreach (FileInfo fi in SearchDirectory(new DirectoryInfo(directory)))
                 {
                     yield return fi;
                 }

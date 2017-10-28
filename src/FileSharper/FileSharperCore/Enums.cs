@@ -44,7 +44,7 @@ namespace FileSharperCore
     {
         SystemDefault,
         Windows,
-        UNIX,
+        Unix,
         OldMacOS
     }
 
