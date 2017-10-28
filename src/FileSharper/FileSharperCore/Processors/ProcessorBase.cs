@@ -13,7 +13,8 @@ namespace FileSharperCore.Processors
 
         public InputFileSource InputFileSource { get; set; }
 
-        public abstract ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token);
+        public abstract ProcessingResult Process(FileInfo originalFile, string[] values,
+            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token);
 
         public virtual void ProcessAggregated(CancellationToken token)
         {

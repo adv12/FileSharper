@@ -184,7 +184,10 @@ namespace FileSharperCore
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    ProcessingResult result = processor?.Process(file, values, lastOutputs ?? new FileInfo[0], token);
+                    ProcessInput whatToProcess = (processor.InputFileSource == InputFileSource.OriginalFile ?
+                        ProcessInput.OriginalFile : ProcessInput.GeneratedFiles);
+                    ProcessingResult result = processor?.Process(file, values,
+                        lastOutputs ?? new FileInfo[0], whatToProcess, token);
                     lastOutputs = result != null ? result.OutputFiles : new FileInfo[0]; 
                 }
                 catch (OperationCanceledException ex)
@@ -220,8 +223,8 @@ namespace FileSharperCore
             }
         }
 
-        private void GetFileCaches(ICondition condition, IOutput[] outputs, FileInfo file, Dictionary<Type, IFileCache> cacheLookup,
-            IProgress<ExceptionInfo> exceptionProgress)
+        private void GetFileCaches(ICondition condition, IOutput[] outputs, FileInfo file,
+            Dictionary<Type, IFileCache> cacheLookup, IProgress<ExceptionInfo> exceptionProgress)
         {
             List<Type> cacheTypes = new List<Type>();
             cacheTypes.AddRange(condition.CacheTypes);

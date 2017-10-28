@@ -107,4 +107,10 @@ namespace FileSharperCore
         ParentInput
     }
 
+    public enum ProcessInput
+    {
+        OriginalFile,
+        GeneratedFiles
+    }
+
 }

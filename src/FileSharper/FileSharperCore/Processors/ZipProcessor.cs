@@ -46,7 +46,8 @@ namespace FileSharperCore.Processors
             }
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values, FileInfo[] generatedFiles, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
         {
             ProcessorScope scope = m_Parameters.OneZipFilePer;
             bool perInput = scope == ProcessorScope.InputFile;
@@ -57,7 +58,7 @@ namespace FileSharperCore.Processors
             {
                 m_Files.Clear();
             }
-            if (this.InputFileSource != InputFileSource.OriginalFile)
+            if (whatToProcess == ProcessInput.GeneratedFiles)
             {
                 if (perPreviousOutput)
                 {

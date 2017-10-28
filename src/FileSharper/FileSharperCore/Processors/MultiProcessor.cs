@@ -22,7 +22,8 @@ namespace FileSharperCore.Processors
 
         public List<IProcessor> Processors { get; } = new List<IProcessor>();
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token)
+        public override ProcessingResult Process(FileInfo originalFile, string[] values,
+            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
         {
             List<FileInfo> outputFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
@@ -32,7 +33,13 @@ namespace FileSharperCore.Processors
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    ProcessingResult result = processor?.Process(originalFile, values, generatedFiles ?? new FileInfo[0], token);
+                    ProcessInput what = whatToProcess;
+                    if (processor.InputFileSource == InputFileSource.OriginalFile)
+                    {
+                        what = ProcessInput.OriginalFile;
+                    }
+                    ProcessingResult result = processor?.Process(originalFile, values,
+                        generatedFiles ?? new FileInfo[0], what, token);
                     if (result != null)
                     {
                         if (result.OutputFiles != null)

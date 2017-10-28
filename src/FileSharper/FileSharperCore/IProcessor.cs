@@ -11,7 +11,7 @@ namespace FileSharperCore
     {
         InputFileSource InputFileSource { get; set; }
         HowOften ProducesFiles { get; }
-        ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token);
+        ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token);
         void ProcessAggregated(CancellationToken token);
     }
 }

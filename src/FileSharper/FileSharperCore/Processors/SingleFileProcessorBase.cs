@@ -13,11 +13,12 @@ namespace FileSharperCore.Processors
     {
         public abstract ProcessingResult Process(FileInfo file, string[] values, CancellationToken token);
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values, FileInfo[] generatedFiles, CancellationToken token)
+        public override ProcessingResult Process(FileInfo originalFile, string[] values,
+            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
         {
             List<FileInfo> resultFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
-            if (InputFileSource == InputFileSource.PreviousOutput || InputFileSource == InputFileSource.ParentInput)
+            if (whatToProcess == ProcessInput.GeneratedFiles)
             {
                 if (generatedFiles != null)
                 {
