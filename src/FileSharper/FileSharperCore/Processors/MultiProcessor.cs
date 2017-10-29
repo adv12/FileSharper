@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace FileSharperCore.Processors
@@ -24,8 +25,10 @@ namespace FileSharperCore.Processors
         public List<IProcessor> Processors { get; } = new List<IProcessor>();
 
         public override ProcessingResult Process(FileInfo originalFile, string[] values,
-            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
+            FileInfo[] generatedFiles, ProcessInput whatToProcess,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
+            StringBuilder message = new StringBuilder();
             List<FileInfo> outputFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
             
@@ -40,7 +43,7 @@ namespace FileSharperCore.Processors
                         what = ProcessInput.OriginalFile;
                     }
                     ProcessingResult result = processor?.Process(originalFile, values,
-                        generatedFiles ?? new FileInfo[0], what, token);
+                        generatedFiles ?? new FileInfo[0], what, exceptionProgress, token);
                     if (result != null)
                     {
                         if (result.OutputFiles != null)
@@ -51,6 +54,14 @@ namespace FileSharperCore.Processors
                         {
                             resultType = ProcessingResultType.Failure;
                         }
+                        if (result.Message != null)
+                        {
+                            if (message.Length > 0)
+                            {
+                                message.Append(" ");
+                            }
+                            message.Append(result.Message);
+                        }
                     }
                 }
                 catch (OperationCanceledException ex)
@@ -59,10 +70,14 @@ namespace FileSharperCore.Processors
                 }
                 catch (Exception ex)
                 {
+                    exceptionProgress.Report(new ExceptionInfo(ex, originalFile));
                 }
             }
-            
-            return new ProcessingResult(resultType, outputFiles.ToArray());
+            if (message.Length == 0)
+            {
+                message.Append("Success");
+            }
+            return new ProcessingResult(resultType, message.ToString(), outputFiles.ToArray());
         }
     }
 }

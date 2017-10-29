@@ -5,17 +5,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace FileSharperCore.Processors
 {
     public abstract class SingleFileProcessorBase : ProcessorBase
     {
-        public abstract ProcessingResult Process(FileInfo file, string[] values, CancellationToken token);
+        public abstract ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
 
         public override ProcessingResult Process(FileInfo originalFile, string[] values,
-            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
+            FileInfo[] generatedFiles, ProcessInput whatToProcess,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
+            StringBuilder message = new StringBuilder();
             List<FileInfo> resultFiles = new List<FileInfo>();
             ProcessingResultType resultType = ProcessingResultType.Success;
             if (whatToProcess == ProcessInput.GeneratedFiles)
@@ -27,14 +31,27 @@ namespace FileSharperCore.Processors
                         token.ThrowIfCancellationRequested();
                         try
                         {
-                            resultFiles.AddRange(Process(f, values, token).OutputFiles);
+                            ProcessingResult result = Process(f, values, exceptionProgress, token);
+                            if (result != null)
+                            {
+                                if (result.OutputFiles != null)
+                                {
+                                    resultFiles.AddRange(result.OutputFiles);
+                                }
+                            }
                         }
                         catch (OperationCanceledException ex)
                         {
                             throw ex;
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            exceptionProgress.Report(new ExceptionInfo(ex, f));
+                            if (message.Length > 0)
+                            {
+                                message.Append(" ");
+                            }
+                            message.Append(ex.Message);
                             resultType = ProcessingResultType.Failure;
                         }
                     }
@@ -45,7 +62,7 @@ namespace FileSharperCore.Processors
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    ProcessingResult tmp = Process(originalFile, values, token);
+                    ProcessingResult tmp = Process(originalFile, values, exceptionProgress, token);
                     if (tmp.Type == ProcessingResultType.Failure)
                     {
                         resultType = ProcessingResultType.Failure;
@@ -64,7 +81,11 @@ namespace FileSharperCore.Processors
                     resultType = ProcessingResultType.Failure;
                 }
             }
-            return new ProcessingResult(resultType, resultFiles.ToArray());
+            if (message.Length == 0)
+            {
+                message.Append("Success");
+            }
+            return new ProcessingResult(resultType, message.ToString(), resultFiles.ToArray());
         }
     }
 }

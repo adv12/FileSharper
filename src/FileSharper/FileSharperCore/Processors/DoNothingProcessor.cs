@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.IO;
 using System.Threading;
 
@@ -18,9 +19,10 @@ namespace FileSharperCore.Processors
         public override object Parameters => null;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
+            FileInfo[] generatedFiles, ProcessInput whatToProcess,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
-            return new ProcessingResult(ProcessingResultType.Success, null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
         }
     }
 }

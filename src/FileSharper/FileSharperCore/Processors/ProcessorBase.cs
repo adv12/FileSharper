@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.IO;
 using System.Threading;
 
@@ -14,9 +15,11 @@ namespace FileSharperCore.Processors
         public InputFileSource InputFileSource { get; set; }
 
         public abstract ProcessingResult Process(FileInfo originalFile, string[] values,
-            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token);
+            FileInfo[] generatedFiles, ProcessInput whatToProcess,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
 
-        public virtual void ProcessAggregated(CancellationToken token)
+        public virtual void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress,
+            CancellationToken token)
         {
 
         }

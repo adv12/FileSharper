@@ -15,15 +15,22 @@ namespace FileSharperCore
             private set;
         }
 
+        public string Message
+        {
+            get;
+            private set;
+        }
+
         public FileInfo[] OutputFiles
         {
             get;
             private set;
         }
 
-        public ProcessingResult(ProcessingResultType type, FileInfo[] outputFiles)
+        public ProcessingResult(ProcessingResultType type, string message, FileInfo[] outputFiles)
         {
             Type = type;
+            Message = message;
             OutputFiles = outputFiles;
         }
     }

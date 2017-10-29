@@ -24,14 +24,15 @@ namespace FileSharperCore.Processors
             m_OpenedFolders.Clear();
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             if (!m_OpenedFolders.Contains(file.DirectoryName))
             {
                 m_OpenedFolders.Add(file.DirectoryName);
                 System.Diagnostics.Process.Start(file.DirectoryName);
             }
-            return new ProcessingResult(ProcessingResultType.Success, null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
         }
     }
 }

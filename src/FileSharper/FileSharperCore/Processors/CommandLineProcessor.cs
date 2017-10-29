@@ -25,20 +25,20 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
-            ProcessingResultType resultType = ProcessingResultType.Failure;
             try
             {
                 string comandLine = ReplaceUtil.Replace(m_Parameters.CommandLine, file);
                 System.Diagnostics.Process.Start("cmd", "/c " + comandLine);
-                resultType = ProcessingResultType.Success;
             }
             catch (Exception ex)
             {
-                    
+                exceptionProgress.Report(new ExceptionInfo(ex, file));
+                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, null);
             }
-            return new ProcessingResult(resultType, null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
         }
     }
 }

@@ -37,7 +37,8 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             int width;
             int height;
@@ -46,11 +47,21 @@ namespace FileSharperCore.Processors
             FileInfo[] generatedFiles = new FileInfo[0];
 
             ProcessingResultType resultType = ProcessingResultType.Failure;
+            string message = "";
+            Bitmap b = null;
             try
             {
-                using (Bitmap b = new Bitmap(file.FullName))
+                b = new Bitmap(file.FullName);
+                isBitmap = true;
+            }
+            catch (Exception ex)
+            {
+                resultType = ProcessingResultType.NotApplicable;
+            }
+            if (isBitmap)
+            {
+                try
                 {
-                    isBitmap = true;
                     if (m_Parameters.ResizeBy == MediaDimension.Width)
                     {
                         width = m_Parameters.Size;
@@ -86,21 +97,26 @@ namespace FileSharperCore.Processors
                                 format = ImageFormat.Tiff;
                                 break;
                         }
-                        bout.Save(outPath, format);
+                        if (m_Parameters.Overwrite || !File.Exists(outPath))
+                        {
+                            string outDirPath = Path.GetDirectoryName(outPath);
+                            Directory.CreateDirectory(outDirPath);
+                            bout.Save(outPath, format);
+                        }
                         resultType = ProcessingResultType.Success;
                         generatedFiles = new FileInfo[] { new FileInfo(outPath) };
                     }
                 }
+                catch(Exception ex)
+                {
+                    exceptionProgress.Report(new ExceptionInfo(ex, file));
+                }
+                finally
+                {
+                    b?.Dispose();
+                }
             }
-            catch (Exception ex)
-            {
-                resultType = ProcessingResultType.Failure;
-            }
-            if (isBitmap)
-            {
-                resultType = ProcessingResultType.NotApplicable;
-            }
-            return new ProcessingResult(resultType, generatedFiles);
+            return new ProcessingResult(resultType, message, generatedFiles);
         }
     }
 }

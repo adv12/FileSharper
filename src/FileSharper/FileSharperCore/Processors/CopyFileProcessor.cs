@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
@@ -29,13 +30,22 @@ namespace FileSharperCore.Processors
 
         public override HowOften ProducesFiles => HowOften.Always;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             string newPath = ReplaceUtil.Replace(m_Parameters.NewPath, file);
-            string dirPath = Path.GetDirectoryName(newPath);
-            Directory.CreateDirectory(dirPath);
-            file.CopyTo(newPath, m_Parameters.Overwrite);
-            return new ProcessingResult(ProcessingResultType.Success, new FileInfo[] { new FileInfo(newPath) });
+            try
+            {
+                string dirPath = Path.GetDirectoryName(newPath);
+                Directory.CreateDirectory(dirPath);
+                file.CopyTo(newPath, m_Parameters.Overwrite);
+            }
+            catch (Exception ex)
+            {
+                exceptionProgress.Report(new ExceptionInfo(ex, file));
+                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
+            }
+            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(newPath) });
         }
     }
 }

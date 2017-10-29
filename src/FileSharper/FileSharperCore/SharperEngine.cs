@@ -195,8 +195,9 @@ namespace FileSharperCore
                     ProcessInput whatToProcess = (processor.InputFileSource == InputFileSource.OriginalFile ?
                         ProcessInput.OriginalFile : ProcessInput.GeneratedFiles);
                     ProcessingResult result = processor?.Process(file, values,
-                        lastOutputs ?? new FileInfo[0], whatToProcess, token);
-                    lastOutputs = result != null ? result.OutputFiles : new FileInfo[0]; 
+                        lastOutputs ?? new FileInfo[0], whatToProcess, exceptionProgress, token);
+                    FileInfo[] outputFiles = result == null ? new FileInfo[0] : result.OutputFiles;
+                    lastOutputs = outputFiles == null ? new FileInfo[0] : outputFiles;
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -218,7 +219,7 @@ namespace FileSharperCore
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    processor?.ProcessAggregated(token);
+                    processor?.ProcessAggregated(exceptionProgress, token);
                 }
                 catch (OperationCanceledException ex)
                 {

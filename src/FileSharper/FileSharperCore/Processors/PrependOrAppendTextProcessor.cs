@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -27,7 +28,8 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             string tmpFile = Path.GetTempFileName();
             using (StreamWriter writer = new StreamWriter(tmpFile))
@@ -56,7 +58,7 @@ namespace FileSharperCore.Processors
             }
             File.Copy(tmpFile, file.FullName, true);
             File.Delete(tmpFile);
-            return new ProcessingResult(ProcessingResultType.Success, null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
         }
     }
 }

@@ -47,7 +47,8 @@ namespace FileSharperCore.Processors
         }
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token)
+            FileInfo[] generatedFiles, ProcessInput whatToProcess,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             ProcessorScope scope = m_Parameters.OneZipFilePer;
             bool perInput = scope == ProcessorScope.InputFile;
@@ -82,12 +83,12 @@ namespace FileSharperCore.Processors
             {
                 outputFiles.Add(GenerateZip(file, token));
             }
-            return new ProcessingResult(ProcessingResultType.Success, outputFiles.ToArray());
+            return new ProcessingResult(ProcessingResultType.Success, "Success", outputFiles.ToArray());
         }
 
-        public override void ProcessAggregated(CancellationToken token)
+        public override void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
-            base.ProcessAggregated(token);
+            base.ProcessAggregated(exceptionProgress, token);
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)
             {
                 GenerateZip(null, token);

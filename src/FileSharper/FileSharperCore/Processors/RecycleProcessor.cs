@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.IO;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
@@ -16,11 +17,12 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => null;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
                 UICancelOption.DoNothing);
-            return null;
+            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[0]);
         }
     }
 }
