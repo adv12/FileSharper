@@ -36,14 +36,23 @@ namespace FileSharperCore
             private set;
         }
 
+        public int MaxToMatch
+        {
+            get;
+            private set;
+        }
+
         public RunInfo(IFileSource fileSource, ICondition condition,
-            IOutput[] outputs, IProcessor[] testedProcessors, IProcessor[] matchedProcessors)
+            IOutput[] outputs, IProcessor[] testedProcessors,
+            IProcessor[] matchedProcessors, int maxToMatch)
         {
             FileSource = fileSource;
             Condition = condition;
             Outputs = outputs;
             TestedProcessors = testedProcessors;
             MatchedProcessors = matchedProcessors;
+            MaxToMatch = maxToMatch == 0 ? -1 : maxToMatch;
+
         }
     }
 }

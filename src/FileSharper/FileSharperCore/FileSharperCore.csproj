@@ -141,6 +141,7 @@
     <Compile Include="Processors\CopyFileProcessor.cs" />
     <Compile Include="Processors\CsvProcessor.cs" />
     <Compile Include="Processors\DoNothingProcessor.cs" />
+    <Compile Include="Processors\ImageResizeProcessor.cs" />
     <Compile Include="Processors\MultiProcessor.cs" />
     <Compile Include="Processors\OpenContainingFolderProcessor.cs" />
     <Compile Include="Processors\OpenFileProcessor.cs" />

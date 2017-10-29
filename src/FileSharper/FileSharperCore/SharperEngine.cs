@@ -25,16 +25,19 @@ namespace FileSharperCore
 
         public IProcessor[] MatchedProcessors => RunInfo.MatchedProcessors;
 
+        public int MaxToMatch => RunInfo.MaxToMatch;
+
         public SharperEngine(IFileSource fileSource, ICondition condition, IOutput[] outputs,
-            IProcessor[] testedProcessors, IProcessor[] matchedProcessors)
+            IProcessor[] testedProcessors, IProcessor[] matchedProcessors, int maxToMatch)
         {
-            RunInfo = new RunInfo(fileSource, condition, outputs, testedProcessors, matchedProcessors);
+            RunInfo = new RunInfo(fileSource, condition, outputs, testedProcessors, matchedProcessors, maxToMatch);
         }
 
         public void Run(CancellationToken token, IProgress<FileProgressInfo> testedProgress,
             IProgress<FileProgressInfo> matchedProgress, IProgress<ExceptionInfo> exceptionProgress,
             IProgress<bool> completeProgress)
         {
+            int numMatched = 0;
             try
             {
                 Thread.MemoryBarrier();
@@ -140,6 +143,7 @@ namespace FileSharperCore
                                 {
                                     matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
                                     RunProcessors(MatchedProcessors, file, allValues, exceptionProgress, token);
+                                    numMatched++;
                                 }
                             }
                         }
@@ -155,6 +159,10 @@ namespace FileSharperCore
                     catch (Exception ex)
                     {
                         exceptionProgress?.Report(new ExceptionInfo(ex, file));
+                    }
+                    if (numMatched == MaxToMatch)
+                    {
+                        break;
                     }
                 }
                 AggregateProcessors(TestedProcessors, exceptionProgress, token);

@@ -113,4 +113,14 @@ namespace FileSharperCore
         GeneratedFiles
     }
 
+    public enum ImageSaveFormat
+    {
+        Jpeg,
+        Png,
+        Gif,
+        Tiff,
+        Exif,
+        Bitmap
+    }
+
 }

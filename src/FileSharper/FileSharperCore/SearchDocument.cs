@@ -65,19 +65,26 @@ namespace FileSharperCore
             get => m_SearchViewModel;
             set => SetField(ref m_SearchViewModel, value);
         }
-        
-        private int m_MaxResults = 200;
-        public int MaxResults
+
+        private int m_MaxToMatch = -1;
+        public int MaxToMatch
         {
-            get => m_MaxResults;
-            set => SetField(ref m_MaxResults, value);
+            get => m_MaxToMatch;
+            set => SetField(ref m_MaxToMatch, value);
+        }
+        
+        private int m_MaxResultsDisplayed = 200;
+        public int MaxResultsDisplayed
+        {
+            get => m_MaxResultsDisplayed;
+            set => SetField(ref m_MaxResultsDisplayed, value);
         }
 
-        private int m_MaxExceptions = 20;
-        public int MaxExceptions
+        private int m_MaxExceptionsDisplayed = 20;
+        public int MaxExceptionsDisplayed
         {
-            get => m_MaxExceptions;
-            set => SetField(ref m_MaxExceptions, value);
+            get => m_MaxExceptionsDisplayed;
+            set => SetField(ref m_MaxExceptionsDisplayed, value);
         }
 
         private bool m_Searching = false;
@@ -129,7 +136,8 @@ namespace FileSharperCore
         {
             return new SharperEngine(FileSourceNode.GetFileSource(),
                 ConditionNode.BuildCondition(), OutputsNode.GetOutputs(),
-                TestedProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors());
+                TestedProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors(),
+                MaxToMatch);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -180,7 +188,7 @@ namespace FileSharperCore
                 {
                     return;
                 }
-                SearchViewModel searchViewModel = new SearchViewModel(engine, Document.MaxResults, Document.MaxExceptions);
+                SearchViewModel searchViewModel = new SearchViewModel(engine, Document.MaxResultsDisplayed, Document.MaxExceptionsDisplayed);
                 Document.SearchViewModel = searchViewModel;
                 Document.Searching = true;
                 try
