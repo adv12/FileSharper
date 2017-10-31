@@ -8,7 +8,7 @@ using System.Threading;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Processors
+namespace FileSharperCore.Processors.Filesystem
 {
     public class CopyFileParameters
     {
@@ -23,6 +23,8 @@ namespace FileSharperCore.Processors
         private CopyFileParameters m_Parameters = new CopyFileParameters();
 
         public override string Name => "Copy file";
+
+        public override string Category => "Filesystem";
 
         public override string Description => "Copy file to the specified location";
 

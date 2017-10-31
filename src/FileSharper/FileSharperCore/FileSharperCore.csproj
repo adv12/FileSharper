@@ -138,18 +138,18 @@
     <Compile Include="ProcessingResult.cs" />
     <Compile Include="ProcessorsNode.cs" />
     <Compile Include="Processors\CommandLineProcessor.cs" />
-    <Compile Include="Processors\CopyFileProcessor.cs" />
+    <Compile Include="Processors\Filesystem\CopyFileProcessor.cs" />
     <Compile Include="Processors\CsvProcessor.cs" />
     <Compile Include="Processors\DoNothingProcessor.cs" />
-    <Compile Include="Processors\ImageResizeProcessor.cs" />
+    <Compile Include="Processors\Image\ImageResizeProcessor.cs" />
     <Compile Include="Processors\MultiProcessor.cs" />
-    <Compile Include="Processors\OpenContainingFolderProcessor.cs" />
-    <Compile Include="Processors\OpenFileProcessor.cs" />
-    <Compile Include="Processors\PrependOrAppendTextProcessor.cs" />
+    <Compile Include="Processors\Shell\OpenContainingFolderProcessor.cs" />
+    <Compile Include="Processors\Shell\OpenFileProcessor.cs" />
+    <Compile Include="Processors\Text\PrependOrAppendTextProcessor.cs" />
     <Compile Include="Processors\ProcessorBase.cs" />
     <Compile Include="ProcessorCatalog.cs" />
     <Compile Include="ProcessorNode.cs" />
-    <Compile Include="Processors\RecycleProcessor.cs" />
+    <Compile Include="Processors\Filesystem\RecycleProcessor.cs" />
     <Compile Include="Processors\SingleFileProcessorBase.cs" />
     <Compile Include="Processors\ZipProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -180,6 +180,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

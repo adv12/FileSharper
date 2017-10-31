@@ -65,12 +65,12 @@ full text of the license.
             <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
             <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
             <StackPanel x:Name="matchLimitsStackPanel" IsEnabled="{Binding NotSearching}" Orientation="Horizontal" Margin="4" Grid.Row="0" Grid.Column="1">
-                <CheckBox x:Name="limitMatchesCheckBox" Margin="4" VerticalAlignment="Center" IsChecked="{Binding LimitMatches}">Stop after</CheckBox>
-                <TextBox Text="{Binding MaxToMatch}" VerticalAlignment="Center"  IsEnabled="{Binding ElementName=limitMatchesCheckBox, Path=IsChecked}" Width="50" Padding="2" />
-                <Label VerticalAlignment="Center" Margin="4">matches</Label>
-                <Label VerticalAlignment="Center" Margin="4"> </Label>
                 <Label Margin="4" VerticalAlignment="Center">Display only first</Label>
                 <TextBox Text="{Binding MaxResultsDisplayed}" VerticalAlignment="Center" Width="50" Padding="2" />
+                <Label VerticalAlignment="Center" Margin="4">matches</Label>
+                <Label VerticalAlignment="Center" Margin="4"></Label>
+                <CheckBox x:Name="limitMatchesCheckBox" Margin="4" VerticalAlignment="Center" IsChecked="{Binding LimitMatches}">Stop after</CheckBox>
+                <TextBox Text="{Binding MaxToMatch}" VerticalAlignment="Center"  IsEnabled="{Binding ElementName=limitMatchesCheckBox, Path=IsChecked}" Width="50" Padding="2" />
                 <Label VerticalAlignment="Center" Margin="4">matches</Label>
             </StackPanel>
             <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">

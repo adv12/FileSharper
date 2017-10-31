@@ -6,11 +6,13 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace FileSharperCore.Processors
+namespace FileSharperCore.Processors.Shell
 {
     public class OpenFileProcessor: SingleFileProcessorBase
     {
         public override string Name => "Open file";
+
+        public override string Category => "Shell";
 
         public override string Description => "Opens the file in its default editor";
 

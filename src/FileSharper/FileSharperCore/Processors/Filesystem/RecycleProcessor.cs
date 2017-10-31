@@ -7,11 +7,13 @@ using System.IO;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 
-namespace FileSharperCore.Processors
+namespace FileSharperCore.Processors.Filesystem
 {
     public class RecycleProcessor : SingleFileProcessorBase
     {
         public override string Name => "Move to Recycle Bin";
+
+        public override string Category => "Filesystem";
 
         public override string Description => "Move the file to the Recycle Bin";
 

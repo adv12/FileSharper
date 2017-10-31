@@ -7,13 +7,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace FileSharperCore.Processors
+namespace FileSharperCore.Processors.Shell
 {
     public class OpenContainingFolderProcessor : SingleFileProcessorBase
     {
         private HashSet<string> m_OpenedFolders = new HashSet<string>();
 
         public override string Name => "Open containing folder";
+
+        public override string Category => "Shell";
 
         public override string Description => "Opens the folder containing the file";
 

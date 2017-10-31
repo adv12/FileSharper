@@ -10,7 +10,7 @@ using System.Threading;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Processors
+namespace FileSharperCore.Processors.Image
 {
 
     public class ImageResizeParameters
@@ -31,7 +31,9 @@ namespace FileSharperCore.Processors
     {
         private ImageResizeParameters m_Parameters = new ImageResizeParameters();
 
-        public override string Name => "Export resized image";
+        public override string Name => "Create resized image";
+
+        public override string Category => "Image";
 
         public override string Description => "Export a resized image";
 

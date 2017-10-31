@@ -24,6 +24,8 @@ namespace FileSharperCore.Processors
 
         public override string Name => "Prepend or append text";
 
+        public override string Category => "Text";
+
         public override string Description => "Prepend or append the specified text to the file";
 
         public override object Parameters => m_Parameters;
