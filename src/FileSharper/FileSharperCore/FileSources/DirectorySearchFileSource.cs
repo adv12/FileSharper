@@ -24,6 +24,10 @@ namespace FileSharperCore.FileSources
         public string FilePattern { get; set; } = "*";
         [PropertyOrder(4, UsageContextEnum.Both)]
         public SearchOrder SearchOrder { get; set; }
+        [PropertyOrder(5, UsageContextEnum.Both)]
+        public bool IncludeHidden { get; set; } = false;
+        [PropertyOrder(6, UsageContextEnum.Both)]
+        public bool IncludeSystem { get; set; } = false;
     }
 
     public class DirectorySearchFileSource : FileSourceBase
@@ -67,8 +71,12 @@ namespace FileSharperCore.FileSources
                     {
                         if (!fileSet.Contains(file))
                         {
-                            fileSet.Add(file);
-                            files.Add(file);
+                            if ((m_Parameters.IncludeHidden || !file.Attributes.HasFlag(FileAttributes.Hidden)) &&
+                                (m_Parameters.IncludeSystem || !file.Attributes.HasFlag(FileAttributes.System)))
+                            {
+                                fileSet.Add(file);
+                                files.Add(file);
+                            }
                         }
                     }
                 }
@@ -115,9 +123,13 @@ namespace FileSharperCore.FileSources
                 }
                 foreach (DirectoryInfo subdir in subdirs)
                 {
-                    foreach (FileInfo fi in SearchDirectory(subdir))
+                    if ((m_Parameters.IncludeHidden || !subdir.Attributes.HasFlag(FileAttributes.Hidden)) &&
+                        (m_Parameters.IncludeSystem || !subdir.Attributes.HasFlag(FileAttributes.System)))
                     {
-                        yield return fi;
+                        foreach (FileInfo fi in SearchDirectory(subdir))
+                        {
+                            yield return fi;
+                        }
                     }
                 }
             }
