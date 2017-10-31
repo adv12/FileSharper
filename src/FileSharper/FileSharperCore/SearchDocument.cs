@@ -66,11 +66,30 @@ namespace FileSharperCore
             set => SetField(ref m_SearchViewModel, value);
         }
 
-        private int m_MaxToMatch = -1;
+        private bool m_LimitMatches;
+        public bool LimitMatches
+        {
+            get => m_LimitMatches;
+            set => SetField(ref m_LimitMatches, value);
+        }
+
+        private int m_MaxToMatch = 1000;
         public int MaxToMatch
         {
             get => m_MaxToMatch;
             set => SetField(ref m_MaxToMatch, value);
+        }
+
+        private int MaxToMatchInternal
+        {
+            get
+            {
+                if (LimitMatches)
+                {
+                    return MaxToMatch;
+                }
+                return -1;
+            }
         }
         
         private int m_MaxResultsDisplayed = 200;
@@ -92,7 +111,17 @@ namespace FileSharperCore
         public bool Searching
         {
             get => m_Searching;
-            set => SetField(ref m_Searching, value);
+            set
+            {
+                SetField(ref m_Searching, value);
+                OnPropertyChanged("NotSearching");
+            }
+        }
+
+        [JsonIgnore]
+        public bool NotSearching
+        {
+            get => !Searching;
         }
 
         private bool m_Loaded;
@@ -137,7 +166,7 @@ namespace FileSharperCore
             return new SharperEngine(FileSourceNode.GetFileSource(),
                 ConditionNode.BuildCondition(), OutputsNode.GetOutputs(),
                 TestedProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors(),
-                MaxToMatch);
+                MaxToMatchInternal);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

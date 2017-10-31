@@ -31,7 +31,7 @@ namespace FileSharperCore.Conditions.Image
 
         public override string[] ColumnHeaders => new string[] { m_Parameters.Dimension.ToString() };
 
-        public override string Name => "Image Dimension";
+        public override string Name => "Image Size";
 
         public override string Category => "Image";
 
