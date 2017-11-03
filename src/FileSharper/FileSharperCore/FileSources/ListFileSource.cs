@@ -28,6 +28,11 @@ namespace FileSharperCore.FileSources
             {
                 foreach (string filename in m_Parameters.Files)
                 {
+                    if (RunInfo.StopRequested)
+                    {
+                        yield break;
+                    }
+                    RunInfo.CancellationToken.ThrowIfCancellationRequested();
                     yield return new FileInfo(filename);
                 }
             }
