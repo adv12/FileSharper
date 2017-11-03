@@ -114,7 +114,9 @@ namespace FileSharperCore
             set
             {
                 SetField(ref m_Searching, value);
-                OnPropertyChanged("NotSearching");
+                OnPropertyChanged(nameof(NotSearching));
+                OnPropertyChanged(nameof(CanRequestStop));
+                OnPropertyChanged(nameof(CanCancel));
             }
         }
 
@@ -122,6 +124,43 @@ namespace FileSharperCore
         public bool NotSearching
         {
             get => !Searching;
+        }
+
+        private bool m_StopRequested = false;
+        [JsonIgnore]
+        public bool StopRequested
+        {
+            get => m_StopRequested;
+            set
+            {
+                SetField(ref m_StopRequested, value);
+                OnPropertyChanged(nameof(CanRequestStop));
+                OnPropertyChanged(nameof(CanCancel));
+            }
+        }
+
+        [JsonIgnore]
+        public bool CanRequestStop
+        {
+            get => Searching && !StopRequested;
+        }
+
+        private bool m_Canceled = false;
+        [JsonIgnore]
+        public bool Canceled
+        {
+            get => m_Canceled;
+            set
+            {
+                SetField(ref m_Canceled, value);
+                OnPropertyChanged(nameof(CanCancel));
+            }
+        }
+
+        [JsonIgnore]
+        public bool CanCancel
+        {
+            get => Searching && StopRequested && !Canceled;
         }
 
         private bool m_Loaded;
@@ -141,6 +180,7 @@ namespace FileSharperCore
         public SearchDocument()
         {
             SearchCommand = new SearchRunner(this);
+            RequestStopCommand = new SearchStopRequester(this);
             CancelCommand = new SearchCanceller(this);
         }
 
@@ -157,7 +197,8 @@ namespace FileSharperCore
 
         [JsonIgnore]
         public ICommand SearchCommand { get; private set; }
-
+        [JsonIgnore]
+        public ICommand RequestStopCommand { get; private set; }
         [JsonIgnore]
         public ICommand CancelCommand { get; private set; }
 
@@ -217,7 +258,8 @@ namespace FileSharperCore
                 {
                     return;
                 }
-                SearchViewModel searchViewModel = new SearchViewModel(engine, Document.MaxResultsDisplayed, Document.MaxExceptionsDisplayed);
+                SearchViewModel searchViewModel = new SearchViewModel(engine,
+                    Document.MaxResultsDisplayed, Document.MaxExceptionsDisplayed);
                 Document.SearchViewModel = searchViewModel;
                 Document.Searching = true;
                 try
@@ -231,6 +273,8 @@ namespace FileSharperCore
                 finally
                 {
                     Document.Searching = false;
+                    Document.StopRequested = false;
+                    Document.Canceled = false;
                 }
             }
         }
@@ -257,6 +301,33 @@ namespace FileSharperCore
             public void Execute(object parameter)
             {
                 Document.SearchViewModel?.Cancel();
+                Document.Canceled = true;
+            }
+        }
+
+        public class SearchStopRequester : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public SearchDocument Document
+            {
+                get; set;
+            }
+
+            public SearchStopRequester(SearchDocument document)
+            {
+                Document = document;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                Document.SearchViewModel?.RequestStop();
+                Document.StopRequested = true;
             }
         }
 

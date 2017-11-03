@@ -53,6 +53,11 @@ namespace FileSharperCore.FileSources
                 string directory = ReplaceUtil.Replace(m_Parameters.Directory, (FileInfo)null);
                 foreach (FileInfo fi in SearchDirectory(new DirectoryInfo(directory)))
                 {
+                    if (RunInfo.StopRequested)
+                    {
+                        yield break;
+                    }
+                    RunInfo.CancellationToken.ThrowIfCancellationRequested();
                     yield return fi;
                 }
             }            
@@ -66,9 +71,19 @@ namespace FileSharperCore.FileSources
                 HashSet<FileInfo> fileSet = new HashSet<FileInfo>();
                 foreach (string filePattern in m_FilePatterns)
                 {
+                    if (RunInfo.StopRequested)
+                    {
+                        yield break;
+                    }
+                    RunInfo.CancellationToken.ThrowIfCancellationRequested();
                     FileInfo[] results = directoryInfo.GetFiles(filePattern);
                     foreach (FileInfo file in results)
                     {
+                        if (RunInfo.StopRequested)
+                        {
+                            yield break;
+                        }
+                        RunInfo.CancellationToken.ThrowIfCancellationRequested();
                         if (!fileSet.Contains(file))
                         {
                             if ((m_Parameters.IncludeHidden || !file.Attributes.HasFlag(FileAttributes.Hidden)) &&
@@ -98,6 +113,11 @@ namespace FileSharperCore.FileSources
             }
             foreach (FileInfo fi in files)
             {
+                if (RunInfo.StopRequested)
+                {
+                    yield break;
+                }
+                RunInfo.CancellationToken.ThrowIfCancellationRequested();
                 yield return fi;
             }
             if (m_Parameters.Recursive)
@@ -123,11 +143,21 @@ namespace FileSharperCore.FileSources
                 }
                 foreach (DirectoryInfo subdir in subdirs)
                 {
+                    if (RunInfo.StopRequested)
+                    {
+                        yield break;
+                    }
+                    RunInfo.CancellationToken.ThrowIfCancellationRequested();
                     if ((m_Parameters.IncludeHidden || !subdir.Attributes.HasFlag(FileAttributes.Hidden)) &&
                         (m_Parameters.IncludeSystem || !subdir.Attributes.HasFlag(FileAttributes.System)))
                     {
                         foreach (FileInfo fi in SearchDirectory(subdir))
                         {
+                            if (RunInfo.StopRequested)
+                            {
+                                yield break;
+                            }
+                            RunInfo.CancellationToken.ThrowIfCancellationRequested();
                             yield return fi;
                         }
                     }

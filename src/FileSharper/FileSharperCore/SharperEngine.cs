@@ -15,22 +15,44 @@ namespace FileSharperCore
 
         public RunInfo RunInfo { get; set; }
 
-        public IFileSource FileSource => RunInfo.FileSource;
+        public IFileSource FileSource { get; set; }
 
-        public ICondition Condition => RunInfo.Condition;
+        public ICondition Condition { get; set; }
 
-        public IOutput[] Outputs => RunInfo.Outputs;
+        public IOutput[] Outputs { get; set; }
 
-        public IProcessor[] TestedProcessors => RunInfo.TestedProcessors;
+        public IProcessor[] TestedProcessors { get; set; }
 
-        public IProcessor[] MatchedProcessors => RunInfo.MatchedProcessors;
+        public IProcessor[] MatchedProcessors { get; set; }
 
-        public int MaxToMatch => RunInfo.MaxToMatch;
+        public int MaxToMatch { get; set; }
+
+        public bool StopRequested
+        {
+            get
+            {
+                lock (m_Mutex)
+                {
+                    if (RunInfo == null)
+                    {
+                        return false;
+                    }
+                    return RunInfo.StopRequested;
+                }
+            }
+        }
+
+        private object m_Mutex = new object();
 
         public SharperEngine(IFileSource fileSource, ICondition condition, IOutput[] outputs,
             IProcessor[] testedProcessors, IProcessor[] matchedProcessors, int maxToMatch)
         {
-            RunInfo = new RunInfo(fileSource, condition, outputs, testedProcessors, matchedProcessors, maxToMatch);
+            FileSource = fileSource;
+            Condition = condition;
+            Outputs = outputs;
+            TestedProcessors = testedProcessors;
+            MatchedProcessors = matchedProcessors;
+            MaxToMatch = maxToMatch;
         }
 
         public void Run(CancellationToken token, IProgress<FileProgressInfo> testedProgress,
@@ -41,6 +63,12 @@ namespace FileSharperCore
             try
             {
                 Thread.MemoryBarrier();
+                lock (m_Mutex)
+                {
+                    RunInfo = new RunInfo(FileSource, Condition, Outputs, TestedProcessors,
+                        MatchedProcessors, MaxToMatch, token, testedProgress, matchedProgress,
+                        exceptionProgress, completeProgress);
+                }
                 token.ThrowIfCancellationRequested();
                 FileSource.Init(RunInfo, exceptionProgress);
                 token.ThrowIfCancellationRequested();
@@ -137,12 +165,12 @@ namespace FileSharperCore
                                 string[] allValues = values.ToArray();
 
                                 testedProgress.Report(new FileProgressInfo(file, result.Type, allValues));
-                                RunProcessors(TestedProcessors, file, allValues, exceptionProgress, token);
+                                RunProcessors(TestedProcessors, file, allValues);
 
                                 if (result.Type == MatchResultType.Yes)
                                 {
                                     matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
-                                    RunProcessors(MatchedProcessors, file, allValues, exceptionProgress, token);
+                                    RunProcessors(MatchedProcessors, file, allValues);
                                     numMatched++;
                                 }
                             }
@@ -160,13 +188,13 @@ namespace FileSharperCore
                     {
                         exceptionProgress?.Report(new ExceptionInfo(ex, file));
                     }
-                    if (numMatched == MaxToMatch)
+                    if (RunInfo.StopRequested || numMatched == MaxToMatch)
                     {
                         break;
                     }
                 }
-                AggregateProcessors(TestedProcessors, exceptionProgress, token);
-                AggregateProcessors(MatchedProcessors, exceptionProgress, token);
+                AggregateProcessors(TestedProcessors);
+                AggregateProcessors(MatchedProcessors);
             }
             catch (OperationCanceledException ex)
             {
@@ -183,19 +211,18 @@ namespace FileSharperCore
             completeProgress?.Report(false);
         }
 
-        private void RunProcessors(IProcessor[] processors, FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+        private void RunProcessors(IProcessor[] processors, FileInfo file, string[] values)
         {
             FileInfo[] lastOutputs = new FileInfo[0];
             foreach (IProcessor processor in processors)
             {
-                token.ThrowIfCancellationRequested();
+                RunInfo.CancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     ProcessInput whatToProcess = (processor.InputFileSource == InputFileSource.OriginalFile ?
                         ProcessInput.OriginalFile : ProcessInput.GeneratedFiles);
                     ProcessingResult result = processor?.Process(file, values,
-                        lastOutputs ?? new FileInfo[0], whatToProcess, exceptionProgress, token);
+                        lastOutputs ?? new FileInfo[0], whatToProcess, RunInfo.ExceptionProgress, RunInfo.CancellationToken);
                     FileInfo[] outputFiles = result == null ? new FileInfo[0] : result.OutputFiles;
                     lastOutputs = outputFiles == null ? new FileInfo[0] : outputFiles;
                 }
@@ -206,20 +233,19 @@ namespace FileSharperCore
                 catch (Exception ex)
                 {
                     lastOutputs = new FileInfo[0];
-                    exceptionProgress?.Report(new ExceptionInfo(ex, file));
+                    RunInfo.ExceptionProgress?.Report(new ExceptionInfo(ex, file));
                 }
             }
         }
 
-        private void AggregateProcessors(IProcessor[] processors, IProgress<ExceptionInfo> exceptionProgress,
-            CancellationToken token)
+        private void AggregateProcessors(IProcessor[] processors)
         {
             foreach (IProcessor processor in processors)
             {
-                token.ThrowIfCancellationRequested();
+                RunInfo.CancellationToken.ThrowIfCancellationRequested();
                 try
                 {
-                    processor?.ProcessAggregated(exceptionProgress, token);
+                    processor?.ProcessAggregated(RunInfo.ExceptionProgress, RunInfo.CancellationToken);
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -227,7 +253,7 @@ namespace FileSharperCore
                 }
                 catch (Exception ex)
                 {
-                    exceptionProgress?.Report(new ExceptionInfo(ex, null));
+                    RunInfo.ExceptionProgress?.Report(new ExceptionInfo(ex, null));
                 }
             }
         }
@@ -341,6 +367,18 @@ namespace FileSharperCore
                 catch (Exception ex)
                 {
                     exceptionProgress?.Report(new ExceptionInfo(ex));
+                }
+            }
+        }
+
+        public void RequestStop()
+        {
+            lock (m_Mutex)
+            {
+                RunInfo runInfo = RunInfo;
+                if (runInfo != null)
+                {
+                    runInfo.RequestStop();
                 }
             }
         }

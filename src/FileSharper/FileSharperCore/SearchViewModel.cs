@@ -118,6 +118,14 @@ namespace FileSharperCore
 
         public CancellationTokenSource TokenSource { get; private set; }
 
+        public bool StopRequested
+        {
+            get
+            {
+                return Engine.StopRequested;
+            }
+        }
+
         public ICommand CopyPathCommand { get; }
 
         public SearchViewModel(SharperEngine engine, int maxResults, int maxExceptions)
@@ -195,6 +203,12 @@ namespace FileSharperCore
             return Task.Run((Action)(() => {
                 Search();
             }));
+        }
+
+        public void RequestStop()
+        {
+            Engine.RequestStop();
+            OnPropertyChanged(nameof(StopRequested));
         }
 
         public void Cancel()

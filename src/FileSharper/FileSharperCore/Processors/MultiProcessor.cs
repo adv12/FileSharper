@@ -79,5 +79,24 @@ namespace FileSharperCore.Processors
             }
             return new ProcessingResult(resultType, message.ToString(), outputFiles.ToArray());
         }
+
+        public override void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+        {
+            foreach (IProcessor processor in Processors)
+            {
+                try
+                {
+                    processor?.ProcessAggregated(exceptionProgress, token);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    exceptionProgress.Report(new ExceptionInfo(ex));
+                }
+            }
+        }
     }
 }
