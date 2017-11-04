@@ -163,20 +163,7 @@ namespace FileSharperCore
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
                     OnPropertyChanged(nameof(InputFileSource));
-                    OnPropertyChanged(nameof(ProducesFiles));
                 }
-            }
-        }
-
-        public HowOften ProducesFiles
-        {
-            get
-            {
-                if (m_ProcessorInternal == null)
-                {
-                    return HowOften.Never;
-                }
-                return m_ProcessorInternal.ProducesFiles;
             }
         }
 

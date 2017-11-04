@@ -102,7 +102,7 @@ namespace FileSharperCore.Processors.Text
             }
             File.Copy(tmpFile, file.FullName, true);
             File.Delete(tmpFile);
-            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }
     }
 }

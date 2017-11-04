@@ -18,8 +18,6 @@ namespace FileSharperCore.Processors
 
         public override string Description => "";
 
-        public override HowOften ProducesFiles => HowOften.Sometimes;
-
         public override object Parameters => null;
 
         public List<IProcessor> Processors { get; } = new List<IProcessor>();

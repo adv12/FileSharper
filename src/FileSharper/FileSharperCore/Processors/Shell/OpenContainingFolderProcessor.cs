@@ -34,7 +34,7 @@ namespace FileSharperCore.Processors.Shell
                 m_OpenedFolders.Add(file.DirectoryName);
                 System.Diagnostics.Process.Start(file.DirectoryName);
             }
-            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }
     }
 }

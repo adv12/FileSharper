@@ -3,10 +3,7 @@
 // full text of the license.
 
 using System;
-using System.IO;
 using System.Text;
-using System.Threading;
-using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Processors.Text

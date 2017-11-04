@@ -93,20 +93,7 @@ namespace FileSharperCore
 
         private void NodePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            ProcessorNode node = (ProcessorNode)sender;
-            int idx = node.Index;
-            int nextIdx = idx + 1;
-            if (e.PropertyName == nameof(ProcessorNode.ProcessorTypeName))
-            {
-                if (node.ProducesFiles == HowOften.Never && nextIdx < ProcessorNodes.Count)
-                {
-                    ProcessorNode tmp = ProcessorNodes[nextIdx];
-                    if (tmp.InputFileSource == InputFileSource.PreviousOutput)
-                    {
-                        tmp.InputFileSource = InputFileSource.OriginalFile;
-                    }
-                }
-            }
+            // TODO: May not need this anymore.  For now, wait and see.
         }
 
         public IProcessor[] GetProcessors()

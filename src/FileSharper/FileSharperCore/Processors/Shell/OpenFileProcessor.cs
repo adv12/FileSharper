@@ -22,7 +22,7 @@ namespace FileSharperCore.Processors.Shell
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
             System.Diagnostics.Process.Start(file.FullName);
-            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }
     }
 }

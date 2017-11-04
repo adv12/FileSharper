@@ -30,8 +30,6 @@ namespace FileSharperCore.Processors.Filesystem
 
         public override object Parameters => m_Parameters;
 
-        public override HowOften ProducesFiles => HowOften.Always;
-
         public override ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
@@ -45,7 +43,7 @@ namespace FileSharperCore.Processors.Filesystem
             catch (Exception ex)
             {
                 exceptionProgress.Report(new ExceptionInfo(ex, file));
-                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
+                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[] { file });
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(newPath) });
         }

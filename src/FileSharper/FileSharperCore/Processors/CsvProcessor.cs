@@ -22,7 +22,7 @@ namespace FileSharperCore.Processors
         public LineEndings LineEndings { get; set; }
     }
 
-    public class CsvProcessor : SingleFileProcessorBase
+    public class CsvProcessor : ProcessorBase
     {
         private CsvParameters m_Parameters = new CsvParameters();
 
@@ -39,19 +39,7 @@ namespace FileSharperCore.Processors
             base.LocalInit(exceptionProgress);
             string filename = ReplaceUtil.Replace(m_Parameters.Filename, (FileInfo)null);
             TextWriter tw = new StreamWriter(filename);
-            string lineEnding = System.Environment.NewLine;
-            switch (m_Parameters.LineEndings)
-            {
-                case LineEndings.Windows:
-                    lineEnding = "\r\n";
-                    break;
-                case LineEndings.Unix:
-                    lineEnding = "\n";
-                    break;
-                case LineEndings.OldMacOS:
-                    lineEnding = "\r";
-                    break;
-            }
+            string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
             m_CsvWriter = new CsvWriter(tw);
             m_CsvWriter.WriteField("Filename");
             m_CsvWriter.WriteField("Path");
@@ -69,17 +57,18 @@ namespace FileSharperCore.Processors
             m_CsvWriter.NextRecord();
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        public override ProcessingResult Process(FileInfo originalFile, string[] values,
+            FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
-            m_CsvWriter.WriteField(file.Name);
-            m_CsvWriter.WriteField(file.DirectoryName);
+            m_CsvWriter.WriteField(originalFile.Name);
+            m_CsvWriter.WriteField(originalFile.DirectoryName);
             foreach (string value in values)
             {
                 m_CsvWriter.WriteField(value);
             }
             m_CsvWriter.NextRecord();
-            return new ProcessingResult(ProcessingResultType.Success, "Success", null);
+            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { originalFile });
         }
 
         public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)

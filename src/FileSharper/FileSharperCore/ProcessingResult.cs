@@ -31,7 +31,8 @@ namespace FileSharperCore
         {
             Type = type;
             Message = message;
-            OutputFiles = outputFiles;
+            OutputFiles = outputFiles ?? throw new System.ArgumentNullException(nameof(outputFiles),
+                "outputFiles must not be null");
         }
     }
 }

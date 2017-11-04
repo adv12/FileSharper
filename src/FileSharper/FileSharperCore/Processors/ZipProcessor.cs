@@ -36,8 +36,6 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override HowOften ProducesFiles => HowOften.Sometimes;
-
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)

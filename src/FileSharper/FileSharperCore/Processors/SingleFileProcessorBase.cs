@@ -34,9 +34,13 @@ namespace FileSharperCore.Processors
                             ProcessingResult result = Process(f, values, exceptionProgress, token);
                             if (result != null)
                             {
-                                if (result.OutputFiles != null)
+                                if (result.OutputFiles != null && result.OutputFiles.Length > 0)
                                 {
                                     resultFiles.AddRange(result.OutputFiles);
+                                }
+                                else
+                                {
+                                    resultFiles.Add(f);
                                 }
                             }
                         }
@@ -67,9 +71,13 @@ namespace FileSharperCore.Processors
                     {
                         resultType = ProcessingResultType.Failure;
                     }
-                    if (tmp.OutputFiles != null)
+                    if (tmp.OutputFiles != null && tmp.OutputFiles.Length > 0)
                     {
                         resultFiles.AddRange(tmp.OutputFiles);
+                    }
+                    else
+                    {
+                        resultFiles.Add(originalFile);
                     }
                 }
                 catch (OperationCanceledException ex)

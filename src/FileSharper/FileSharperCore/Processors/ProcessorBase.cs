@@ -10,7 +10,6 @@ namespace FileSharperCore.Processors
 {
     public abstract class ProcessorBase : PluggableItemBase, IProcessor
     {
-        public virtual HowOften ProducesFiles { get => HowOften.Never; }
 
         public InputFileSource InputFileSource { get; set; }
 
