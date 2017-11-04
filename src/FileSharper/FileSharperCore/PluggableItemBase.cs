@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Threading;
 
 namespace FileSharperCore
 {
@@ -20,6 +21,16 @@ namespace FileSharperCore
             {
                 m_RunInfo = value;
             }
+        }
+
+        protected CancellationToken CancellationToken
+        {
+            get => this.RunInfo.CancellationToken;
+        }
+
+        protected IProgress<ExceptionInfo> ExceptionProgress
+        {
+            get => this.RunInfo.ExceptionProgress;
         }
 
         public virtual string Category

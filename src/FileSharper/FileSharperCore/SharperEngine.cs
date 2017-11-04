@@ -63,6 +63,22 @@ namespace FileSharperCore
             try
             {
                 Thread.MemoryBarrier();
+                if (testedProgress == null)
+                {
+                    testedProgress = new Progress<FileProgressInfo>(x => { });
+                }
+                if (matchedProgress == null)
+                {
+                    matchedProgress = new Progress<FileProgressInfo>(x => { });
+                }
+                if (exceptionProgress == null)
+                {
+                    exceptionProgress = new Progress<ExceptionInfo>(x => { });
+                }
+                if (completeProgress == null)
+                {
+                    completeProgress = new Progress<bool>(x => { });
+                }
                 lock (m_Mutex)
                 {
                     RunInfo = new RunInfo(FileSource, Condition, Outputs, TestedProcessors,
