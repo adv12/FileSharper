@@ -24,6 +24,14 @@ namespace FileSharperCore.Processors
 
         public List<IProcessor> Processors { get; } = new List<IProcessor>();
 
+        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        {
+            foreach (IProcessor processor in Processors)
+            {
+                processor.Init(RunInfo, exceptionProgress);
+            }
+        }
+
         public override ProcessingResult Process(FileInfo originalFile, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
@@ -96,6 +104,14 @@ namespace FileSharperCore.Processors
                 {
                     exceptionProgress.Report(new ExceptionInfo(ex));
                 }
+            }
+        }
+
+        public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)
+        {
+            foreach (IProcessor processor in Processors)
+            {
+                processor.Cleanup(exceptionProgress);
             }
         }
     }
