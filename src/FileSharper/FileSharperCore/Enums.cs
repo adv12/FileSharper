@@ -123,4 +123,17 @@ namespace FileSharperCore
         Bitmap
     }
 
+    public enum TrimType
+    {
+        Start,
+        End,
+        Both
+    }
+
+    public enum TextCase
+    {
+        Uppercase,
+        Lowercase
+    }
+
 }

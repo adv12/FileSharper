@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using FileSharperCore.Util;
 using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -25,6 +26,8 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(5, UsageContextEnum.Both)]
         public bool CaseSensitive { get; set; }
         [PropertyOrder(6, UsageContextEnum.Both)]
+        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        [PropertyOrder(7, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; } = true;
     }
 
@@ -72,6 +75,7 @@ namespace FileSharperCore.Processors.Text
             string tmpFile = Path.GetTempFileName();
             using (StreamWriter writer = new StreamWriter(tmpFile))
             {
+                writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
                 if (m_Parameters.Multiline)
                 {
                     string text = File.ReadAllText(file.FullName);

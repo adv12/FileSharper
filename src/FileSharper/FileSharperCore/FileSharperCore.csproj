@@ -145,6 +145,9 @@
     <Compile Include="Processors\MultiProcessor.cs" />
     <Compile Include="Processors\Shell\OpenContainingFolderProcessor.cs" />
     <Compile Include="Processors\Shell\OpenFileProcessor.cs" />
+    <Compile Include="Processors\Text\ChangeCaseProcessor.cs" />
+    <Compile Include="Processors\Text\ChangeLineEndingsProcessor.cs" />
+    <Compile Include="Processors\Text\LineProcessor.cs" />
     <Compile Include="Processors\Text\PrependOrAppendTextProcessor.cs" />
     <Compile Include="Processors\ProcessorBase.cs" />
     <Compile Include="ProcessorCatalog.cs" />
@@ -152,6 +155,9 @@
     <Compile Include="Processors\Filesystem\RecycleProcessor.cs" />
     <Compile Include="Processors\SingleFileProcessorBase.cs" />
     <Compile Include="Processors\Text\ReplaceTextProcessor.cs" />
+    <Compile Include="Processors\Text\SpacesToTabsProcessor.cs" />
+    <Compile Include="Processors\Text\TabsToSpacesProcessor.cs" />
+    <Compile Include="Processors\Text\TrimWhitespaceProcessor.cs" />
     <Compile Include="Processors\ZipProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunInfo.cs" />
@@ -161,6 +167,7 @@
     <Compile Include="Util\CompareUtil.cs" />
     <Compile Include="Util\PositiveFraction.cs" />
     <Compile Include="Util\ReplaceUtil.cs" />
+    <Compile Include="Util\TextUtil.cs" />
     <Compile Include="Util\UnitUtil.cs" />
   </ItemGroup>
   <ItemGroup>

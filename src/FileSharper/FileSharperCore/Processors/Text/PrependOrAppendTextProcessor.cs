@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using FileSharperCore.Util;
 using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -18,6 +19,8 @@ namespace FileSharperCore.Processors
         [PropertyOrder(2, UsageContextEnum.Both)]
         public List<string> Text { get; set; } = new List<string>();
         [PropertyOrder(3, UsageContextEnum.Both)]
+        public LineEndings LineEndings { get; set; }
+        [PropertyOrder(4, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; } = true;
     }
 
@@ -39,6 +42,7 @@ namespace FileSharperCore.Processors
             string tmpFile = Path.GetTempFileName();
             using (StreamWriter writer = new StreamWriter(tmpFile))
             {
+                writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
                     if (m_Parameters.PrependOrAppend == PrependAppend.Prepend)
