@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Processors
@@ -16,6 +17,8 @@ namespace FileSharperCore.Processors
         public PrependAppend PrependOrAppend { get; set; }
         [PropertyOrder(2, UsageContextEnum.Both)]
         public List<string> Text { get; set; } = new List<string>();
+        [PropertyOrder(3, UsageContextEnum.Both)]
+        public bool MoveOriginalToRecycleBin { get; set; } = true;
     }
 
     public class PrependOrAppendTextProcessor : SingleFileProcessorBase
@@ -57,6 +60,11 @@ namespace FileSharperCore.Processors
                         }
                     }
                 }
+            }
+            if (m_Parameters.MoveOriginalToRecycleBin)
+            {
+                FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
+                UICancelOption.DoNothing);
             }
             File.Copy(tmpFile, file.FullName, true);
             File.Delete(tmpFile);
