@@ -12,7 +12,6 @@ namespace FileSharperCore
 {
     public class SharperEngine
     {
-
         public RunInfo RunInfo { get; set; }
 
         public IFileSource FileSource { get; set; }
@@ -62,7 +61,6 @@ namespace FileSharperCore
             int numMatched = 0;
             try
             {
-                Thread.MemoryBarrier();
                 if (testedProgress == null)
                 {
                     testedProgress = new Progress<FileProgressInfo>(x => { });
