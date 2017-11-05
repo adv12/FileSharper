@@ -3,7 +3,6 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
@@ -49,13 +48,10 @@ namespace FileSharperCore.Processors
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
                     string text = m_Parameters.Text ?? string.Empty;
-                    string[] lines = text?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                    
                     if (m_Parameters.PrependOrAppend == PrependAppend.Prepend)
                     {
-                        foreach (string line in lines)
-                        {
-                            writer.WriteLine(line);
-                        }
+                        WriteLines(writer, text);
                     }
                     while (!reader.EndOfStream)
                     {
@@ -63,10 +59,7 @@ namespace FileSharperCore.Processors
                     }
                     if (m_Parameters.PrependOrAppend == PrependAppend.Append)
                     {
-                        foreach (string line in lines)
-                        {
-                            writer.WriteLine(line);
-                        }
+                        WriteLines(writer, text);
                     }
                 }
             }
@@ -78,6 +71,24 @@ namespace FileSharperCore.Processors
             File.Copy(tmpFile, file.FullName, true);
             File.Delete(tmpFile);
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
+        }
+
+        public void WriteLines(StreamWriter writer, string text)
+        {
+            string[] lines = text?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (i > 0)
+                {
+                    writer.WriteLine();
+                }
+                writer.Write(line);
+            }
+            if (text.EndsWith(Environment.NewLine))
+            {
+                writer.WriteLine();
+            }
         }
     }
 }
