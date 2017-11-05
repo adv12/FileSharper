@@ -31,7 +31,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(6, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(7, UsageContextEnum.Both)]
-        public bool MoveOriginalToRecycleBin { get; set; } = true;
+        public bool MoveOriginalToRecycleBin { get; set; }
     }
 
     public class ReplaceTextProcessor : SingleFileProcessorBase

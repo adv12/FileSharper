@@ -136,4 +136,11 @@ namespace FileSharperCore
         Lowercase
     }
 
+    public enum StringComparisonType
+    {
+        CaseInsensitive,
+        CaseSensitive,
+        Ordinal
+    }
+
 }

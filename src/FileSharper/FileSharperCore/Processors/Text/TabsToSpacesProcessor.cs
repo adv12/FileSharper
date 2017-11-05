@@ -17,7 +17,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(4, UsageContextEnum.Both)]
-        public bool MoveOriginalToRecycleBin { get; set; } = true;
+        public bool MoveOriginalToRecycleBin { get; set; }
     }
 
     public class TabsToSpacesProcessor : LineProcessor

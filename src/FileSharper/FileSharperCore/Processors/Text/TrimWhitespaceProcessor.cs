@@ -13,7 +13,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(2, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public bool MoveOriginalToRecycleBin { get; set; } = true;
+        public bool MoveOriginalToRecycleBin { get; set; }
     }
 
     public class TrimWhitespaceProcessor : LineProcessor

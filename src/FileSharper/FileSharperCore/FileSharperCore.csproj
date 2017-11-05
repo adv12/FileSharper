@@ -156,6 +156,7 @@
     <Compile Include="Processors\Filesystem\RecycleProcessor.cs" />
     <Compile Include="Processors\SingleFileProcessorBase.cs" />
     <Compile Include="Processors\Text\ReplaceTextProcessor.cs" />
+    <Compile Include="Processors\Text\SortLinesProcessor.cs" />
     <Compile Include="Processors\Text\SpacesToTabsProcessor.cs" />
     <Compile Include="Processors\Text\TabsToSpacesProcessor.cs" />
     <Compile Include="Processors\Text\TrimWhitespaceProcessor.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Util\CompareUtil.cs" />
     <Compile Include="Util\PositiveFraction.cs" />
     <Compile Include="Util\ReplaceUtil.cs" />
+    <Compile Include="Util\ReverseComparer.cs" />
     <Compile Include="Util\TextUtil.cs" />
     <Compile Include="Util\UnitUtil.cs" />
   </ItemGroup>
