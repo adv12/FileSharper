@@ -72,13 +72,7 @@ namespace FileSharperCore.Processors.Text
                     writer.WriteLine(line);
                 }
             }
-            if (m_Parameters.MoveOriginalToRecycleBin)
-            {
-                FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
-                UICancelOption.DoNothing);
-            }
-            File.Copy(tmpFile, file.FullName, true);
-            File.Delete(tmpFile);
+            CopyAndDeleteTempFile(tmpFile, file.FullName, m_Parameters.MoveOriginalToRecycleBin);
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }
     }

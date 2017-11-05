@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using Microsoft.VisualBasic.FileIO;
 
 namespace FileSharperCore.Processors
 {
@@ -21,6 +22,17 @@ namespace FileSharperCore.Processors
             CancellationToken token)
         {
 
+        }
+
+        public void CopyAndDeleteTempFile(string tmpFile, string outFile, bool moveOriginalToRecycleBin)
+        {
+            if (moveOriginalToRecycleBin)
+            {
+                FileSystem.DeleteFile(outFile, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
+                UICancelOption.DoNothing);
+            }
+            File.Copy(tmpFile, outFile, true);
+            File.Delete(tmpFile);
         }
     }
 }

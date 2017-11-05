@@ -34,13 +34,7 @@ namespace FileSharperCore.Processors.Text
                     }
                 }
             }
-            if (MoveOriginalToRecycleBin)
-            {
-                FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
-                UICancelOption.DoNothing);
-            }
-            File.Copy(tmpFile, file.FullName, true);
-            File.Delete(tmpFile);
+            CopyAndDeleteTempFile(tmpFile, file.FullName, MoveOriginalToRecycleBin);
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }
 
