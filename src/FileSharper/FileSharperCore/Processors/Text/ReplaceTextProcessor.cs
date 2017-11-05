@@ -3,9 +3,11 @@
 // full text of the license.
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using FileSharperCore.Editors;
 using FileSharperCore.Util;
 using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -18,6 +20,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(1, UsageContextEnum.Both)]
         public string TextToMatch { get; set; }
         [PropertyOrder(2, UsageContextEnum.Both)]
+        [Editor(typeof(FileSharperMultiLineTextEditor), typeof(FileSharperMultiLineTextEditor))]
         public string ReplacementText { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
         public bool UseRegex { get; set; }
@@ -66,7 +69,7 @@ namespace FileSharperCore.Processors.Text
             else
             {
                 m_Regex = new Regex(Regex.Escape(m_Parameters.TextToMatch), regexOptions);
-                m_ReplacementText = m_Parameters.ReplacementText.Replace("$", "$$");
+                m_ReplacementText = m_Parameters.ReplacementText?.Replace("$", "$$");
             }
         }
 

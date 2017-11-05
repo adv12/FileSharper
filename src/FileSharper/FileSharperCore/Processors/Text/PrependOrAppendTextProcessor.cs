@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
+using FileSharperCore.Editors;
 using FileSharperCore.Util;
 using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -17,7 +19,8 @@ namespace FileSharperCore.Processors
         [PropertyOrder(1, UsageContextEnum.Both)]
         public PrependAppend PrependOrAppend { get; set; }
         [PropertyOrder(2, UsageContextEnum.Both)]
-        public List<string> Text { get; set; } = new List<string>();
+        [Editor(typeof(FileSharperMultiLineTextEditor), typeof(FileSharperMultiLineTextEditor))]
+        public string Text { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; }
         [PropertyOrder(4, UsageContextEnum.Both)]
@@ -45,9 +48,11 @@ namespace FileSharperCore.Processors
                 writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
+                    string text = m_Parameters.Text ?? string.Empty;
+                    string[] lines = text?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
                     if (m_Parameters.PrependOrAppend == PrependAppend.Prepend)
                     {
-                        foreach (string line in m_Parameters.Text)
+                        foreach (string line in lines)
                         {
                             writer.WriteLine(line);
                         }
@@ -58,7 +63,7 @@ namespace FileSharperCore.Processors
                     }
                     if (m_Parameters.PrependOrAppend == PrependAppend.Append)
                     {
-                        foreach (string line in m_Parameters.Text)
+                        foreach (string line in lines)
                         {
                             writer.WriteLine(line);
                         }

@@ -95,6 +95,7 @@
     <Compile Include="Conditions\Image\ImageDimensionCondition.cs" />
     <Compile Include="Conditions\MatchEverythingCondition.cs" />
     <Compile Include="Editors\DateTimePickerEditor.cs" />
+    <Compile Include="Editors\FileSharperMultiLineTextEditor.cs" />
     <Compile Include="Editors\FolderChooserEditor.xaml.cs">
       <DependentUpon>FolderChooserEditor.xaml</DependentUpon>
     </Compile>
