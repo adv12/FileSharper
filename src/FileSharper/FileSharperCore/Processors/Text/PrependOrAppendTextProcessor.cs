@@ -8,7 +8,6 @@ using System.IO;
 using System.Threading;
 using FileSharperCore.Editors;
 using FileSharperCore.Util;
-using Microsoft.VisualBasic.FileIO;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Processors

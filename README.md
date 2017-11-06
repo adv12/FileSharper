@@ -19,4 +19,6 @@ If you download FileSharper and start adding classes that would benefit others, 
 
 Caveat Emptor: FileSharper is currently roughly alpha quality.  And there are no unit tests.  So you may find it very broken in spots.
 
+Caveat #2: FileSharper is pretty stupid about encodings, so don't be surprised if it mangles your non-ASCII/UTF-8 files.
+
 Oh.  Also.  There is *kind of* support for plugins, but I don't recommend using it.  There's a lot I don't know about code signing, security, and all that.

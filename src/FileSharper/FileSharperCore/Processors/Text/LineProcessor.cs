@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
-using Microsoft.VisualBasic.FileIO;
 
 namespace FileSharperCore.Processors.Text
 {
