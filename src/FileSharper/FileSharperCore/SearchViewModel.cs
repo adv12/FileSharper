@@ -5,8 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -128,6 +130,12 @@ namespace FileSharperCore
 
         public ICommand CopyPathCommand { get; }
 
+        public ICommand CopyFileCommand { get; }
+
+        public ICommand OpenFileCommand { get; }
+
+        public ICommand OpenContainingFolderCommand { get; }
+
         public SearchViewModel(SharperEngine engine, int maxResults, int maxExceptions)
         {
             Engine = engine;
@@ -136,6 +144,9 @@ namespace FileSharperCore
             ExceptionCount = 0;
             TokenSource = new CancellationTokenSource();
             CopyPathCommand = new PathCopier(this);
+            CopyFileCommand = new FileCopier(this);
+            OpenFileCommand = new FileOpener(this);
+            OpenContainingFolderCommand = new ContainingFolderOpener(this);
             foreach (string columnHeader in ColumnHeaders)
             {
                 DataColumn column = new DataColumn(columnHeader);
@@ -250,6 +261,118 @@ namespace FileSharperCore
                         first = false;
                     }
                     System.Windows.Clipboard.SetText(sb.ToString());
+                }
+            }
+        }
+
+        public class FileOpener : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public SearchViewModel ViewModel { get; private set; }
+
+            public FileOpener(SearchViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;// parameter != null;
+            }
+
+            public void Execute(object parameter)
+            {
+                System.Collections.IList rowViews = (System.Collections.IList)parameter;
+                if (rowViews != null)
+                {
+                    foreach (DataRowView rowView in rowViews)
+                    {
+                        DataRow row = rowView.Row;
+                        try
+                        {
+                            Process.Start(Path.Combine((string)row[1], (string)row[0]));
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public class ContainingFolderOpener : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public SearchViewModel ViewModel { get; private set; }
+
+            public ContainingFolderOpener(SearchViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;// parameter != null;
+            }
+
+            public void Execute(object parameter)
+            {
+                System.Collections.IList rowViews = (System.Collections.IList)parameter;
+                if (rowViews != null)
+                {
+                    HashSet<string> openedFolders = new HashSet<string>();
+                    foreach (DataRowView rowView in rowViews)
+                    {
+                        DataRow row = rowView.Row;
+                        try
+                        {
+                            string dirName = (string)row[1];
+                            if (!openedFolders.Contains(dirName))
+                            {
+                                openedFolders.Add(dirName);
+                                Process.Start(dirName);
+                            }
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public class FileCopier : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public SearchViewModel ViewModel { get; private set; }
+
+            public FileCopier(SearchViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;// parameter != null;
+            }
+
+            public void Execute(object parameter)
+            {
+                System.Collections.IList rowViews = (System.Collections.IList)parameter;
+                if (rowViews != null)
+                {
+                    StringCollection paths = new StringCollection();
+                    foreach (DataRowView rowView in rowViews)
+                    {
+                        DataRow row = rowView.Row;
+                        paths.Add(Path.Combine((string)row[1], (string)row[0]));
+                    }
+                    System.Windows.Clipboard.SetFileDropList(paths);
                 }
             }
         }
