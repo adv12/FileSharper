@@ -11,10 +11,6 @@ namespace FileSharperCore.Conditions
 {
     public abstract class ConditionBase : PluggableItemWithColumnsAndCacheTypesBase, ICondition
     {
-        public override int ColumnCount => 0;
-
-        public override string[] ColumnHeaders => new string[0];
-
         public abstract MatchResult Matches(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token);
     }
 }

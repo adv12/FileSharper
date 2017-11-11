@@ -94,6 +94,7 @@
     <Compile Include="Conditions\Image\ImageAspectRatioCondition.cs" />
     <Compile Include="Conditions\Image\ImageDimensionCondition.cs" />
     <Compile Include="Conditions\MatchEverythingCondition.cs" />
+    <Compile Include="Conditions\Text\LineCountCondition.cs" />
     <Compile Include="Conditions\Text\WordCountCondition.cs" />
     <Compile Include="Editors\DateTimePickerEditor.cs" />
     <Compile Include="Editors\FileSharperMultiLineTextEditor.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Outputs\NothingOutput.cs" />
     <Compile Include="Outputs\OutputBase.cs" />
     <Compile Include="Outputs\Filesystem\ReadOnlyOutput.cs" />
+    <Compile Include="Outputs\Text\LineCountOutput.cs" />
     <Compile Include="Outputs\Text\WordCountOutput.cs" />
     <Compile Include="PluggableItemBase.cs" />
     <Compile Include="PluggableItemWithColumnsAndCacheTypesBase.cs" />

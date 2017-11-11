@@ -19,6 +19,10 @@ namespace FileSharperCore.Conditions
 
         public override object Parameters => null;
 
+        public override int ColumnCount => 0;
+
+        public override string[] ColumnHeaders => new string[0];
+
         public override MatchResult Matches(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)
         {
             return new MatchResult(MatchResultType.Yes, new string[0]);

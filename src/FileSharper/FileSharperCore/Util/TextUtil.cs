@@ -42,5 +42,16 @@ namespace FileSharperCore.Util
             }
             return wordCount;
         }
+
+        public static int GetLineCount(StreamReader reader)
+        {
+            int lineCount = 0;
+            while (!reader.EndOfStream)
+            {
+                reader.ReadLine();
+                lineCount++;
+            }
+            return lineCount;
+        }
     }
 }
