@@ -3,6 +3,8 @@
 // full text of the license.
 
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FileSharperCore.Util
 {
@@ -21,6 +23,24 @@ namespace FileSharperCore.Util
                 default:
                     return Environment.NewLine;
             }
+        }
+
+        public static int GetWordCount(StreamReader reader)
+        {
+            int wordCount = 0;
+            while (!reader.EndOfStream)
+            {
+                string line = reader.ReadLine();
+                string[] words = Regex.Split(line, @"\s+");
+                for (int i = 0; i < words.Length; i++)
+                {
+                    if (words[i] != null && words[i].Length > 0)
+                    {
+                        wordCount++;
+                    }
+                }
+            }
+            return wordCount;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using FileSharperCore.Conditions.Text;
 
 namespace FileSharperCore.Conditions
 {

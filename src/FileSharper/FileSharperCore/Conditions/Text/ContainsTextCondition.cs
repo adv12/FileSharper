@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Conditions
+namespace FileSharperCore.Conditions.Text
 {
 
     public class ContainsTextParameters
@@ -29,6 +29,8 @@ namespace FileSharperCore.Conditions
         private string m_LowerCaseText;
 
         public override string Name => "Contains Text";
+
+        public override string Category => "Text";
 
         public override string Description => "Whether the file contains the specififed text";
 

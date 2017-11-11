@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
@@ -45,31 +46,26 @@ namespace FileSharperCore.Processors
             TextWriter tw = new StreamWriter(filename);
             string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
             m_CsvWriter = new CsvWriter(tw);
+            List<string> headers = new List<string>();
             switch (m_Parameters.PathFormat)
             {
                 case PathFormat.FullPath:
-                    m_CsvWriter.WriteField("Filename");
+                    headers.Add("Filename");
                     break;
                 case PathFormat.NameThenDirectory:
-                    m_CsvWriter.WriteField("Filename");
-                    m_CsvWriter.WriteField("Path");
+                    headers.Add("Filename");
+                    headers.Add("Path");
                     break;
                 case PathFormat.DirectoryThenName:
-                    m_CsvWriter.WriteField("Path");
-                    m_CsvWriter.WriteField("Filename");
+                    headers.Add("Path");
+                    headers.Add("Filename");
                     break;
             }
-            m_CsvWriter.WriteField("Matches");
-            foreach (string header in this.RunInfo.Condition.ColumnHeaders)
+            headers.Add("Matches");
+            string[] columnHeaders = HeaderUtil.GetUniqueHeaders(headers, RunInfo.Condition, RunInfo.Outputs);
+            foreach (string header in columnHeaders)
             {
                 m_CsvWriter.WriteField(header);
-            }
-            foreach (IOutput output in this.RunInfo.Outputs)
-            {
-                foreach (string header in output.ColumnHeaders)
-                {
-                    m_CsvWriter.WriteField(header);
-                }
             }
             m_CsvWriter.NextRecord();
         }

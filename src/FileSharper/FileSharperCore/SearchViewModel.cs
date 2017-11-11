@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FileSharperCore.Util;
 
 namespace FileSharperCore
 {
@@ -103,18 +104,7 @@ namespace FileSharperCore
                 List<string> headers = new List<string>();
                 headers.Add("Filename");
                 headers.Add("Path");
-                if (Engine.Condition != null)
-                {
-                    headers.AddRange(Engine.Condition.ColumnHeaders);
-                }
-                if (Engine.Outputs != null)
-                {
-                    foreach (IOutput output in Engine.Outputs)
-                    {
-                        headers.AddRange(output.ColumnHeaders);
-                    }
-                }
-                return headers.ToArray();
+                return HeaderUtil.GetUniqueHeaders(headers, Engine.Condition, Engine.Outputs);
             }
         }
 

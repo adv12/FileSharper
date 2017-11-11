@@ -86,7 +86,7 @@
     <Compile Include="Conditions\AnyCondition.cs" />
     <Compile Include="Conditions\CompoundCondition.cs" />
     <Compile Include="Conditions\ConditionBase.cs" />
-    <Compile Include="Conditions\ContainsTextCondition.cs" />
+    <Compile Include="Conditions\Text\ContainsTextCondition.cs" />
     <Compile Include="Conditions\FilePathContainsTextCondition.cs" />
     <Compile Include="Conditions\Filesystem\FileDateCondition.cs" />
     <Compile Include="Conditions\Filesystem\FileLengthCondition.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Conditions\Image\ImageAspectRatioCondition.cs" />
     <Compile Include="Conditions\Image\ImageDimensionCondition.cs" />
     <Compile Include="Conditions\MatchEverythingCondition.cs" />
+    <Compile Include="Conditions\Text\WordCountCondition.cs" />
     <Compile Include="Editors\DateTimePickerEditor.cs" />
     <Compile Include="Editors\FileSharperMultiLineTextEditor.cs" />
     <Compile Include="Editors\FolderChooserEditor.xaml.cs">
@@ -134,6 +135,7 @@
     <Compile Include="Outputs\NothingOutput.cs" />
     <Compile Include="Outputs\OutputBase.cs" />
     <Compile Include="Outputs\Filesystem\ReadOnlyOutput.cs" />
+    <Compile Include="Outputs\Text\WordCountOutput.cs" />
     <Compile Include="PluggableItemBase.cs" />
     <Compile Include="PluggableItemWithColumnsAndCacheTypesBase.cs" />
     <Compile Include="PluggableItemWithColumnsBase.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="SearchViewModel.cs" />
     <Compile Include="SharperEngine.cs" />
     <Compile Include="Util\CompareUtil.cs" />
+    <Compile Include="Util\HeaderUtil.cs" />
     <Compile Include="Util\PositiveFraction.cs" />
     <Compile Include="Util\ReplaceUtil.cs" />
     <Compile Include="Util\ReverseComparer.cs" />
