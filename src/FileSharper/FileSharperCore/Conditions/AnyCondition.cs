@@ -33,6 +33,7 @@ namespace FileSharperCore.Conditions
                 if (result.Type == MatchResultType.Yes)
                 {
                     type = MatchResultType.Yes;
+                    // DO NOT short-circuit.  We need all conditions to be evaluated for their ouptut values.
                 }
             }
             return new MatchResult(type, values.ToArray());
