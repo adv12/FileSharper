@@ -64,7 +64,8 @@ namespace FileSharperCore
                     }
                 }
             }
-            outputs = outputs.OrderBy(o => o.Category).ThenBy(o => o.Name).ToList();
+            outputs = outputs.OrderBy(o => o.Category, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(o => o.Name, StringComparer.OrdinalIgnoreCase).ToList();
             outputs.Insert(0, new NothingOutput());
             m_Outputs = outputs.ToArray();
         }

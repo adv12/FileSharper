@@ -44,7 +44,8 @@ namespace FileSharperCore.Processors
             }
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        public override ProcessingResult Process(FileInfo file,
+            MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {

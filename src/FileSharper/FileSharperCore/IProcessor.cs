@@ -11,7 +11,7 @@ namespace FileSharperCore
     public interface IProcessor: IPluggableItem
     {
         InputFileSource InputFileSource { get; set; }
-        ProcessingResult Process(FileInfo originalFile, string[] values,
+        ProcessingResult Process(FileInfo originalFile, MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
         void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);

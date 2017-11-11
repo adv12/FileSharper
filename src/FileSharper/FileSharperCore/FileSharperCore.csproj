@@ -110,6 +110,7 @@
     <Compile Include="FileCaches\BitmapFileCache.cs" />
     <Compile Include="FileProgressInfo.cs" />
     <Compile Include="FileSources\DirectorySearchFileSource.cs" />
+    <Compile Include="FileSources\FileFileSource.cs" />
     <Compile Include="FileSources\FileSourceBase.cs" />
     <Compile Include="FileSourceCatalog.cs" />
     <Compile Include="FileSourceNode.cs" />

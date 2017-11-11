@@ -63,7 +63,8 @@ namespace FileSharperCore
                     }
                 }
             }
-            processors = processors.OrderBy(p => p.Category).ThenBy(p => p.Name).ToList();
+            processors = processors.OrderBy(p => p.Category, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
             processors.Insert(0, new DoNothingProcessor());
             m_Processors = processors.ToArray();
         }

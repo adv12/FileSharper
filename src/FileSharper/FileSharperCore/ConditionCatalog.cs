@@ -60,7 +60,8 @@ namespace FileSharperCore
                     }
                 }
             }
-            conditions = conditions.OrderBy(c => c.Category).ThenBy(c => c.Name).ToList();
+            conditions = conditions.OrderBy(c => c.Category, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(c => c.Name, StringComparer.OrdinalIgnoreCase).ToList();
             conditions.Insert(0, new MatchEverythingCondition());
             conditions.Insert(1, new AllCondition());
             conditions.Insert(2, new AnyCondition());

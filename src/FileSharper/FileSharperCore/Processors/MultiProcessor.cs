@@ -14,7 +14,7 @@ namespace FileSharperCore.Processors
     {
         public override string Name => "Collect output files";
 
-        public override string Category => " Compound";
+        public override string Category => "\u0002Compound";
 
         public override string Description => "";
 
@@ -30,7 +30,8 @@ namespace FileSharperCore.Processors
             }
         }
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values,
+        public override ProcessingResult Process(FileInfo originalFile,
+            MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
@@ -48,7 +49,7 @@ namespace FileSharperCore.Processors
                     {
                         what = ProcessInput.OriginalFile;
                     }
-                    ProcessingResult result = processor?.Process(originalFile, values,
+                    ProcessingResult result = processor?.Process(originalFile, matchResultType, values,
                         generatedFiles ?? new FileInfo[0], what, exceptionProgress, token);
                     if (result != null)
                     {

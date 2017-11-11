@@ -14,7 +14,8 @@ namespace FileSharperCore.Processors
 
         public InputFileSource InputFileSource { get; set; }
 
-        public abstract ProcessingResult Process(FileInfo originalFile, string[] values,
+        public abstract ProcessingResult Process(FileInfo originalFile,
+            MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
 

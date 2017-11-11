@@ -19,6 +19,8 @@ namespace FileSharperCore.Processors
         [Editor(typeof(SaveFileEditor), typeof(SaveFileEditor))]
         public string Filename { get; set; }
         [PropertyOrder(2, UsageContextEnum.Both)]
+        public PathFormat PathFormat { get; set; }
+        [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; }
     }
 
@@ -29,6 +31,8 @@ namespace FileSharperCore.Processors
         private CsvWriter m_CsvWriter;
 
         public override string Name => "Write to CSV";
+
+        public override string Category => "\u0002\u0002Report";
 
         public override string Description => "Writes the results to the specified CSV file";
 
@@ -41,8 +45,21 @@ namespace FileSharperCore.Processors
             TextWriter tw = new StreamWriter(filename);
             string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
             m_CsvWriter = new CsvWriter(tw);
-            m_CsvWriter.WriteField("Filename");
-            m_CsvWriter.WriteField("Path");
+            switch (m_Parameters.PathFormat)
+            {
+                case PathFormat.FullPath:
+                    m_CsvWriter.WriteField("Filename");
+                    break;
+                case PathFormat.NameThenDirectory:
+                    m_CsvWriter.WriteField("Filename");
+                    m_CsvWriter.WriteField("Path");
+                    break;
+                case PathFormat.DirectoryThenName:
+                    m_CsvWriter.WriteField("Path");
+                    m_CsvWriter.WriteField("Filename");
+                    break;
+            }
+            m_CsvWriter.WriteField("Matches");
             foreach (string header in this.RunInfo.Condition.ColumnHeaders)
             {
                 m_CsvWriter.WriteField(header);
@@ -57,12 +74,26 @@ namespace FileSharperCore.Processors
             m_CsvWriter.NextRecord();
         }
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values,
+        public override ProcessingResult Process(FileInfo originalFile,
+            MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
-            m_CsvWriter.WriteField(originalFile.Name);
-            m_CsvWriter.WriteField(originalFile.DirectoryName);
+            switch (m_Parameters.PathFormat)
+            {
+                case PathFormat.FullPath:
+                    m_CsvWriter.WriteField(originalFile.FullName);
+                    break;
+                case PathFormat.NameThenDirectory:
+                    m_CsvWriter.WriteField(originalFile.Name);
+                    m_CsvWriter.WriteField(originalFile.DirectoryName);
+                    break;
+                case PathFormat.DirectoryThenName:
+                    m_CsvWriter.WriteField(originalFile.DirectoryName);
+                    m_CsvWriter.WriteField(originalFile.Name);
+                    break;
+            }
+            m_CsvWriter.WriteField(matchResultType.ToString());
             foreach (string value in values)
             {
                 m_CsvWriter.WriteField(value);

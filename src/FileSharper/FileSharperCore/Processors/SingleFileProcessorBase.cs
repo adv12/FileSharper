@@ -15,7 +15,8 @@ namespace FileSharperCore.Processors
         public abstract ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
 
-        public override ProcessingResult Process(FileInfo originalFile, string[] values,
+        public override ProcessingResult Process(FileInfo originalFile,
+            MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {

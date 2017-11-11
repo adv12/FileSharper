@@ -62,6 +62,8 @@ namespace FileSharperCore
                     }
                 }
             }
+            fileSources = fileSources.OrderBy(fs => fs.Category, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(fs => fs.Name, StringComparer.OrdinalIgnoreCase).ToList();
             m_FileSources = fileSources.ToArray();
         }
 

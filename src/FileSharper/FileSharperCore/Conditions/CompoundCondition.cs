@@ -25,7 +25,7 @@ namespace FileSharperCore.Conditions
             }
         }
 
-        public override string Category => " Compound";
+        public override string Category => "\u0002Compound";
 
         public override string[] ColumnHeaders
         {

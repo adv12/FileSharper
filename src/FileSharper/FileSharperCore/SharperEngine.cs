@@ -128,6 +128,8 @@ namespace FileSharperCore
 
                         MatchResult result = null;
 
+                        MatchResultType matchResultType = MatchResultType.NotApplicable;
+
                         if (!file.Exists)
                         {
                             continue;
@@ -142,6 +144,7 @@ namespace FileSharperCore
                                 {
                                     values.AddRange(result.Values);
                                 }
+                                matchResultType = result == null ? MatchResultType.NotApplicable : result.Type;
                             }
                             catch (OperationCanceledException ex)
                             {
@@ -179,12 +182,12 @@ namespace FileSharperCore
                                 string[] allValues = values.ToArray();
 
                                 testedProgress.Report(new FileProgressInfo(file, result.Type, allValues));
-                                RunProcessors(TestedProcessors, file, allValues);
+                                RunProcessors(TestedProcessors, file, matchResultType, allValues);
 
                                 if (result.Type == MatchResultType.Yes)
                                 {
                                     matchedProgress?.Report(new FileProgressInfo(file, result.Type, allValues));
-                                    RunProcessors(MatchedProcessors, file, allValues);
+                                    RunProcessors(MatchedProcessors, file, matchResultType, allValues);
                                     numMatched++;
                                 }
                             }
@@ -225,7 +228,8 @@ namespace FileSharperCore
             completeProgress?.Report(false);
         }
 
-        private void RunProcessors(IProcessor[] processors, FileInfo file, string[] values)
+        private void RunProcessors(IProcessor[] processors, FileInfo file,
+            MatchResultType matchResultType, string[] values)
         {
             FileInfo[] lastOutputs = new FileInfo[0];
             foreach (IProcessor processor in processors)
@@ -235,7 +239,7 @@ namespace FileSharperCore
                 {
                     ProcessInput whatToProcess = (processor.InputFileSource == InputFileSource.OriginalFile ?
                         ProcessInput.OriginalFile : ProcessInput.GeneratedFiles);
-                    ProcessingResult result = processor?.Process(file, values,
+                    ProcessingResult result = processor?.Process(file, matchResultType, values,
                         lastOutputs ?? new FileInfo[0], whatToProcess, RunInfo.ExceptionProgress, RunInfo.CancellationToken);
                     FileInfo[] outputFiles = result == null ? new FileInfo[0] : result.OutputFiles;
                     lastOutputs = outputFiles == null ? new FileInfo[0] : outputFiles;

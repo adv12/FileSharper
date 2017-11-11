@@ -143,4 +143,11 @@ namespace FileSharperCore
         Ordinal
     }
 
+    public enum PathFormat
+    {
+        FullPath,
+        NameThenDirectory,
+        DirectoryThenName
+    }
+
 }
