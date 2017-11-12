@@ -2,12 +2,9 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.FileSources
@@ -33,7 +30,9 @@ namespace FileSharperCore.FileSources
                         yield break;
                     }
                     RunInfo.CancellationToken.ThrowIfCancellationRequested();
-                    yield return new FileInfo(filename);
+                    string name = filename;
+                    name = ReplaceUtil.Replace(name, (FileInfo)null);
+                    yield return new FileInfo(name);
                 }
             }
         }

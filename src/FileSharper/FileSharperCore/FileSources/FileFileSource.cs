@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using FileSharperCore.Editors;
+using FileSharperCore.Util;
 
 namespace FileSharperCore.FileSources
 {
@@ -30,7 +31,8 @@ namespace FileSharperCore.FileSources
         public override IEnumerable<FileInfo> Files
         {
             get {
-                using (StreamReader reader = new StreamReader(m_Parameters.File))
+                string file = ReplaceUtil.Replace(m_Parameters.File, (FileInfo)null);
+                using (StreamReader reader = new StreamReader(file))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -39,8 +41,9 @@ namespace FileSharperCore.FileSources
                             yield break;
                         }
                         RunInfo.CancellationToken.ThrowIfCancellationRequested();
-                        string line = reader.ReadLine();
-                        yield return new FileInfo(line.Trim());
+                        string line = reader.ReadLine().Trim();
+                        line = ReplaceUtil.Replace(line, (FileInfo)null);
+                        yield return new FileInfo(line);
                     }
                 }
             }
