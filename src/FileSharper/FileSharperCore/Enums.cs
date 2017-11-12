@@ -48,6 +48,15 @@ namespace FileSharperCore
         OldMacOS
     }
 
+    public enum DetectedLineEndings
+    {
+        NotApplicable,
+        Windows,
+        Unix,
+        OldMacOS,
+        Mixed
+    }
+
     public enum SizeUnits
     {
         Bytes,

@@ -34,7 +34,7 @@ namespace FileSharperCore.Conditions.Text
             {
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
-                    lineCount = TextUtil.GetLineCount(reader);
+                    lineCount = TextUtil.GetLineCount(reader, token);
                 }
                 resultType = CompareUtil.Compare(lineCount, m_Parameters.ComparisonType, m_Parameters.Count);
             }

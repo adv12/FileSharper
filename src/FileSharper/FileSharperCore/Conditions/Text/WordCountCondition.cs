@@ -44,7 +44,7 @@ namespace FileSharperCore.Conditions.Text
             {
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
-                    wordCount = TextUtil.GetWordCount(reader);
+                    wordCount = TextUtil.GetWordCount(reader, token);
                 }
                 resultType = CompareUtil.Compare(wordCount, m_Parameters.ComparisonType, m_Parameters.Count);
             }

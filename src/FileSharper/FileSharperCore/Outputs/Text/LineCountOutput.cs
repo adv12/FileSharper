@@ -32,7 +32,7 @@ namespace FileSharperCore.Outputs.Text
             {
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
-                    lineCount = TextUtil.GetLineCount(reader);
+                    lineCount = TextUtil.GetLineCount(reader, token);
                 }
                 value = lineCount.ToString();
             }

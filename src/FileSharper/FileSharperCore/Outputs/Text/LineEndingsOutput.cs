@@ -10,35 +10,35 @@ using FileSharperCore.Util;
 
 namespace FileSharperCore.Outputs.Text
 {
-    public class WordCountOutput : OutputBase
+    public class LineEndingsOutput : OutputBase
     {
         public override int ColumnCount => 1;
 
-        public override string[] ColumnHeaders => new string[] { "Word Count" };
+        public override string[] ColumnHeaders => new string[] { "Line Endings" };
 
-        public override string Name => "Word Count";
+        public override string Name => "Line Endings";
 
         public override string Category => "Text";
 
-        public override string Description => "The number of words in the text file";
+        public override string Description => "The type of line endings used in the text file";
 
         public override object Parameters => null;
 
         public override string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)
         {
-            int wordCount = 0;
+            DetectedLineEndings lineEndings = DetectedLineEndings.NotApplicable;
             string value = "N/A";
             try
             {
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
-                    wordCount = TextUtil.GetWordCount(reader, token);
+                    lineEndings = TextUtil.GetLineEndings(reader, token);
                 }
-                value = wordCount.ToString();
+                value = lineEndings.ToString();
             }
             catch (Exception ex)
             {
-
+                
             }
             return new string[] { value };
         }
