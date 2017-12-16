@@ -13,6 +13,10 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(2, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(3, UsageContextEnum.Both)]
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        [PropertyOrder(4, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(5, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -29,6 +33,10 @@ namespace FileSharperCore.Processors.Text
         public override object Parameters => m_Parameters;
 
         protected override LineEndings LineEndings => m_Parameters.LineEndings;
+
+        protected override string FileName => m_Parameters.FileName;
+
+        protected override bool OverwriteExistingFile => m_Parameters.OverwriteExistingFile;
 
         protected override bool MoveOriginalToRecycleBin => m_Parameters.MoveOriginalToRecycleBin;
 

@@ -22,6 +22,10 @@ namespace FileSharperCore.Processors
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; }
         [PropertyOrder(4, UsageContextEnum.Both)]
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        [PropertyOrder(5, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(6, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -52,9 +56,28 @@ namespace FileSharperCore.Processors
                     {
                         WriteLines(writer, text);
                     }
+                    bool writtenAnyFromFile = false;
                     while (!reader.EndOfStream)
                     {
-                        writer.WriteLine(reader.ReadLine());
+                        if (writtenAnyFromFile)
+                        {
+                            writer.WriteLine();
+                        }
+                        writer.Write(reader.ReadLine());
+                        writtenAnyFromFile = true;
+                    }
+                    // Add a trailing line ending if the original file ended in one
+                    using (FileStream s = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                    {
+                        if (s.CanSeek && s.Length > 0)
+                        {
+                            s.Seek(-1, SeekOrigin.End);
+                            int b = s.ReadByte();
+                            if (b == 10 || b == 13)
+                            {
+                                writer.WriteLine();
+                            }
+                        }
                     }
                     if (m_Parameters.PrependOrAppend == PrependAppend.Append)
                     {
@@ -62,8 +85,8 @@ namespace FileSharperCore.Processors
                     }
                 }
             }
-            CopyAndDeleteTempFile(tmpFile, file.FullName, m_Parameters.MoveOriginalToRecycleBin);
-            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
+            return GetProcessingResultFromCopyAndDeleteTempFile(file, m_Parameters.FileName, tmpFile,
+                m_Parameters.OverwriteExistingFile, m_Parameters.MoveOriginalToRecycleBin);
         }
 
         public void WriteLines(StreamWriter writer, string text)

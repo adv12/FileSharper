@@ -20,6 +20,10 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(4, UsageContextEnum.Both)]
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        [PropertyOrder(5, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(6, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -71,8 +75,8 @@ namespace FileSharperCore.Processors.Text
                     writer.WriteLine(line);
                 }
             }
-            CopyAndDeleteTempFile(tmpFile, file.FullName, m_Parameters.MoveOriginalToRecycleBin);
-            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
+            return GetProcessingResultFromCopyAndDeleteTempFile(file, m_Parameters.FileName, tmpFile,
+                m_Parameters.OverwriteExistingFile, m_Parameters.MoveOriginalToRecycleBin);
         }
     }
 }

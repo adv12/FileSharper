@@ -16,6 +16,10 @@ namespace FileSharperCore.Processors.Text
 
         protected abstract LineEndings LineEndings { get; }
 
+        protected abstract string FileName { get; }
+
+        protected abstract bool OverwriteExistingFile { get; }
+
         public override ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
@@ -33,8 +37,8 @@ namespace FileSharperCore.Processors.Text
                     }
                 }
             }
-            CopyAndDeleteTempFile(tmpFile, file.FullName, MoveOriginalToRecycleBin);
-            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
+            return GetProcessingResultFromCopyAndDeleteTempFile(file, FileName, tmpFile,
+                OverwriteExistingFile, MoveOriginalToRecycleBin);
         }
 
         protected abstract string TransformLine(string line);
