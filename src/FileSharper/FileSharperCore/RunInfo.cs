@@ -23,7 +23,7 @@ namespace FileSharperCore
             private set;
         }
 
-        public IOutput[] Outputs
+        public IFieldSource[] FieldSources
         {
             get;
             private set;
@@ -97,14 +97,14 @@ namespace FileSharperCore
         }
 
         public RunInfo(IFileSource fileSource, ICondition condition,
-            IOutput[] outputs, IProcessor[] testedProcessors,
+            IFieldSource[] fieldSources, IProcessor[] testedProcessors,
             IProcessor[] matchedProcessors, int maxToMatch, CancellationToken token,
             IProgress<FileProgressInfo> testedProgress, IProgress<FileProgressInfo> matchedProgress,
             IProgress<ExceptionInfo> exceptionProgress, IProgress<bool> completeProgress)
         {
             FileSource = fileSource;
             Condition = condition;
-            Outputs = outputs;
+            FieldSources = fieldSources;
             TestedProcessors = testedProcessors;
             MatchedProcessors = matchedProcessors;
             MaxToMatch = maxToMatch == 0 ? -1 : maxToMatch;

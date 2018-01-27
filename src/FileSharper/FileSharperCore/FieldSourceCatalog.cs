@@ -6,39 +6,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FileSharperCore.Outputs;
+using FileSharperCore.FieldSources;
 
 namespace FileSharperCore
 {
-    public class OutputCatalog
+    public class FieldSourceCatalog
     {
-        private static OutputCatalog s_Instance;
+        private static FieldSourceCatalog s_Instance;
 
-        public static OutputCatalog Instance
+        public static FieldSourceCatalog Instance
         {
             get
             {
                 if (s_Instance == null)
                 {
-                    s_Instance = new OutputCatalog();
+                    s_Instance = new FieldSourceCatalog();
                 }
                 return s_Instance;
             }
         }
 
-        private IOutput[] m_Outputs = null;
+        private IFieldSource[] m_FieldSources = null;
 
-        public IOutput[] Outputs
+        public IFieldSource[] FieldSources
         {
             get
             {
-                return m_Outputs;
+                return m_FieldSources;
             }
         }
 
-        private OutputCatalog()
+        private FieldSourceCatalog()
         {
-            List<IOutput> outputs = new List<IOutput>();
+            List<IFieldSource> fieldSources = new List<IFieldSource>();
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -46,15 +46,15 @@ namespace FileSharperCore
                 foreach (Type t in types)
                 {
                     Type[] interfaces = t.GetInterfaces();
-                    if (interfaces.Contains(typeof(IOutput)) && !t.IsAbstract &&
-                        t != typeof(NothingOutput))
+                    if (interfaces.Contains(typeof(IFieldSource)) && !t.IsAbstract &&
+                        t != typeof(NothignFieldSource))
                     {
                         try
                         {
-                            IOutput o = (IOutput)Activator.CreateInstance(t);
+                            IFieldSource o = (IFieldSource)Activator.CreateInstance(t);
                             if (o != null)
                             {
-                                outputs.Add(o);
+                                fieldSources.Add(o);
                             }
                         }
                         catch (Exception ex)
@@ -64,20 +64,20 @@ namespace FileSharperCore
                     }
                 }
             }
-            outputs = outputs.OrderBy(o => o.Category, StringComparer.OrdinalIgnoreCase)
+            fieldSources = fieldSources.OrderBy(o => o.Category, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(o => o.Name, StringComparer.OrdinalIgnoreCase).ToList();
-            outputs.Insert(0, new NothingOutput());
-            m_Outputs = outputs.ToArray();
+            fieldSources.Insert(0, new NothignFieldSource());
+            m_FieldSources = fieldSources.ToArray();
         }
 
-        public IOutput CreateOutput(string typeName)
+        public IFieldSource CreateFieldSource(string typeName)
         {
-            foreach (IOutput output in m_Outputs)
+            foreach (IFieldSource fieldSource in m_FieldSources)
             {
-                Type t = output.GetType();
+                Type t = fieldSource.GetType();
                 if (t.FullName == typeName)
                 {
-                    return (IOutput)Activator.CreateInstance(t);
+                    return (IFieldSource)Activator.CreateInstance(t);
                 }
             }
             return null;

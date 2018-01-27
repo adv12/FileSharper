@@ -9,14 +9,14 @@ using FileSharperCore;
 namespace FileSharperUI
 {
     /// <summary>
-    /// Interaction logic for OutputNodeControl.xaml
+    /// Interaction logic for FieldSourceNodeControl.xaml
     /// </summary>
-    public partial class OutputNodeControl : UserControl
+    public partial class FieldSourceNodeControl : UserControl
     {
-        public OutputNodeControl()
+        public FieldSourceNodeControl()
         {
             InitializeComponent();
-            ListCollectionView lcv = new ListCollectionView(OutputCatalog.Instance.Outputs);
+            ListCollectionView lcv = new ListCollectionView(FieldSourceCatalog.Instance.FieldSources);
             lcv.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
             this.comboBox.ItemsSource = lcv;
         }

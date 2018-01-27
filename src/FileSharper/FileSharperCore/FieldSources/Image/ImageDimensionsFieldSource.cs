@@ -10,7 +10,7 @@ using System.IO;
 using System.Threading;
 using FileSharperCore.FileCaches;
 
-namespace FileSharperCore.Outputs.Image
+namespace FileSharperCore.FieldSources.Image
 {
     public class ImageDimensionsParameters
     {
@@ -18,7 +18,7 @@ namespace FileSharperCore.Outputs.Image
         public MediaDimensionOrDimensions Dimension { get; set; } = MediaDimensionOrDimensions.WidthHeight;
     }
 
-    public class ImageDimensionsOutput : OutputBase
+    public class ImageDimensionsFieldSource : FieldSourceBase
     {
         private ImageDimensionsParameters m_Parameters = new ImageDimensionsParameters();
 

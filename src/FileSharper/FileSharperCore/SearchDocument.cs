@@ -54,7 +54,7 @@ namespace FileSharperCore
 
         public FileSourceNode FileSourceNode { get; set; } = new FileSourceNode();
         public ConditionNode ConditionNode { get; set; } = new ConditionNode();
-        public OutputsNode OutputsNode { get; set; } = new OutputsNode();
+        public FieldSourcesNode FieldSourcesNode { get; set; } = new FieldSourcesNode();
         public ProcessorsNode TestedProcessorsNode { get; set; } = new ProcessorsNode();
         public ProcessorsNode MatchedProcessorsNode { get; set; } = new ProcessorsNode();
 
@@ -188,7 +188,7 @@ namespace FileSharperCore
         {
             if (addStarterNodes)
             {
-                OutputsNode.OutputNodes.Add(new OutputNode());
+                FieldSourcesNode.FieldSourceNodes.Add(new FieldSourceNode());
                 TestedProcessorsNode.ProcessorNodes.Add(new ProcessorNode());
                 MatchedProcessorsNode.ProcessorNodes.Add(new ProcessorNode());
             }
@@ -205,7 +205,7 @@ namespace FileSharperCore
         public SharperEngine GetEngine()
         {
             return new SharperEngine(FileSourceNode.GetFileSource(),
-                ConditionNode.BuildCondition(), OutputsNode.GetOutputs(),
+                ConditionNode.BuildCondition(), FieldSourcesNode.GetFieldSources(),
                 TestedProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors(),
                 MaxToMatchInternal);
         }

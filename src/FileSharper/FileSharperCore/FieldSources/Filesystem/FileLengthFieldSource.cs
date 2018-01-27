@@ -9,7 +9,7 @@ using System.Threading;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Outputs.Filesystem
+namespace FileSharperCore.FieldSources.Filesystem
 {
     public class FileLengthParameters
     {
@@ -21,7 +21,7 @@ namespace FileSharperCore.Outputs.Filesystem
         public string Format { get; set; } = "F2";
     }
 
-    public class FileLengthOutput : OutputBase
+    public class FileLengthFieldSource : FieldSourceBase
     {
         private FileLengthParameters m_Parameters = new FileLengthParameters();
 

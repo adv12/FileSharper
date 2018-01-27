@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Outputs.Filesystem
+namespace FileSharperCore.FieldSources.Filesystem
 {
 
     public class FileDateParameters
@@ -19,7 +19,7 @@ namespace FileSharperCore.Outputs.Filesystem
         public string FormatString { get; set; } = "yyyy/MM/dd hh:mm:ss tt";
     }
 
-    public class FileDateOutput : OutputBase
+    public class FileDateFieldSource : FieldSourceBase
     {
         private FileDateParameters m_Parameters = new FileDateParameters();
 

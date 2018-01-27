@@ -62,14 +62,14 @@
     <Compile Include="FileSourceNodeControl.xaml.cs">
       <DependentUpon>FileSourceNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OutputNodeControl.xaml.cs">
-      <DependentUpon>OutputNodeControl.xaml</DependentUpon>
+    <Compile Include="FieldSourceNodeControl.xaml.cs">
+      <DependentUpon>FieldSourceNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OutputNodeRowControl.xaml.cs">
-      <DependentUpon>OutputNodeRowControl.xaml</DependentUpon>
+    <Compile Include="FieldSourceNodeRowControl.xaml.cs">
+      <DependentUpon>FieldSourceNodeRowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OutputsNodeControl.xaml.cs">
-      <DependentUpon>OutputsNodeControl.xaml</DependentUpon>
+    <Compile Include="FieldSourcesNodeControl.xaml.cs">
+      <DependentUpon>FieldSourcesNodeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProcessorNodeControl.xaml.cs">
       <DependentUpon>ProcessorNodeControl.xaml</DependentUpon>
@@ -112,15 +112,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OutputNodeControl.xaml">
+    <Page Include="FieldSourceNodeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OutputNodeRowControl.xaml">
+    <Page Include="FieldSourceNodeRowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OutputsNodeControl.xaml">
+    <Page Include="FieldSourcesNodeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

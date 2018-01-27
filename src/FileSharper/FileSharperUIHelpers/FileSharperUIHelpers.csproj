@@ -52,7 +52,7 @@
     <Compile Include="ObjectToVisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeNameToFileSourceConverter.cs" />
-    <Compile Include="TypeNameToOutputConverter.cs" />
+    <Compile Include="TypeNameToFieldSourceConverter.cs" />
     <Compile Include="TypeNameToProcessorConverter.cs" />
   </ItemGroup>
   <ItemGroup>

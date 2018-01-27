@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace FileSharperCore.Outputs.Filesystem
+namespace FileSharperCore.FieldSources.Filesystem
 {
-    public class ReadOnlyOutput : OutputBase
+    public class ReadOnlyFieldSource : FieldSourceBase
     {
         public override int ColumnCount => 1;
 
@@ -25,9 +25,9 @@ namespace FileSharperCore.Outputs.Filesystem
 
         public override string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> cacheTypes, CancellationToken token)
         {
-            string output = file.IsReadOnly ? "Yes" : "No";
-            string[] outputs = new string[] { output };
-            return new string[] { output };
+            string field = file.IsReadOnly ? "Yes" : "No";
+            string[] fields = new string[] { field };
+            return fields;
         }
     }
 }

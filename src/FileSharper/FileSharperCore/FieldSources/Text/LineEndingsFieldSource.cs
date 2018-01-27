@@ -8,9 +8,9 @@ using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
 
-namespace FileSharperCore.Outputs.Text
+namespace FileSharperCore.FieldSources.Text
 {
-    public class LineEndingsOutput : OutputBase
+    public class LineEndingsFieldSource : FieldSourceBase
     {
         public override int ColumnCount => 1;
 

@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace FileSharperCore.Outputs
+namespace FileSharperCore
 {
-    public abstract class OutputBase : PluggableItemWithColumnsAndCacheTypesBase, IOutput
+    public interface IFieldSource: IPluggableItemWithColumnsAndCacheTypes
     {
-        public abstract string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token);
+        string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token);
     }
 }

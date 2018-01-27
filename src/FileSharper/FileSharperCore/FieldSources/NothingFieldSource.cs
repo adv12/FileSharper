@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileSharperCore.Outputs
+namespace FileSharperCore.FieldSources
 {
-    public class NothingOutput : OutputBase
+    public class NothignFieldSource : FieldSourceBase
     {
         public override int ColumnCount => 0;
 

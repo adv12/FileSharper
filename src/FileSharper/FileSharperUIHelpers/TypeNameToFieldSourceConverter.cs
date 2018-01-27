@@ -10,13 +10,13 @@ using FileSharperCore;
 
 namespace FileSharperUIHelpers
 {
-    public class TypeNameToOutputConverter : IValueConverter
+    public class TypeNameToFieldSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
                 return null;
-            return OutputCatalog.Instance.Outputs.Where(x => x.GetType().FullName == (string)value).FirstOrDefault();
+            return FieldSourceCatalog.Instance.FieldSources.Where(x => x.GetType().FullName == (string)value).FirstOrDefault();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

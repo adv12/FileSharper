@@ -18,7 +18,7 @@ namespace FileSharperCore
 
         public ICondition Condition { get; set; }
 
-        public IOutput[] Outputs { get; set; }
+        public IFieldSource[] FieldSources { get; set; }
 
         public IProcessor[] TestedProcessors { get; set; }
 
@@ -43,12 +43,12 @@ namespace FileSharperCore
 
         private object m_Mutex = new object();
 
-        public SharperEngine(IFileSource fileSource, ICondition condition, IOutput[] outputs,
+        public SharperEngine(IFileSource fileSource, ICondition condition, IFieldSource[] fieldSources,
             IProcessor[] testedProcessors, IProcessor[] matchedProcessors, int maxToMatch)
         {
             FileSource = fileSource;
             Condition = condition;
-            Outputs = outputs;
+            FieldSources = fieldSources;
             TestedProcessors = testedProcessors;
             MatchedProcessors = matchedProcessors;
             MaxToMatch = maxToMatch;
@@ -79,7 +79,7 @@ namespace FileSharperCore
                 }
                 lock (m_Mutex)
                 {
-                    RunInfo = new RunInfo(FileSource, Condition, Outputs, TestedProcessors,
+                    RunInfo = new RunInfo(FileSource, Condition, FieldSources, TestedProcessors,
                         MatchedProcessors, MaxToMatch, token, testedProgress, matchedProgress,
                         exceptionProgress, completeProgress);
                 }
@@ -88,10 +88,10 @@ namespace FileSharperCore
                 token.ThrowIfCancellationRequested();
                 Condition.Init(RunInfo, exceptionProgress);
                 token.ThrowIfCancellationRequested();
-                foreach (IOutput output in Outputs)
+                foreach (IFieldSource fieldSource in FieldSources)
                 {
                     token.ThrowIfCancellationRequested();
-                    output.Init(RunInfo, exceptionProgress);
+                    fieldSource.Init(RunInfo, exceptionProgress);
                 }
                 foreach (IProcessor processor in TestedProcessors)
                 {
@@ -136,7 +136,7 @@ namespace FileSharperCore
                         }
                         try
                         {
-                            GetFileCaches(Condition, Outputs, file, caches, exceptionProgress);
+                            GetFileCaches(Condition, FieldSources, file, caches, exceptionProgress);
                             try
                             {
                                 result = Condition.Matches(file, caches, token);
@@ -156,13 +156,13 @@ namespace FileSharperCore
                             }
                             if (result != null)
                             {
-                                foreach (IOutput output in Outputs)
+                                foreach (IFieldSource fieldSource in FieldSources)
                                 {
-                                    if (output != null)
+                                    if (fieldSource != null)
                                     {
                                         try
                                         {
-                                            string[] vals = output.GetValues(file, caches, token);
+                                            string[] vals = fieldSource.GetValues(file, caches, token);
                                             if (vals != null)
                                             {
                                                 values.AddRange(vals);
@@ -276,14 +276,14 @@ namespace FileSharperCore
             }
         }
 
-        private void GetFileCaches(ICondition condition, IOutput[] outputs, FileInfo file,
+        private void GetFileCaches(ICondition condition, IFieldSource[] fieldSources, FileInfo file,
             Dictionary<Type, IFileCache> cacheLookup, IProgress<ExceptionInfo> exceptionProgress)
         {
             List<Type> cacheTypes = new List<Type>();
             cacheTypes.AddRange(condition.CacheTypes);
-            foreach (IOutput output in outputs)
+            foreach (IFieldSource fieldSource in fieldSources)
             {
-                cacheTypes.AddRange(output.CacheTypes);
+                cacheTypes.AddRange(fieldSource.CacheTypes);
             }
             foreach (Type type in cacheTypes)
             {
@@ -354,11 +354,11 @@ namespace FileSharperCore
             {
                 exceptionProgress?.Report(new ExceptionInfo(ex));
             }
-            foreach (IOutput output in Outputs)
+            foreach (IFieldSource fieldSource in FieldSources)
             {
                 try
                 {
-                    output?.Cleanup(exceptionProgress);
+                    fieldSource?.Cleanup(exceptionProgress);
                 }
                 catch (Exception ex)
                 {

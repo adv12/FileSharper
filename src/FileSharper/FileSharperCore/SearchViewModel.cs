@@ -104,7 +104,7 @@ namespace FileSharperCore
                 List<string> headers = new List<string>();
                 headers.Add("Filename");
                 headers.Add("Path");
-                return HeaderUtil.GetUniqueHeaders(headers, Engine.Condition, Engine.Outputs);
+                return HeaderUtil.GetUniqueHeaders(headers, Engine.Condition, Engine.FieldSources);
             }
         }
 

@@ -8,7 +8,7 @@ namespace FileSharperCore.Util
 {
     public class HeaderUtil
     {
-        public static string[] GetUniqueHeaders(List<string> uniqueHeaders, ICondition condition, IOutput[] outputs)
+        public static string[] GetUniqueHeaders(List<string> uniqueHeaders, ICondition condition, IFieldSource[] fieldSources)
         {
             List<string> headers = new List<string>();
             HashSet<string> usedHeaders = new HashSet<string>(uniqueHeaders);
@@ -16,11 +16,11 @@ namespace FileSharperCore.Util
             {
                 headers.AddRange(condition.ColumnHeaders);
             }
-            if (outputs != null)
+            if (fieldSources != null)
             {
-                foreach (IOutput output in outputs)
+                foreach (IFieldSource fieldSource in fieldSources)
                 {
-                    headers.AddRange(output.ColumnHeaders);
+                    headers.AddRange(fieldSource.ColumnHeaders);
                 }
             }
             foreach (string header in headers)

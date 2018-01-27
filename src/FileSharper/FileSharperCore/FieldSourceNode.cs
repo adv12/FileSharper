@@ -10,31 +10,31 @@ using Newtonsoft.Json;
 
 namespace FileSharperCore
 {
-    public class OutputNode : INotifyPropertyChanged
+    public class FieldSourceNode : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private string m_OutputTypeName;
-        private OutputsNode m_Owner;
+        private string m_FieldSourceTypeName;
+        private FieldSourcesNode m_Owner;
         private int m_Index;
-        private IOutput m_OutputInternal;
+        private IFieldSource m_FieldSourceInternal;
 
         [JsonProperty(Order = int.MinValue)]
-        public string OutputTypeName
+        public string FieldSourceTypeName
         {
-            get => m_OutputTypeName;
+            get => m_FieldSourceTypeName;
             set
             {
-                if (m_OutputTypeName != value)
+                if (m_FieldSourceTypeName != value)
                 {
-                    m_OutputTypeName = value;
+                    m_FieldSourceTypeName = value;
                     if (value == null)
                     {
-                        OutputInternal = null;
+                        FieldSourceInternal = null;
                     }
                     else
                     {
-                        OutputInternal = OutputCatalog.Instance.CreateOutput(m_OutputTypeName);
+                        FieldSourceInternal = FieldSourceCatalog.Instance.CreateFieldSource(m_FieldSourceTypeName);
                     }
                     OnPropertyChanged();
                 }
@@ -42,7 +42,7 @@ namespace FileSharperCore
         }
 
         [JsonIgnore]
-        public OutputsNode Owner
+        public FieldSourcesNode Owner
         {
             get => m_Owner;
             set
@@ -74,18 +74,18 @@ namespace FileSharperCore
         [JsonIgnore]
         public bool Last
         {
-            get => m_Owner != null && m_Owner.OutputNodes.Count - 1 == Index;
+            get => m_Owner != null && m_Owner.FieldSourceNodes.Count - 1 == Index;
         }
 
-        private IOutput OutputInternal
+        private IFieldSource FieldSourceInternal
         {
-            get => m_OutputInternal;
+            get => m_FieldSourceInternal;
             set
             {
-                if (m_OutputInternal != value)
+                if (m_FieldSourceInternal != value)
                 {
-                    IOutput old = m_OutputInternal;
-                    m_OutputInternal = value;
+                    IFieldSource old = m_FieldSourceInternal;
+                    m_FieldSourceInternal = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
                 }
@@ -96,7 +96,7 @@ namespace FileSharperCore
         {
             get
             {
-                return m_OutputInternal?.Parameters;
+                return m_FieldSourceInternal?.Parameters;
             }
         }
 
@@ -105,9 +105,9 @@ namespace FileSharperCore
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public IOutput GetOutput()
+        public IFieldSource GetFieldSource()
         {
-            return OutputInternal;
+            return FieldSourceInternal;
         }
 
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)

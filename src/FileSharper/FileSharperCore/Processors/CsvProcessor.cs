@@ -62,7 +62,7 @@ namespace FileSharperCore.Processors
                     break;
             }
             headers.Add("Matches");
-            string[] columnHeaders = HeaderUtil.GetUniqueHeaders(headers, RunInfo.Condition, RunInfo.Outputs);
+            string[] columnHeaders = HeaderUtil.GetUniqueHeaders(headers, RunInfo.Condition, RunInfo.FieldSources);
             foreach (string header in columnHeaders)
             {
                 m_CsvWriter.WriteField(header);

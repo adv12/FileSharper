@@ -11,24 +11,24 @@ using Newtonsoft.Json;
 
 namespace FileSharperCore
 {
-    public class OutputsNode
+    public class FieldSourcesNode
     {
 
-        public ObservableCollection<OutputNode> OutputNodes
+        public ObservableCollection<FieldSourceNode> FieldSourceNodes
         {
             get;
-        } = new ObservableCollection<OutputNode>();
+        } = new ObservableCollection<FieldSourceNode>();
 
-        public OutputsNode()
+        public FieldSourcesNode()
         {
-            OutputNodes.CollectionChanged += OutputNodes_CollectionChanged;
+            FieldSourceNodes.CollectionChanged += FieldSourceNodes_CollectionChanged;
         }
 
-        private void OutputNodes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void FieldSourceNodes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
-                foreach (OutputNode newNode in e.NewItems)
+                foreach (FieldSourceNode newNode in e.NewItems)
                 {
                     newNode.Owner = this;
                 }
@@ -39,39 +39,39 @@ namespace FileSharperCore
             {
                 if (e.OldItems != null)
                 {
-                    foreach (OutputNode oldNode in e.OldItems)
+                    foreach (FieldSourceNode oldNode in e.OldItems)
                     {
                         oldNode.Owner = null;
                     }
                 }
             }
-            for (int i = 0; i < OutputNodes.Count; i++)
+            for (int i = 0; i < FieldSourceNodes.Count; i++)
             {
-                OutputNodes[i].Index = i;
+                FieldSourceNodes[i].Index = i;
             }
         }
 
-        public IOutput[] GetOutputs()
+        public IFieldSource[] GetFieldSources()
         {
-            return OutputNodes.Select(on => on.GetOutput()).Where(o => o != null).ToArray();
+            return FieldSourceNodes.Select(on => on.GetFieldSource()).Where(o => o != null).ToArray();
         }
 
         [JsonIgnore]
-        public ICommand RemoveCommand { get { return new OutputNodeRemover(this); } }
+        public ICommand RemoveCommand { get { return new FieldSourceNodeRemover(this); } }
 
         [JsonIgnore]
-        public ICommand AddCommand { get { return new OutputNodeAdder(this); } }
+        public ICommand AddCommand { get { return new FieldSourceNodeAdder(this); } }
 
-        public class OutputNodeRemover : ICommand
+        public class FieldSourceNodeRemover : ICommand
         {
             public event EventHandler CanExecuteChanged;
 
-            public OutputsNode Node
+            public FieldSourcesNode Node
             {
                 get; set;
             }
 
-            public OutputNodeRemover(OutputsNode node)
+            public FieldSourceNodeRemover(FieldSourcesNode node)
             {
                 Node = node;
             }
@@ -83,20 +83,20 @@ namespace FileSharperCore
 
             public void Execute(object parameter)
             {
-                Node.OutputNodes.Remove((OutputNode)parameter);
+                Node.FieldSourceNodes.Remove((FieldSourceNode)parameter);
             }
         }
 
-        public class OutputNodeAdder : ICommand
+        public class FieldSourceNodeAdder : ICommand
         {
             public event EventHandler CanExecuteChanged;
 
-            public OutputsNode Node
+            public FieldSourcesNode Node
             {
                 get; set;
             }
 
-            public OutputNodeAdder(OutputsNode node)
+            public FieldSourceNodeAdder(FieldSourcesNode node)
             {
                 Node = node;
             }
@@ -108,7 +108,7 @@ namespace FileSharperCore
 
             public void Execute(object parameter)
             {
-                Node.OutputNodes.Add(new OutputNode());
+                Node.FieldSourceNodes.Add(new FieldSourceNode());
             }
         }
     }

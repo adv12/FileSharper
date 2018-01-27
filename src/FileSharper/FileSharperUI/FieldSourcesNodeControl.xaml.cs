@@ -7,11 +7,11 @@ using System.Windows.Controls;
 namespace FileSharperUI
 {
     /// <summary>
-    /// Interaction logic for OutputNodeRowControl.xaml
+    /// Interaction logic for FieldSourcesNodeControl.xaml
     /// </summary>
-    public partial class OutputNodeRowControl : UserControl
+    public partial class FieldSourcesNodeControl : UserControl
     {
-        public OutputNodeRowControl()
+        public FieldSourcesNodeControl()
         {
             InitializeComponent();
         }
