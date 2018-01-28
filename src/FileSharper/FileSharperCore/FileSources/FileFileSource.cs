@@ -24,6 +24,8 @@ namespace FileSharperCore.FileSources
         
         public override string Name => "File";
 
+        public override string Category => "Miscellaneous";
+
         public override string Description => "Reads full file paths from a text file";
 
         public override object Parameters => m_Parameters;

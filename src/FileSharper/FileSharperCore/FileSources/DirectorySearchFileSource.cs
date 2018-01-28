@@ -44,6 +44,8 @@ namespace FileSharperCore.FileSources
 
         public override string Name => "Directory Search";
 
+        public override string Category => "Miscellaneous";
+
         public override string Description => "Searches through the specified directory " +
             "for files matching the specified pattern.";
 

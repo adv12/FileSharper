@@ -33,12 +33,9 @@ namespace FileSharperCore
             get => this.RunInfo.ExceptionProgress;
         }
 
-        public virtual string Category
+        public abstract string Category
         {
-            get
-            {
-                return "Miscellaneous";
-            }
+            get;
         }
 
         public abstract string Name

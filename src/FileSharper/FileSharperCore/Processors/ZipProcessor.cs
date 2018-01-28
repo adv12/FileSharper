@@ -32,6 +32,8 @@ namespace FileSharperCore.Processors
 
         public override string Name => "Zip file(s)";
 
+        public override string Category => "Miscellaneous";
+
         public override string Description => "Creates a zip file per search, per input file, or per previous output file depending on the settings.";
 
         public override object Parameters => m_Parameters;

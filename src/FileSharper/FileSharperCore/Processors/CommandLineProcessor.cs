@@ -21,6 +21,8 @@ namespace FileSharperCore.Processors
 
         public override string Name => "Execute command line";
 
+        public override string Category => "Miscellaneous";
+
         public override string Description => "Executes the specified command line";
 
         public override object Parameters => m_Parameters;

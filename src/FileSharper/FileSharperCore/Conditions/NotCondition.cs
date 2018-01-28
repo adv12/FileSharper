@@ -21,6 +21,8 @@ namespace FileSharperCore.Conditions
 
         public override string Name => "Not";
 
+        public override string Category => "Miscellaneous";
+
         public override string Description => "Returns the opposite of the provided condition";
 
         public override int ColumnCount

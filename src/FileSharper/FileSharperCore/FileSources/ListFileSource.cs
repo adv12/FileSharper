@@ -39,6 +39,8 @@ namespace FileSharperCore.FileSources
 
         public override string Name => "List";
 
+        public override string Category => "Miscellaneous";
+
         public override string Description => "A list of file paths";
 
         public override object Parameters => m_Parameters;

@@ -19,6 +19,8 @@ namespace FileSharperCore.Conditions
 
         public override string Name => "File Path Contains Text";
 
+        public override string Category => "Filesystem";
+
         public override string Description => "Whether the file path contains the specified text";
 
         public override object Parameters => m_Parameters;
