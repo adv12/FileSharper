@@ -1,6 +1,6 @@
 # FileSharper
 
-FileSharper is a C#/WPF file search and processing application designed to be quickly extended with new functionality.  It's published under the MIT license so you can grab the source and add your own domain-specific code.  For a demo, see [this video](https://youtu.be/fp4KZXTEaZE) or [this video](https://youtu.be/ACOryNATedE) on YouTube.  To try it out yourself, grab a possibly-somewhat-recent installer [here](http://www.flamingtortoise.com/FileSharper/).
+FileSharper is a C#/WPF file search and processing application designed to be quickly extended with new functionality.  It's published under the MIT license so you can grab the source and add your own domain-specific code.  For a demo, see [this video](https://youtu.be/fp4KZXTEaZE) or [this video](https://youtu.be/ACOryNATedE) on YouTube.  To try it out yourself, grab a possibly-somewhat-recent installer [here](http://www.flamingtortoise.com/FileSharper/Download).  For a tutorial of how to use FileSharper, see [Using FileSharper](https://github.com/adv12/FileSharper/wiki/Using-FileSharper).
 
 You can extend FileSharper's functionality by writing classes that implement any of the four main interfaces:
 
