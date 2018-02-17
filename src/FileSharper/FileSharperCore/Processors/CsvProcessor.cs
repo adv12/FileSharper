@@ -11,6 +11,7 @@ using CsvHelper;
 using FileSharperCore.Editors;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using System.Diagnostics;
 
 namespace FileSharperCore.Processors
 {
@@ -23,6 +24,8 @@ namespace FileSharperCore.Processors
         public PathFormat PathFormat { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; }
+        [PropertyOrder(4, UsageContextEnum.Both)]
+        public bool AutoOpen { get; set; }
     }
 
     public class CsvProcessor : ProcessorBase
@@ -39,11 +42,13 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
+        private string m_Filename;
+
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
             base.LocalInit(exceptionProgress);
-            string filename = ReplaceUtil.Replace(m_Parameters.Filename, (FileInfo)null);
-            TextWriter tw = new StreamWriter(filename);
+            m_Filename = ReplaceUtil.Replace(m_Parameters.Filename, (FileInfo)null);
+            TextWriter tw = new StreamWriter(m_Filename);
             string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
             m_CsvWriter = new CsvWriter(tw);
             List<string> headers = new List<string>();
@@ -102,6 +107,17 @@ namespace FileSharperCore.Processors
         {
             m_CsvWriter?.Dispose();
             base.LocalCleanup(exceptionProgress);
+            if (m_Parameters.AutoOpen)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(m_Filename);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
         }
     }
 }
