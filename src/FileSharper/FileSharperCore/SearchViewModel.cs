@@ -108,6 +108,17 @@ namespace FileSharperCore
             }
         }
 
+        public string[] BindingColumnHeaders
+        {
+            get
+            {
+                List<string> headers = new List<string>();
+                headers.Add("Filename");
+                headers.Add("Path");
+                return HeaderUtil.GetUniqueHeaders(headers, Engine.Condition, Engine.FieldSources, true);
+            }
+        }
+
         public CancellationTokenSource TokenSource { get; private set; }
 
         public bool StopRequested
@@ -137,7 +148,7 @@ namespace FileSharperCore
             CopyFileCommand = new FileCopier(this);
             OpenFileCommand = new FileOpener(this);
             OpenContainingFolderCommand = new ContainingFolderOpener(this);
-            foreach (string columnHeader in ColumnHeaders)
+            foreach (string columnHeader in BindingColumnHeaders)
             {
                 DataColumn column = new DataColumn(columnHeader);
                 SearchResults.Columns.Add(column);

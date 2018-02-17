@@ -3,12 +3,14 @@
 // full text of the license.
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace FileSharperCore.Util
 {
     public class HeaderUtil
     {
-        public static string[] GetUniqueHeaders(List<string> uniqueHeaders, ICondition condition, IFieldSource[] fieldSources)
+        public static string[] GetUniqueHeaders(List<string> uniqueHeaders, ICondition condition,
+            IFieldSource[] fieldSources, bool forBinding = false)
         {
             List<string> headers = new List<string>();
             HashSet<string> usedHeaders = new HashSet<string>(uniqueHeaders);
@@ -25,11 +27,12 @@ namespace FileSharperCore.Util
             }
             foreach (string header in headers)
             {
+                string baseHeader = forBinding ? Regex.Replace(header, @"[^a-zA-Z0-9_\- ]", "X") : header;
                 int num = 2;
-                string newHeader = header;
+                string newHeader = baseHeader;
                 while (usedHeaders.Contains(newHeader))
                 {
-                    newHeader = header + " " + num;
+                    newHeader = baseHeader + " " + num;
                     num++;
                 }
                 uniqueHeaders.Add(newHeader);

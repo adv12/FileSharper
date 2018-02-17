@@ -3,7 +3,9 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Data;
 using FileSharperCore;
@@ -18,10 +20,13 @@ namespace FileSharperUIHelpers
             if (searchViewModel != null)
             {
                 var gridView = new GridView();
-                foreach (string headerName in searchViewModel.ColumnHeaders)
+                string[] columnHeaders = searchViewModel.ColumnHeaders;
+                int i = 0;
+                foreach (string bindingHeaderName in searchViewModel.BindingColumnHeaders)
                 {
-                    var binding = new Binding(headerName);
-                    gridView.Columns.Add(new GridViewColumn { Header = headerName, DisplayMemberBinding = binding });
+                    var binding = new Binding(bindingHeaderName);
+                    gridView.Columns.Add(new GridViewColumn { Header = columnHeaders[i++],
+                        DisplayMemberBinding = binding });
                 }
                 return gridView;
             }
