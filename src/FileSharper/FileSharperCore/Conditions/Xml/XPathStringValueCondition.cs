@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Andrew Vardeman.  Published under the MIT license.
+﻿// Copyright (c) 2018 Andrew Vardeman.  Published under the MIT license.
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
@@ -14,7 +14,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Conditions.Xml
 {
-    public class XPathStringValueParameters
+    public class XPathStringValueMatchParameters
     {
         [PropertyOrder(1, UsageContextEnum.Both)]
         public bool IgnoreDefaultNamespace { get; set; } = true;
@@ -32,18 +32,28 @@ namespace FileSharperCore.Conditions.Xml
 
     public class XPathStringValueCondition : ConditionBase
     {
-        private XPathStringValueParameters m_Parameters = new XPathStringValueParameters();
+        private XPathStringValueMatchParameters m_Parameters = new XPathStringValueMatchParameters();
         private XPathExpression m_Expression;
         private Regex m_Regex;
         private string m_LowerCaseText;
 
         public override int ColumnCount => 1;
 
-        public override string[] ColumnHeaders => new string[] { "XPath String Value Contains Text" };
+        public override string[] ColumnHeaders
+        {
+            get
+            {
+                if (m_Parameters.UseRegex)
+                {
+                    return new string[] { "String Result of XPath " + m_Parameters.XPath + " Matches Regex \"" + m_Parameters.Text + "\"" };
+                }
+                return new string[] { "String Result of Xpath " + m_Parameters.XPath + " Contains \"" + m_Parameters.Text + "\"" };
+            }
+        }
 
         public override string Category => "XML";
 
-        public override string Name => "XPath String Value Contains Text";
+        public override string Name => "XPath Result String Value Contains Text";
 
         public override string Description => null;
 
@@ -77,16 +87,7 @@ namespace FileSharperCore.Conditions.Xml
             XmlDocument xmlDoc = new XmlDocument();
             try
             {
-                if (m_Parameters.IgnoreDefaultNamespace)
-                {
-                    string docstr = File.ReadAllText(file.FullName);
-                    docstr = Regex.Replace(docstr, @"xmlns\s*=\s*", "foobar=");
-                    xmlDoc.LoadXml(docstr);
-                }
-                else
-                {
-                    xmlDoc.Load(file.FullName);
-                }
+                XmlUtil.LoadXmlDocument(xmlDoc, file, m_Parameters.IgnoreDefaultNamespace);
             }
             catch (Exception)
             {

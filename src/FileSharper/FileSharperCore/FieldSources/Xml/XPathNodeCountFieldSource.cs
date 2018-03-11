@@ -11,9 +11,10 @@ using System.Xml.XPath;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Conditions.Xml
+namespace FileSharperCore.FieldSources.Xml
 {
-    public class XPathNodeCountComparisonParameters
+
+    public class XPathNodeCountParameters
     {
         [PropertyOrder(1, UsageContextEnum.Both)]
         public bool IgnoreDefaultNamespace { get; set; } = true;
@@ -21,15 +22,11 @@ namespace FileSharperCore.Conditions.Xml
         public string DefaultNamespacePrefixIfNotIgnored { get; set; } = "x";
         [PropertyOrder(3, UsageContextEnum.Both)]
         public string XPath { get; set; } = "*";
-        [PropertyOrder(4, UsageContextEnum.Both)]
-        public ComparisonType ComparisonType { get; set; } = ComparisonType.GreaterThan;
-        [PropertyOrder(5, UsageContextEnum.Both)]
-        public int Count { get; set; } = 0;
     }
 
-    public class XPathNodeCountCondition : ConditionBase
+    public class XPathNodeCountFieldSource : FieldSourceBase
     {
-        private XPathNodeCountComparisonParameters m_Parameters = new XPathNodeCountComparisonParameters();
+        private XPathNodeCountParameters m_Parameters = new XPathNodeCountParameters();
         private XPathExpression m_Expression;
 
         public override int ColumnCount => 1;
@@ -50,7 +47,7 @@ namespace FileSharperCore.Conditions.Xml
             m_Expression = XPathExpression.Compile(m_Parameters.XPath);
         }
 
-        public override MatchResult Matches(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)
+        public override string[] GetValues(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)
         {
             XmlDocument xmlDoc = new XmlDocument();
             try
@@ -59,7 +56,7 @@ namespace FileSharperCore.Conditions.Xml
             }
             catch (Exception)
             {
-                return new MatchResult(MatchResultType.NotApplicable, "N/A");
+                return new string[] { "N/A" };
             }
             XPathNavigator navigator = xmlDoc.CreateNavigator();
             XmlNamespaceManager namespaceManager = XmlUtil.GetNamespaceManager(
@@ -69,13 +66,11 @@ namespace FileSharperCore.Conditions.Xml
             {
                 m_Expression.SetContext(namespaceManager);
                 XPathNodeIterator iterator = navigator.Select(m_Expression);
-                MatchResultType resultType = CompareUtil.Compare(iterator.Count,
-                    m_Parameters.ComparisonType, m_Parameters.Count);
-                return new MatchResult(resultType, iterator.Count.ToString());
+                return new string[] { iterator.Count.ToString() };
             }
             catch (XPathException)
             {
-                return new MatchResult(MatchResultType.No, "0");
+                return new string[] { "0" };
             }
         }
     }

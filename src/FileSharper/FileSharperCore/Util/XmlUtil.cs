@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
@@ -34,5 +36,20 @@ namespace FileSharperCore.Util
             }
             return namespaceManager;
         }
+
+        public static void LoadXmlDocument(XmlDocument xmlDoc, FileInfo file, bool ignoreDefaultNamespace)
+        {
+            if (ignoreDefaultNamespace)
+            {
+                string docstr = File.ReadAllText(file.FullName);
+                docstr = Regex.Replace(docstr, @"xmlns\s*=\s*", "foobar=");
+                xmlDoc.LoadXml(docstr);
+            }
+            else
+            {
+                xmlDoc.Load(file.FullName);
+            }
+        }
+
     }
 }

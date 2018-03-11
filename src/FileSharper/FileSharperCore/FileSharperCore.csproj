@@ -112,6 +112,8 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="ExceptionInfo.cs" />
+    <Compile Include="FieldSources\Xml\XPathNodeCountFieldSource.cs" />
+    <Compile Include="FieldSources\Xml\XPathStringValueFieldSource.cs" />
     <Compile Include="FileCaches\BitmapFileCache.cs" />
     <Compile Include="FileProgressInfo.cs" />
     <Compile Include="FileSources\DirectorySearchFileSource.cs" />
