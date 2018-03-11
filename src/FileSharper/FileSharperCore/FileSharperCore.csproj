@@ -97,6 +97,8 @@
     <Compile Include="Conditions\Text\LineCountCondition.cs" />
     <Compile Include="Conditions\Text\LineEndingsCondition.cs" />
     <Compile Include="Conditions\Text\WordCountCondition.cs" />
+    <Compile Include="Conditions\Xml\XPathNodeCountCondition.cs" />
+    <Compile Include="Conditions\Xml\XPathStringValueCondition.cs" />
     <Compile Include="Editors\DateTimePickerEditor.cs" />
     <Compile Include="Editors\FileSharperMultiLineTextEditor.cs" />
     <Compile Include="Editors\FolderChooserEditor.xaml.cs">
@@ -181,6 +183,7 @@
     <Compile Include="Util\ReverseComparer.cs" />
     <Compile Include="Util\TextUtil.cs" />
     <Compile Include="Util\UnitUtil.cs" />
+    <Compile Include="Util\XmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
