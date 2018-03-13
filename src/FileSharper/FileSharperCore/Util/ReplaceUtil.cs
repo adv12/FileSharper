@@ -44,23 +44,17 @@ namespace FileSharperCore.Util
 
         public static string Replace(string input, IDictionary<string, string> replacements)
         {
-            MatchCollection matches = ReplacementRegex.Matches(input);
-            StringBuilder sb = new StringBuilder();
-            int startIndex = 0;
-            foreach (Match match in matches)
-            {
-                sb.Append(input.Substring(startIndex, match.Index - startIndex));
-                string varname = match.Groups[1].Value;
-                string value = varname;
-                if (replacements.ContainsKey(varname))
+            return ReplacementRegex.Replace(input,
+                m =>
                 {
-                    value = replacements[varname];
-                }
-                sb.Append(value);
-                startIndex = match.Index + match.Length;
-            }
-            sb.Append(input.Substring(startIndex, input.Length - startIndex));
-            return sb.ToString();
+                    string varname = m.Groups[1].Value;
+                    string value = varname;
+                    if (replacements.ContainsKey(varname))
+                    {
+                        value = replacements[varname];
+                    }
+                    return value;
+                });
         }
     }
 }
