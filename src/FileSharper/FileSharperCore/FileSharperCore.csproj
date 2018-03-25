@@ -99,6 +99,7 @@
     <Compile Include="Conditions\MatchEverythingCondition.cs" />
     <Compile Include="Conditions\Text\LineCountCondition.cs" />
     <Compile Include="Conditions\Text\LineEndingsCondition.cs" />
+    <Compile Include="Conditions\Text\TextEncodingCondition.cs" />
     <Compile Include="Conditions\Text\WordCountCondition.cs" />
     <Compile Include="Conditions\Xml\XPathNodeCountCondition.cs" />
     <Compile Include="Conditions\Xml\XPathStringValueCondition.cs" />
@@ -115,6 +116,7 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="ExceptionInfo.cs" />
+    <Compile Include="FieldSources\Text\TextEncodingFieldSource.cs" />
     <Compile Include="FieldSources\Xml\XPathNodeCountFieldSource.cs" />
     <Compile Include="FieldSources\Xml\XPathStringValueFieldSource.cs" />
     <Compile Include="FileCaches\BitmapFileCache.cs" />

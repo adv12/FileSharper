@@ -23,7 +23,7 @@ namespace FileSharperCore.Processors
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; }
         [PropertyOrder(4, UsageContextEnum.Both)]
-        public OutputEncoding OutputEncoding { get; set; } = OutputEncoding.MatchInput;
+        public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(5, UsageContextEnum.Both)]
         public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
         [PropertyOrder(6, UsageContextEnum.Both)]

@@ -17,7 +17,7 @@ namespace FileSharperCore.Processors.Text
 
         protected abstract LineEndings LineEndings { get; }
 
-        protected abstract OutputEncoding OutputEncoding { get; }
+        protected abstract OutputEncodingType OutputEncodingType { get; }
 
         protected abstract string FileName { get; }
 
@@ -29,7 +29,7 @@ namespace FileSharperCore.Processors.Text
             Encoding encoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
-                tmpFile, encoding, OutputEncoding))
+                tmpFile, encoding, OutputEncodingType))
             {
                 writer.NewLine = TextUtil.GetNewline(LineEndings);
                 using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(

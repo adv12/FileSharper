@@ -31,7 +31,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(6, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(7, UsageContextEnum.Both)]
-        public OutputEncoding OutputEncoding { get; set; } = OutputEncoding.MatchInput;
+        public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(8, UsageContextEnum.Both)]
         public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
         [PropertyOrder(9, UsageContextEnum.Both)]

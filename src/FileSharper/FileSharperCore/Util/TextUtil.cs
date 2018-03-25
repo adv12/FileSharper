@@ -130,20 +130,40 @@ namespace FileSharperCore.Util
         public static Encoding DetectEncoding(FileInfo file)
         {
             string filename = file.FullName;
-            using (FileStream fs = File.OpenRead(filename))
+            Encoding encoding = null;
+            try
             {
-                Ude.CharsetDetector cdet = new Ude.CharsetDetector();
-                cdet.Feed(fs);
-                cdet.DataEnd();
-                if (cdet.Charset != null)
+                using (FileStream fs = File.OpenRead(filename))
                 {
-                    return GetEncodingFromUdeCharset(cdet.Charset);
-                }
-                else
-                {
-                    return null;
+                    Ude.CharsetDetector cdet = new Ude.CharsetDetector();
+                    cdet.Feed(fs);
+                    cdet.DataEnd();
+                    if (cdet.Charset != null)
+                    {
+                        encoding = GetEncodingFromUdeCharset(cdet.Charset);
+                    }
                 }
             }
+            catch (Exception)
+            {
+                // leave as null
+            }
+            if (encoding == null)
+            {
+                try
+                {
+                    using (StreamReader sr = new StreamReader(filename))
+                    {
+                        sr.Read();
+                        encoding = sr.CurrentEncoding;
+                    }
+                }
+                catch (IOException)
+                {
+                    // just return null
+                }
+            }
+            return encoding;
         }
 
         public static Encoding GetEncodingFromUdeCharset(string charset)
@@ -214,9 +234,9 @@ namespace FileSharperCore.Util
         }
 
         public static StreamWriter CreateStreamWriterWithAppropriateEncoding(string path,
-            Encoding detectedEncoding, OutputEncoding outputEncoding)
+            Encoding detectedEncoding, OutputEncodingType outputEncoding)
         {
-            Encoding encoding = GetEncoding(detectedEncoding, outputEncoding);
+            Encoding encoding = GetOutputEncoding(detectedEncoding, outputEncoding);
             if (encoding == null)
             {
                 return new StreamWriter(path);
@@ -224,45 +244,36 @@ namespace FileSharperCore.Util
             return new StreamWriter(path, false, encoding);
         }
 
-        public static Encoding GetEncoding(Encoding detectedEncoding, OutputEncoding outputEncoding)
+        public static DetectedEncodingType GetDetectedEncodingType(FileInfo file)
         {
-            switch (outputEncoding)
+            Encoding encoding = DetectEncoding(file);
+            try
             {
-                case OutputEncoding.MatchInput:
-                    return detectedEncoding;
-                case OutputEncoding.ASCII:
-                    return Encoding.ASCII;
-                case OutputEncoding.UTF8:
-                    return Encoding.UTF8;
-                case OutputEncoding.UTF16_LE:
-                    return Encoding.Unicode;
-                case OutputEncoding.UTF16_BE:
-                    return Encoding.BigEndianUnicode;
-                case OutputEncoding.UTF32_BE:
-                    return Encoding.GetEncoding(12001);
-                case OutputEncoding.UTF32_LE:
-                    return Encoding.UTF32;
-                case OutputEncoding.WIN1252:
-                    return Encoding.GetEncoding(1252); // Western European (Windows)
-                case OutputEncoding.EUCKR: // Korean (EUC)
-                    return Encoding.GetEncoding(51949);
-                case OutputEncoding.EUCJP: // Japanese (EUC)
-                    return Encoding.GetEncoding(51932);
-                case OutputEncoding.GB18030: // Chinese Simplified
-                    return Encoding.GetEncoding(54936);
-                case OutputEncoding.ISO2022_JP: // Japanese (JIS)
-                    return Encoding.GetEncoding(50220);
-                case OutputEncoding.ISO2022_CN: // Chinese Simplified (ISO-2022)
-                    return Encoding.GetEncoding(50227);
-                case OutputEncoding.ISO2022_KR: // Korean (ISO)
-                    return Encoding.GetEncoding(50225);
-                case OutputEncoding.HZ_GB_2312: // Chinese Simplified (HZ)
-                    return Encoding.GetEncoding(52936);
-                case OutputEncoding.ISO8859_8: // Hebrew (ISO-Visual)
-                    return Encoding.GetEncoding(28598);
-                default:
-                    return null;
+                int codePage = encoding.CodePage;
+                return (DetectedEncodingType)codePage;
             }
+            catch (Exception)
+            {
+
+            }
+            return DetectedEncodingType.None;
+        }
+
+        public static Encoding GetOutputEncoding(Encoding detectedEncoding, OutputEncodingType outputEncodingType)
+        {
+            if (outputEncodingType == OutputEncodingType.MatchInput)
+            {
+                return detectedEncoding;
+            }
+            try
+            {
+                return Encoding.GetEncoding((int)outputEncodingType);
+            }
+            catch (Exception)
+            {
+                // just return null;
+            }
+            return null;
         }
 
     }
