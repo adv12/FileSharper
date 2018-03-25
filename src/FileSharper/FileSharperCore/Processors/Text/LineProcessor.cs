@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using FileSharperCore.Util;
 
@@ -16,6 +17,8 @@ namespace FileSharperCore.Processors.Text
 
         protected abstract LineEndings LineEndings { get; }
 
+        protected abstract OutputEncoding OutputEncoding { get; }
+
         protected abstract string FileName { get; }
 
         protected abstract bool OverwriteExistingFile { get; }
@@ -23,11 +26,14 @@ namespace FileSharperCore.Processors.Text
         public override ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
+            Encoding encoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
-            using (StreamWriter writer = new StreamWriter(tmpFile))
+            using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
+                tmpFile, encoding, OutputEncoding))
             {
                 writer.NewLine = TextUtil.GetNewline(LineEndings);
-                using (StreamReader reader = new StreamReader(file.FullName))
+                using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(
+                    file, encoding))
                 {
                     while (!reader.EndOfStream)
                     {

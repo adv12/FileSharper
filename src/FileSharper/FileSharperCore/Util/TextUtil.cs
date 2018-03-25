@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -125,5 +126,144 @@ namespace FileSharperCore.Util
                 return DetectedLineEndings.Mixed;
             }
         }
+
+        public static Encoding DetectEncoding(FileInfo file)
+        {
+            string filename = file.FullName;
+            using (FileStream fs = File.OpenRead(filename))
+            {
+                Ude.CharsetDetector cdet = new Ude.CharsetDetector();
+                cdet.Feed(fs);
+                cdet.DataEnd();
+                if (cdet.Charset != null)
+                {
+                    return GetEncodingFromUdeCharset(cdet.Charset);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static Encoding GetEncodingFromUdeCharset(string charset)
+        {
+            // https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding?view=netframework-4.7.1
+            switch (charset)
+            {
+                case Ude.Charsets.ASCII:
+                    return Encoding.ASCII;
+                case Ude.Charsets.UTF8:
+                    return Encoding.UTF8;
+                case Ude.Charsets.UTF16_LE:
+                    return Encoding.Unicode;
+                case Ude.Charsets.UTF16_BE:
+                    return Encoding.BigEndianUnicode;
+                case Ude.Charsets.UTF32_BE:
+                    return Encoding.GetEncoding(12001);
+                case Ude.Charsets.UTF32_LE:
+                    return Encoding.UTF32;
+                case Ude.Charsets.WIN1252:
+                    return Encoding.GetEncoding(1252); // Western European (Windows)
+                case Ude.Charsets.EUCKR: // Korean (EUC)
+                    return Encoding.GetEncoding(51949);
+                case Ude.Charsets.EUCJP: // Japanese (EUC)
+                    return Encoding.GetEncoding(51932);
+                case Ude.Charsets.GB18030: // Chinese Simplified
+                    return Encoding.GetEncoding(54936);
+                case Ude.Charsets.ISO2022_JP: // Japanese (JIS)
+                    return Encoding.GetEncoding(50220);
+                case Ude.Charsets.ISO2022_CN: // Chinese Simplified (ISO-2022)
+                    return Encoding.GetEncoding(50227);
+                case Ude.Charsets.ISO2022_KR: // Korean (ISO)
+                    return Encoding.GetEncoding(50225);
+                case Ude.Charsets.HZ_GB_2312: // Chinese Simplified (HZ)
+                    return Encoding.GetEncoding(52936);
+                case Ude.Charsets.ISO8859_8: // Hebrew (ISO-Visual)
+                    return Encoding.GetEncoding(28598);
+
+                case Ude.Charsets.UCS4_3412: // not in Microsoft's list
+                case Ude.Charsets.UCS4_2413: // not in Microsoft's list
+                case Ude.Charsets.WIN1251: // Cyrillic (Windows), not supported by .NET
+                case Ude.Charsets.WIN1253: // Greek (Windows), not supported by .NET
+                case Ude.Charsets.WIN1255: // Hebrew (Windows), not supported by .NET
+                case Ude.Charsets.BIG5: // Chinese Traditional, not supported by .NET
+                case Ude.Charsets.EUCTW: // not in Microsoft's list
+                case Ude.Charsets.SHIFT_JIS: // Japanese (Shift-JIS), not supported by .NET
+                case Ude.Charsets.MAC_CYRILLIC: // Cyrillic (Mac), not supported by .NET
+                case Ude.Charsets.KOI8R: // Cyrillic (KOI8-R), not supported by .NET
+                case Ude.Charsets.IBM855: // OEM Cyrillic, not supported by .NET
+                case Ude.Charsets.IBM866: // Cyrillic (DOS), not supported by .NET
+                case Ude.Charsets.ISO8859_2: // Central European (ISO), not supported by .NET
+                case Ude.Charsets.ISO8859_5: // Cyrillic (ISO), not supported by .NET
+                case Ude.Charsets.ISO_8859_7: // Greek (ISO), not supported by .NET
+                case Ude.Charsets.TIS620: // not in Microsoft's list
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        public static StreamReader CreateStreamReaderWithAppropriateEncoding(FileInfo file, Encoding detectedEncoding)
+        {
+            if (detectedEncoding == null)
+            {
+                return new StreamReader(file.FullName);
+            }
+            return new StreamReader(file.FullName, detectedEncoding);
+        }
+
+        public static StreamWriter CreateStreamWriterWithAppropriateEncoding(string path,
+            Encoding detectedEncoding, OutputEncoding outputEncoding)
+        {
+            Encoding encoding = GetEncoding(detectedEncoding, outputEncoding);
+            if (encoding == null)
+            {
+                return new StreamWriter(path);
+            }
+            return new StreamWriter(path, false, encoding);
+        }
+
+        public static Encoding GetEncoding(Encoding detectedEncoding, OutputEncoding outputEncoding)
+        {
+            switch (outputEncoding)
+            {
+                case OutputEncoding.MatchInput:
+                    return detectedEncoding;
+                case OutputEncoding.ASCII:
+                    return Encoding.ASCII;
+                case OutputEncoding.UTF8:
+                    return Encoding.UTF8;
+                case OutputEncoding.UTF16_LE:
+                    return Encoding.Unicode;
+                case OutputEncoding.UTF16_BE:
+                    return Encoding.BigEndianUnicode;
+                case OutputEncoding.UTF32_BE:
+                    return Encoding.GetEncoding(12001);
+                case OutputEncoding.UTF32_LE:
+                    return Encoding.UTF32;
+                case OutputEncoding.WIN1252:
+                    return Encoding.GetEncoding(1252); // Western European (Windows)
+                case OutputEncoding.EUCKR: // Korean (EUC)
+                    return Encoding.GetEncoding(51949);
+                case OutputEncoding.EUCJP: // Japanese (EUC)
+                    return Encoding.GetEncoding(51932);
+                case OutputEncoding.GB18030: // Chinese Simplified
+                    return Encoding.GetEncoding(54936);
+                case OutputEncoding.ISO2022_JP: // Japanese (JIS)
+                    return Encoding.GetEncoding(50220);
+                case OutputEncoding.ISO2022_CN: // Chinese Simplified (ISO-2022)
+                    return Encoding.GetEncoding(50227);
+                case OutputEncoding.ISO2022_KR: // Korean (ISO)
+                    return Encoding.GetEncoding(50225);
+                case OutputEncoding.HZ_GB_2312: // Chinese Simplified (HZ)
+                    return Encoding.GetEncoding(52936);
+                case OutputEncoding.ISO8859_8: // Hebrew (ISO-Visual)
+                    return Encoding.GetEncoding(28598);
+                default:
+                    return null;
+            }
+        }
+
     }
 }

@@ -18,6 +18,8 @@ namespace FileSharper
 
         private int m_SelectedIndex = 0;
 
+        public bool m_ShowingHelp = false;
+
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
             new ObservableCollection<SearchDocument>();
 
@@ -33,11 +35,27 @@ namespace FileSharper
             }
         }
 
+        public bool ShowingHelp
+        {
+            get => m_ShowingHelp;
+            set
+            {
+                if (m_ShowingHelp != value)
+                {
+                    m_ShowingHelp = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public ICommand NewSearchCommand { get; private set; }
         public ICommand OpenSearchCommand { get; private set; }
         public ICommand CloseSearchCommand { get; private set; }
         public ICommand SaveSearchCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
+
+        public ICommand AboutCommand { get; private set; }
+        public ICommand HideAboutCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -47,6 +65,9 @@ namespace FileSharper
             CloseSearchCommand = new SearchCloser(this);
             SaveSearchCommand = new SearchSaver(this);
             ExitCommand = new ApplicationExiter(this);
+
+            AboutCommand = new AboutBoxShower(this);
+            HideAboutCommand = new AboutBoxHider(this);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -234,6 +255,56 @@ namespace FileSharper
         public void Execute(object parameter)
         {
             System.Windows.Application.Current.Shutdown();
+        }
+    }
+
+    public class AboutBoxShower : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+        public MainViewModel ViewModel
+        {
+            get; set;
+        }
+
+        public AboutBoxShower(MainViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            ViewModel.ShowingHelp = true;
+        }
+    }
+
+    public class AboutBoxHider : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+        public MainViewModel ViewModel
+        {
+            get; set;
+        }
+
+        public AboutBoxHider(MainViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            ViewModel.ShowingHelp = false;
         }
     }
 }

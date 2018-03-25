@@ -159,4 +159,24 @@ namespace FileSharperCore
         DirectoryThenName
     }
 
+    public enum OutputEncoding
+    {
+        MatchInput,
+        ASCII,
+        UTF8,
+        UTF16_LE,
+        UTF16_BE,
+        UTF32_BE,
+        UTF32_LE,
+        WIN1252,
+        EUCKR,
+        EUCJP,
+        GB18030,
+        ISO2022_JP,
+        ISO2022_CN,
+        ISO2022_KR,
+        HZ_GB_2312,
+        ISO8859_8
+    }
+
 }

@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Threading;
 using FileSharperCore.Editors;
 using FileSharperCore.Util;
@@ -22,10 +23,12 @@ namespace FileSharperCore.Processors
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; }
         [PropertyOrder(4, UsageContextEnum.Both)]
-        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        public OutputEncoding OutputEncoding { get; set; } = OutputEncoding.MatchInput;
         [PropertyOrder(5, UsageContextEnum.Both)]
-        public bool OverwriteExistingFile { get; set; } = true;
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
         [PropertyOrder(6, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(7, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -44,14 +47,16 @@ namespace FileSharperCore.Processors
         public override ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
+            Encoding encoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
-            using (StreamWriter writer = new StreamWriter(tmpFile))
+            using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
+                tmpFile, encoding, m_Parameters.OutputEncoding))
             {
                 writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
-                using (StreamReader reader = new StreamReader(file.FullName))
+                using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(file, encoding))
                 {
                     string text = m_Parameters.Text ?? string.Empty;
-                    
+
                     if (m_Parameters.PrependOrAppend == PrependAppend.Prepend)
                     {
                         WriteLines(writer, text);

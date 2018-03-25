@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -20,10 +21,12 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(3, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(4, UsageContextEnum.Both)]
-        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        public OutputEncoding OutputEncoding { get; set; } = OutputEncoding.MatchInput;
         [PropertyOrder(5, UsageContextEnum.Both)]
-        public bool OverwriteExistingFile { get; set; } = true;
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
         [PropertyOrder(6, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(7, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -64,10 +67,12 @@ namespace FileSharperCore.Processors.Text
         public override ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
-            string[] lines = File.ReadAllLines(file.FullName);
+            Encoding detectedEncoding = TextUtil.DetectEncoding(file);
+            string[] lines = File.ReadAllLines(file.FullName, detectedEncoding);
             Array.Sort(lines, m_Comparer);
             string tmpFile = Path.GetTempFileName();
-            using (StreamWriter writer = new StreamWriter(tmpFile))
+            using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
+                tmpFile, detectedEncoding, m_Parameters.OutputEncoding))
             {
                 writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
                 foreach (string line in lines)

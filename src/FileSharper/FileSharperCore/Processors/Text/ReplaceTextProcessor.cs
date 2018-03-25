@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using FileSharperCore.Editors;
@@ -30,10 +31,12 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(6, UsageContextEnum.Both)]
         public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(7, UsageContextEnum.Both)]
-        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        public OutputEncoding OutputEncoding { get; set; } = OutputEncoding.MatchInput;
         [PropertyOrder(8, UsageContextEnum.Both)]
-        public bool OverwriteExistingFile { get; set; } = true;
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
         [PropertyOrder(9, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(10, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -78,8 +81,10 @@ namespace FileSharperCore.Processors.Text
 
         public override ProcessingResult Process(FileInfo file, string[] values, IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
+            Encoding detectedEncoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
-            using (StreamWriter writer = new StreamWriter(tmpFile))
+            using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
+                tmpFile, detectedEncoding, m_Parameters.OutputEncoding))
             {
                 writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
                 if (m_Parameters.Multiline)
@@ -90,7 +95,8 @@ namespace FileSharperCore.Processors.Text
                 }
                 else
                 {
-                    using (StreamReader reader = new StreamReader(file.FullName))
+                    using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(
+                        file, detectedEncoding))
                     {
                         while (!reader.EndOfStream)
                         {
