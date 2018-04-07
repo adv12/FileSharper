@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using FileSharperCore;
 using Microsoft.Win32;
@@ -18,7 +19,11 @@ namespace FileSharper
 
         private int m_SelectedIndex = 0;
 
-        public bool m_ShowingHelp = false;
+        private bool m_ShowingAbout = false;
+
+        private bool m_ShowingPathHelp = false;
+
+        private bool m_ShowingMainUI = true;
 
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
             new ObservableCollection<SearchDocument>();
@@ -35,14 +40,55 @@ namespace FileSharper
             }
         }
 
-        public bool ShowingHelp
+        public bool ShowingAbout
         {
-            get => m_ShowingHelp;
+            get => m_ShowingAbout;
             set
             {
-                if (m_ShowingHelp != value)
+                if (m_ShowingAbout != value)
                 {
-                    m_ShowingHelp = value;
+                    m_ShowingAbout = value;
+                    if (value)
+                    {
+                        ShowingPathHelp = false;
+                        ShowingMainUI = false;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool ShowingPathHelp
+        {
+            get => m_ShowingPathHelp;
+            set
+            {
+                if (m_ShowingPathHelp != value)
+                {
+                    m_ShowingPathHelp = value;
+                    if (value)
+                    {
+                        ShowingAbout = false;
+                        ShowingMainUI = false;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool ShowingMainUI
+        {
+            get => m_ShowingMainUI;
+            set
+            {
+                if (m_ShowingMainUI != value)
+                {
+                    m_ShowingMainUI = value;
+                    if (value)
+                    {
+                        ShowingAbout = false;
+                        ShowingPathHelp = false;
+                    }
                     OnPropertyChanged();
                 }
             }
@@ -57,6 +103,11 @@ namespace FileSharper
         public ICommand AboutCommand { get; private set; }
         public ICommand HideAboutCommand { get; private set; }
 
+        public ICommand PathHelpCommand { get; private set; }
+        public ICommand HidePathHelpCommand { get; private set; }
+
+        public ICommand NavigateCommand { get; private set; }
+
         public MainViewModel()
         {
             SearchDocuments.Add(new SearchDocument(true));
@@ -68,11 +119,20 @@ namespace FileSharper
 
             AboutCommand = new AboutBoxShower(this);
             HideAboutCommand = new AboutBoxHider(this);
+
+            PathHelpCommand = new PathHelpShower(this);
+            HidePathHelpCommand = new PathHelpHider(this);
+
+            NavigateCommand = new LinkNavigator(this);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (!ShowingAbout && !ShowingPathHelp)
+            {
+                ShowingMainUI = true;
+            }
         }
 
         public class NewSearchMaker : ICommand
@@ -279,7 +339,7 @@ namespace FileSharper
 
         public void Execute(object parameter)
         {
-            ViewModel.ShowingHelp = true;
+            ViewModel.ShowingAbout = true;
         }
     }
 
@@ -304,7 +364,93 @@ namespace FileSharper
 
         public void Execute(object parameter)
         {
-            ViewModel.ShowingHelp = false;
+            ViewModel.ShowingAbout = false;
+        }
+    }
+
+    public class PathHelpShower : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+        public MainViewModel ViewModel
+        {
+            get; set;
+        }
+
+        public PathHelpShower(MainViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            ViewModel.ShowingPathHelp = true;
+        }
+    }
+
+    public class PathHelpHider : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+        public MainViewModel ViewModel
+        {
+            get; set;
+        }
+
+        public PathHelpHider(MainViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            ViewModel.ShowingPathHelp = false;
+        }
+    }
+
+    public class LinkNavigator : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+
+        public MainViewModel ViewModel
+        {
+            get; set;
+        }
+
+        public LinkNavigator(MainViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            string url = parameter as string;
+            if (url != null)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(url);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Could not open hyperlink {url}: {ex}");
+                }
+            }
         }
     }
 }

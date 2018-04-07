@@ -34,6 +34,7 @@ full text of the license.
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About FileSharper" Command="{Binding AboutCommand}"/>
+                <MenuItem Header="Specifying _Paths in FileSharper" Command="{Binding PathHelpCommand}"/>
             </MenuItem>
         </Menu>
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -43,7 +44,7 @@ full text of the license.
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TabControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingHelp, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">
+            <TabControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -58,34 +59,12 @@ full text of the license.
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
-            <StackPanel Margin="20" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ShowingHelp, Converter={StaticResource boolToVisibilityConverter}}">
-                <TextBlock FontSize="24" Margin="20" HorizontalAlignment="Center">About FileSharper</TextBlock>
-                <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
-                    FileSharper is Copyright (C) 2018 Andrew Vardeman.  It's open source, distributed under the MIT License.
-                    The code is available on GitHub:  https://github.com/adv12/FileSharper.  It's written in C#
-                    and WPF, and it's designed to be easily extensible.  If you know C# and would like to add
-                    functionality, grab the source and read the project wiki (https://github.com/adv12/FileSharper/wiki)
-                    for tips on use and modification.</TextBlock>
-                <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
-                    FileSharper uses the Xceed WPF Toolkit, which is distributed under the Microsoft Public License.
-                    The code is available on GitHub: https://github.com/xceedsoftware/wpftoolkit</TextBlock>
-                <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
-                    FileSharper uses the Json.NET JSON framework, available at https://www.newtonsoft.com/json.
-                    It's open source, distributed under the MIT License.  The source code is available on GitHub:
-                    https://github.com/JamesNK/Newtonsoft.Json</TextBlock>
-                <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
-                    FileSharper uses the CsvHelper library from Josh Close, available at https://joshclose.github.io/CsvHelper.
-                    It's open source, distributed under the Microsoft Public License.  The source code is available on GitHub:
-                    https://github.com/joshclose/csvhelper
-                </TextBlock>
-                <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
-                    FileSharper uses Ookii Dialogs from http://www.ookii.org/software/dialogs/</TextBlock>
-                <TextBlock Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap">
-                    FileSharper uses UDE, a C# port of Mozilla Universal Charset Detector.
-                    UDE is distributed under the Mozilla Public License version 1.1.
-                    The code is available on GitHub: https://github.com/errepi/ude</TextBlock>
-                <Button Padding="4" HorizontalAlignment="Center" Command="{Binding HideAboutCommand}">OK</Button>
-            </StackPanel>
+            <ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ShowingAbout, Converter={StaticResource boolToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
+                <local:AboutControl />
+            </ScrollViewer>
+            <ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ShowingPathHelp, Converter={StaticResource boolToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
+                <local:PathHelpControl />
+            </ScrollViewer>
         </Grid>
         <!--<FileSharperUI:SearchDocumentControl Name="searchDocumentControl" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>-->
     </DockPanel>

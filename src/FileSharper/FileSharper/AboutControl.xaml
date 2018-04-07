@@ -1,0 +1,45 @@
+﻿<!--
+Copyright (c) 2018 Andrew Vardeman.  Published under the MIT license.
+See license.txt in the FileSharper distribution or repository for the
+full text of the license.
+-->
+<!--
+    
+-->
+<UserControl x:Class="FileSharper.AboutControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharper"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Margin="20" HorizontalAlignment="Stretch">
+        <TextBlock FontSize="24" Margin="20" HorizontalAlignment="Center">About FileSharper</TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                    FileSharper is Copyright (C) 2018 Andrew Vardeman.  It's open source, distributed under the MIT License.
+                    The code is available on GitHub: <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/adv12/FileSharper">https://github.com/adv12/FileSharper</Hyperlink>.  It's written in C#
+                    and WPF, and it's designed to be easily extensible.  If you know C# and would like to add
+                    functionality, grab the source and read the project wiki (<Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/adv12/FileSharper/wiki">https://github.com/adv12/FileSharper/wiki</Hyperlink>)
+                    for tips on use and modification.</TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                    FileSharper uses the Xceed WPF Toolkit, which is distributed under the Microsoft Public License.
+                    The code is available on GitHub: <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/xceedsoftware/wpftoolkit">https://github.com/xceedsoftware/wpftoolkit</Hyperlink></TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                    FileSharper uses the Json.NET JSON framework, available at <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://www.newtonsoft.com/json">https://www.newtonsoft.com/json</Hyperlink>.
+                    It's open source, distributed under the MIT License.  The source code is available on GitHub:
+                    <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/JamesNK/Newtonsoft.Json">https://github.com/JamesNK/Newtonsoft.Json</Hyperlink></TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                    FileSharper uses the CsvHelper library from Josh Close, available at <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://joshclose.github.io/CsvHelper">https://joshclose.github.io/CsvHelper</Hyperlink>.
+                    It's open source, distributed under the Microsoft Public License.  The source code is available on GitHub:
+                    <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/joshclose/csvhelper">https://github.com/joshclose/csvhelper</Hyperlink>
+        </TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                    FileSharper uses Ookii Dialogs from <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="http://www.ookii.org/software/dialogs/">http://www.ookii.org/software/dialogs/</Hyperlink></TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap">
+                    FileSharper uses UDE, a C# port of Mozilla Universal Charset Detector.
+                    UDE is distributed under the Mozilla Public License version 1.1.
+                    The code is available on GitHub: <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/errepi/ude">https://github.com/errepi/ude</Hyperlink></TextBlock>
+        <Button Padding="4" HorizontalAlignment="Center" Command="{Binding HideAboutCommand}">OK</Button>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,98 @@
+﻿<!--
+Copyright (c) 2018 Andrew Vardeman.  Published under the MIT license.
+See license.txt in the FileSharper distribution or repository for the
+full text of the license.
+-->
+<!--
+    
+-->
+<UserControl x:Class="FileSharper.PathHelpControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharper"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Margin="20" HorizontalAlignment="Stretch">
+        <TextBlock FontSize="24" Margin="20" HorizontalAlignment="Center">Specifying Paths in FileSharper</TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+            When setting up certain processors to run when files are tested or matched, you will need to specify a path
+            for an output file.  You can type in full paths, e.g. &quot;C:\foo.txt&quot;, but you can also construct a path
+            from properties of the input file and refer to special folders like the Desktop folder using special names
+            between braces like &quot;{DirectoryName}&quot;, &quot;{NameWithoutExtension}&quot;, and &quot;{Desktop}&quot;.
+            The names of many of the substituted strings match property names from the .NET <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://msdn.microsoft.com/en-us/library/system.io.fileinfo(v=vs.110).aspx">FileInfo class</Hyperlink>
+            and <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://msdn.microsoft.com/en-us/library/system.environment.specialfolder(v=vs.110).aspx">SpecialFolder enumeration</Hyperlink>.
+        </TextBlock>
+        <TextBlock FontSize="18" Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">Input File Properties Supported</TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold"><Run FontWeight="Normal">The following input file properties are supported:</Run><LineBreak/><LineBreak/>
+            <Run>Name</Run><LineBreak/>
+            <Run>FullName</Run><LineBreak/>
+            <Run>DirectoryName</Run><LineBreak/>
+            <Run>Extension</Run><LineBreak/>
+            <Run>NameWithoutExtension</Run><LineBreak/>
+            <Run>NameMinusExtension</Run><LineBreak/>
+            <Run>Length</Run><LineBreak/>
+            <Run>CreationTime</Run><LineBreak/>
+            <Run>CreationTimeUtc</Run><LineBreak/>
+            <Run>LastWriteTime</Run><LineBreak/>
+            <Run>LastWriteTimeUtc</Run><LineBreak/>
+            <Run>LastAccessTime</Run><LineBreak/>
+            <Run>LastAccessTimeUtc</Run><LineBreak/>
+        </TextBlock>
+        <TextBlock FontSize="18" Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">Special Folders Supported</TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold"><Run FontWeight="Normal">The following special folder names are supported:</Run><LineBreak/><LineBreak/>
+            <Run>AdminTools</Run><LineBreak/>
+            <Run>ApplicationData</Run><LineBreak/>
+            <Run>CDBurning</Run><LineBreak/>
+            <Run>CommonAdminTools</Run><LineBreak/>
+            <Run>CommonApplicationData</Run><LineBreak/>
+            <Run>CommonDesktopDirectory</Run><LineBreak/>
+            <Run>CommonDocuments</Run><LineBreak/>
+            <Run>CommonMusic</Run><LineBreak/>
+            <Run>CommonOemLinks</Run><LineBreak/>
+            <Run>CommonPictures</Run><LineBreak/>
+            <Run>CommonProgramFiles</Run><LineBreak/>
+            <Run>CommonPrograms</Run><LineBreak/>
+            <Run>CommonStartMenu</Run><LineBreak/>
+            <Run>CommonStartup</Run><LineBreak/>
+            <Run>CommonTemplates</Run><LineBreak/>
+            <Run>CommonVideos</Run><LineBreak/>
+            <Run>Cookies</Run><LineBreak/>
+            <Run>Desktop</Run><LineBreak/>
+            <Run>DesktopDirectory</Run><LineBreak/>
+            <Run>Favorites</Run><LineBreak/>
+            <Run>Fonts</Run><LineBreak/>
+            <Run>History</Run><LineBreak/>
+            <Run>InternetCache</Run><LineBreak/>
+            <Run>LocalApplicationData</Run><LineBreak/>
+            <Run>LocalizedResources</Run><LineBreak/>
+            <Run>MyComputer</Run><LineBreak/>
+            <Run>MyDocuments</Run><LineBreak/>
+            <Run>MyMusic</Run><LineBreak/>
+            <Run>MyPictures</Run><LineBreak/>
+            <Run>MyVideos</Run><LineBreak/>
+            <Run>NetworkShortcuts</Run><LineBreak/>
+            <Run>Personal</Run><LineBreak/>
+            <Run>PrinterShortcuts</Run><LineBreak/>
+            <Run>ProgramFiles</Run><LineBreak/>
+            <Run>ProgramFilesX86</Run><LineBreak/>
+            <Run>Programs</Run><LineBreak/>
+            <Run>Recent</Run><LineBreak/>
+            <Run>Resources</Run><LineBreak/>
+            <Run>SendTo</Run><LineBreak/>
+            <Run>StartMenu</Run><LineBreak/>
+            <Run>Startup</Run><LineBreak/>
+            <Run>System</Run><LineBreak/>
+            <Run>SystemX86</Run><LineBreak/>
+            <Run>Templates</Run><LineBreak/>
+            <Run>UserProfile</Run><LineBreak/>
+            <Run>Windows</Run><LineBreak/>
+        </TextBlock>
+        <TextBlock FontSize="18" Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">Miscellaneous Other Variables Supported</TextBlock>
+        <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold"><Run FontWeight="Normal">The following variables are also supported:</Run><LineBreak/><LineBreak/>
+            <Run>Now</Run><LineBreak/>
+        </TextBlock>
+        <Button Padding="4" HorizontalAlignment="Center" Command="{Binding HidePathHelpCommand}">OK</Button>
+    </StackPanel>
+</UserControl>
