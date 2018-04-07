@@ -14,3 +14,5 @@
 /src/FileSharper/packages
 *.csproj.user
 /README.md.bak
+/src/FileSharper/FileSharper/Thumbs.db
+/src/FileSharper/FileSharperSetup/Debug
