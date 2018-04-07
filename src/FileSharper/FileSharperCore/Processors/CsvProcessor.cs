@@ -11,7 +11,6 @@ using CsvHelper;
 using FileSharperCore.Editors;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using System.Diagnostics;
 
 namespace FileSharperCore.Processors
 {
