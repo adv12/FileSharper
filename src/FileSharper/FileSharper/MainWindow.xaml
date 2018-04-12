@@ -28,6 +28,10 @@ full text of the license.
                 <MenuItem Header="_Open" Command="{Binding OpenSearchCommand}" />
                 <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" />
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}"/>
+                <MenuItem Header="Save As _Template for New Searches" Command="{Binding SaveTemplateCommand}"
+                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                <MenuItem Header="_Reset Template for New Searches" Command="{Binding ResetTemplateCommand}"
+                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" />
                 <Separator />
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}" />

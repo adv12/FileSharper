@@ -13,15 +13,21 @@ using Newtonsoft.Json.Converters;
 
 namespace FileSharperCore
 {
-    public class SearchDocument : INotifyPropertyChanged
+    public class SearchDocument : INotifyPropertyChanged, ICloneable
     {
 
         public static SearchDocument FromFile(string path)
         {
             string json = File.ReadAllText(path);
+            SearchDocument doc = FromString(json);
+            doc.FileName = path;
+            return doc;
+        }
+
+        public static SearchDocument FromString(string json)
+        {
             SearchDocument doc = JsonConvert.DeserializeObject<SearchDocument>(json);
             doc.Loaded = true;
-            doc.FileName = path;
             return doc;
         }
 
@@ -225,11 +231,21 @@ namespace FileSharperCore
 
         public void Save(string filename)
         {
+            File.WriteAllText(filename, ToString());
+        }
+
+        public override string ToString()
+        {
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new StringEnumConverter());
             settings.Formatting = Formatting.Indented;
             string text = JsonConvert.SerializeObject(this, settings);
-            File.WriteAllText(filename, text);
+            return text;
+        }
+
+        public object Clone()
+        {
+            return FromString(ToString());
         }
 
         public class SearchRunner : ICommand

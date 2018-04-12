@@ -28,7 +28,10 @@ namespace FileSharper
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
             new ObservableCollection<SearchDocument>();
 
-        public int SelectedIndex {
+        public FileSharperSettings Settings { get; }
+
+        public int SelectedIndex
+        {
             get => m_SelectedIndex;
             set
             {
@@ -98,6 +101,8 @@ namespace FileSharper
         public ICommand OpenSearchCommand { get; private set; }
         public ICommand CloseSearchCommand { get; private set; }
         public ICommand SaveSearchCommand { get; private set; }
+        public ICommand SaveTemplateCommand { get; private set; }
+        public ICommand ResetTemplateCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
 
         public ICommand AboutCommand { get; private set; }
@@ -110,11 +115,15 @@ namespace FileSharper
 
         public MainViewModel()
         {
-            SearchDocuments.Add(new SearchDocument(true));
+            Settings = FileSharperSettings.Load();
+
+            AddNewSearch();
             NewSearchCommand = new NewSearchMaker(this);
             OpenSearchCommand = new SearchOpener(this);
             CloseSearchCommand = new SearchCloser(this);
             SaveSearchCommand = new SearchSaver(this);
+            SaveTemplateCommand = new SearchTemplateSaver(this);
+            ResetTemplateCommand = new SearchTemplateClearer(this);
             ExitCommand = new ApplicationExiter(this);
 
             AboutCommand = new AboutBoxShower(this);
@@ -124,6 +133,19 @@ namespace FileSharper
             HidePathHelpCommand = new PathHelpHider(this);
 
             NavigateCommand = new LinkNavigator(this);
+        }
+
+        public void AddNewSearch()
+        {
+            if (Settings?.NewSearchTemplate != null)
+            {
+                SearchDocuments.Add((SearchDocument)Settings.NewSearchTemplate.Clone());
+            }
+            else
+            {
+                SearchDocuments.Add(new SearchDocument(true));
+            }
+            SelectedIndex = SearchDocuments.Count - 1;
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -156,8 +178,7 @@ namespace FileSharper
 
             public void Execute(object parameter)
             {
-                ViewModel.SearchDocuments.Add(new SearchDocument(true));
-                ViewModel.SelectedIndex = ViewModel.SearchDocuments.Count - 1;
+                ViewModel.AddNewSearch();
             }
         }
 
@@ -290,165 +311,243 @@ namespace FileSharper
                 }
             }
         }
-    }
 
-    public class ApplicationExiter : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-
-
-        public MainViewModel ViewModel
+        public class SearchTemplateSaver : ICommand
         {
-            get; set;
-        }
+            public event EventHandler CanExecuteChanged;
 
-        public ApplicationExiter(MainViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-    }
-
-    public class AboutBoxShower : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-
-        public MainViewModel ViewModel
-        {
-            get; set;
-        }
-
-        public AboutBoxShower(MainViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            ViewModel.ShowingAbout = true;
-        }
-    }
-
-    public class AboutBoxHider : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-
-        public MainViewModel ViewModel
-        {
-            get; set;
-        }
-
-        public AboutBoxHider(MainViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            ViewModel.ShowingAbout = false;
-        }
-    }
-
-    public class PathHelpShower : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-
-        public MainViewModel ViewModel
-        {
-            get; set;
-        }
-
-        public PathHelpShower(MainViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            ViewModel.ShowingPathHelp = true;
-        }
-    }
-
-    public class PathHelpHider : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-
-        public MainViewModel ViewModel
-        {
-            get; set;
-        }
-
-        public PathHelpHider(MainViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            ViewModel.ShowingPathHelp = false;
-        }
-    }
-
-    public class LinkNavigator : ICommand
-    {
-        public event EventHandler CanExecuteChanged;
-
-        public MainViewModel ViewModel
-        {
-            get; set;
-        }
-
-        public LinkNavigator(MainViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            string url = parameter as string;
-            if (url != null)
+            public MainViewModel ViewModel
             {
-                try
+                get; set;
+            }
+
+            public SearchTemplateSaver(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                int idx = ViewModel.SelectedIndex;
+                if (idx >= 0 && idx < ViewModel.SearchDocuments.Count)
                 {
-                    System.Diagnostics.Process.Start(url);
+                    MessageBoxResult result = MessageBoxResult.OK;
+                    if (parameter is Window)
+                    {
+                        result = MessageBox.Show(parameter as Window,
+                            "Save the current search as the template for new searches?", "Save Template?",
+                            MessageBoxButton.OKCancel);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            SearchDocument doc = ViewModel.SearchDocuments[idx];
+                            if (doc != null)
+                            {
+                                ViewModel.Settings.NewSearchTemplate = doc.Clone() as SearchDocument;
+                            }
+                        }
+                    }
                 }
-                catch (Exception ex)
+            }
+        }
+
+        public class SearchTemplateClearer : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public SearchTemplateClearer(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                MessageBoxResult result = MessageBoxResult.OK;
+                if (parameter is Window)
                 {
-                    MessageBox.Show($"Could not open hyperlink {url}: {ex}");
+                    result = MessageBox.Show(parameter as Window,
+                        "Reset the template for new searches to an empty search?", "Reset Template?",
+                        MessageBoxButton.OKCancel);
+                }
+                if (result == MessageBoxResult.OK)
+                {
+                    ViewModel.Settings.NewSearchTemplate = null;
+                }
+            }
+        }
+
+        public class ApplicationExiter : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public ApplicationExiter(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
+        }
+
+        public class AboutBoxShower : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public AboutBoxShower(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                ViewModel.ShowingAbout = true;
+            }
+        }
+
+        public class AboutBoxHider : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public AboutBoxHider(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                ViewModel.ShowingAbout = false;
+            }
+        }
+
+        public class PathHelpShower : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public PathHelpShower(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                ViewModel.ShowingPathHelp = true;
+            }
+        }
+
+        public class PathHelpHider : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public PathHelpHider(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                ViewModel.ShowingPathHelp = false;
+            }
+        }
+
+        public class LinkNavigator : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public LinkNavigator(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                string url = parameter as string;
+                if (url != null)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(url);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Could not open hyperlink {url}: {ex}");
+                    }
                 }
             }
         }

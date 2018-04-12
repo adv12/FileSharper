@@ -2,6 +2,8 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace FileSharper
@@ -16,6 +18,19 @@ namespace FileSharper
             FileSharperUtil.LoadAssemblies();
             InitializeComponent();
             DataContext = new MainViewModel();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            try
+            {
+                ((MainViewModel)DataContext)?.Settings?.Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Error saving settings: " + ex.ToString());
+            }
         }
     }
 }
