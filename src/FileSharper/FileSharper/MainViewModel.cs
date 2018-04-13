@@ -99,6 +99,7 @@ namespace FileSharper
 
         public ICommand NewSearchCommand { get; private set; }
         public ICommand OpenSearchCommand { get; private set; }
+        public ICommand OpenRecentCommand { get; private set; }
         public ICommand CloseSearchCommand { get; private set; }
         public ICommand SaveSearchCommand { get; private set; }
         public ICommand SaveTemplateCommand { get; private set; }
@@ -120,6 +121,7 @@ namespace FileSharper
             AddNewSearch();
             NewSearchCommand = new NewSearchMaker(this);
             OpenSearchCommand = new SearchOpener(this);
+            OpenRecentCommand = new RecentSearchOpener(this);
             CloseSearchCommand = new SearchCloser(this);
             SaveSearchCommand = new SearchSaver(this);
             SaveTemplateCommand = new SearchTemplateSaver(this);
@@ -146,6 +148,13 @@ namespace FileSharper
                 SearchDocuments.Add(new SearchDocument(true));
             }
             SelectedIndex = SearchDocuments.Count - 1;
+        }
+
+        public void OpenFile(string filename)
+        {
+            SearchDocuments.Add(SearchDocument.FromFile(filename));
+            SelectedIndex = SearchDocuments.Count - 1;
+            Settings.AddRecentDocument(filename);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -204,15 +213,43 @@ namespace FileSharper
             public void Execute(object parameter)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Multiselect = true;
                 openFileDialog.Filter = "FileSharper files (*.fsh)|*.fsh";
                 bool? success = openFileDialog.ShowDialog();
                 if (success.HasValue && success.Value)
                 {
                     foreach (string filename in openFileDialog.FileNames)
                     {
-                        ViewModel.SearchDocuments.Add(SearchDocument.FromFile(openFileDialog.FileName));
-                        ViewModel.SelectedIndex = ViewModel.SearchDocuments.Count - 1;
+                        ViewModel.OpenFile(filename);
                     }
+                }
+            }
+        }
+
+        public class RecentSearchOpener : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public RecentSearchOpener(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                if (parameter is string)
+                {
+                    ViewModel.OpenFile((string)parameter);
                 }
             }
         }
@@ -307,6 +344,7 @@ namespace FileSharper
                     {
                         doc.Save(path);
                         doc.FileName = path;
+                        ViewModel.Settings.AddRecentDocument(path);
                     }
                 }
             }

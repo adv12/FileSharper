@@ -16,6 +16,7 @@ full text of the license.
         xmlns:FileSharperUI="clr-namespace:FileSharperUI;assembly=FileSharperUI" x:Class="FileSharper.MainWindow"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
+        x:Name="ThisWindow"
         Title="FileSharper" Height="700" Width="600">
     <Window.Resources>
         <sys:Boolean x:Key="True">True</sys:Boolean>
@@ -26,12 +27,22 @@ full text of the license.
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{Binding NewSearchCommand}" />
                 <MenuItem Header="_Open" Command="{Binding OpenSearchCommand}" />
+                <MenuItem Header="Open _Recent" ItemsSource="{Binding Settings.RecentDocuments}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="MenuItem.Header" Value="{Binding}"/>
+                            <Setter Property="MenuItem.Command" Value="{Binding RelativeSource={RelativeSource AncestorType=MenuItem},
+                             Path=DataContext.OpenRecentCommand}"/>
+                            <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
                 <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" />
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}"/>
                 <MenuItem Header="Save As _Template for New Searches" Command="{Binding SaveTemplateCommand}"
-                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                          CommandParameter="{Binding ElementName=ThisWindow}" />
                 <MenuItem Header="_Reset Template for New Searches" Command="{Binding ResetTemplateCommand}"
-                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                          CommandParameter="{Binding ElementName=ThisWindow}" />
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" />
                 <Separator />
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}" />
