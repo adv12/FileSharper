@@ -42,7 +42,7 @@ full text of the license.
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{Binding NewSearchCommand}" InputGestureText="Ctrl+N"/>
                 <MenuItem Header="_Open..." Command="{Binding OpenSearchCommand}" InputGestureText="Ctrl+O"/>
-                <MenuItem Header="Open _Recent" ItemsSource="{Binding Settings.RecentDocuments}">
+                <MenuItem Header="Open _Recent" ItemsSource="{Binding Settings.RecentDocuments}" IsEnabled="{Binding AnyRecentDocuments}">
                     <MenuItem.ItemContainerStyle>
                         <Style>
                             <Setter Property="MenuItem.Header" Value="{Binding}"/>

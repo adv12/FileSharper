@@ -19,16 +19,20 @@ namespace FileSharper
 
         private int m_SelectedIndex = 0;
 
+        private bool m_AnyOpenFiles = false;
+
+        private bool m_AnyRecentDocuments = false;
+
         private bool m_ShowingAbout = false;
 
         private bool m_ShowingPathHelp = false;
 
         private bool m_ShowingMainUI = true;
 
+        public FileSharperSettings Settings { get; }
+
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
             new ObservableCollection<SearchDocument>();
-
-        public FileSharperSettings Settings { get; }
 
         public int SelectedIndex
         {
@@ -38,6 +42,32 @@ namespace FileSharper
                 if (m_SelectedIndex != value)
                 {
                     m_SelectedIndex = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool AnyOpenFiles
+        {
+            get => m_AnyOpenFiles;
+            private set
+            {
+                if (m_AnyOpenFiles != value)
+                {
+                    m_AnyOpenFiles = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool AnyRecentDocuments
+        {
+            get => m_AnyRecentDocuments;
+            private set
+            {
+                if (m_AnyRecentDocuments != value)
+                {
+                    m_AnyRecentDocuments = value;
                     OnPropertyChanged();
                 }
             }
@@ -118,6 +148,11 @@ namespace FileSharper
         {
             Settings = FileSharperSettings.Load();
 
+            Settings.RecentDocuments.CollectionChanged += RecentDocuments_CollectionChanged;
+            AnyRecentDocuments = Settings.RecentDocuments.Count > 0;
+
+            SearchDocuments.CollectionChanged += SearchDocuments_CollectionChanged;
+
             AddNewSearch();
             NewSearchCommand = new NewSearchMaker(this);
             OpenSearchCommand = new SearchOpener(this);
@@ -135,6 +170,16 @@ namespace FileSharper
             HidePathHelpCommand = new PathHelpHider(this);
 
             NavigateCommand = new LinkNavigator(this);
+        }
+
+        private void RecentDocuments_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            AnyRecentDocuments = Settings.RecentDocuments.Count > 0;
+        }
+
+        private void SearchDocuments_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            AnyOpenFiles = SearchDocuments.Count > 0;
         }
 
         public void AddNewSearch()
@@ -266,11 +311,20 @@ namespace FileSharper
             public SearchCloser(MainViewModel viewModel)
             {
                 ViewModel = viewModel;
+                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            }
+
+            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
+                {
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
 
             public bool CanExecute(object parameter)
             {
-                return true;
+                return ViewModel.AnyOpenFiles;
             }
 
             public void Execute(object parameter)
@@ -309,11 +363,20 @@ namespace FileSharper
             public SearchSaver(MainViewModel viewModel)
             {
                 ViewModel = viewModel;
+                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            }
+
+            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
+                {
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
 
             public bool CanExecute(object parameter)
             {
-                return true;
+                return ViewModel.AnyOpenFiles;
             }
 
             public void Execute(object parameter)
@@ -362,11 +425,20 @@ namespace FileSharper
             public SearchTemplateSaver(MainViewModel viewModel)
             {
                 ViewModel = viewModel;
+                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            }
+
+            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
+                {
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
 
             public bool CanExecute(object parameter)
             {
-                return true;
+                return ViewModel.AnyOpenFiles;
             }
 
             public void Execute(object parameter)

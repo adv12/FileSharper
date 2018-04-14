@@ -4,11 +4,7 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FileSharperCore;
 using Newtonsoft.Json;
 
@@ -73,7 +69,7 @@ namespace FileSharper
         public void Save(string settingsPath)
         {
             EnsureSettingsDirectoryPath();
-            string text = JsonConvert.SerializeObject(this);
+            string text = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(settingsPath, text);
         }
 
