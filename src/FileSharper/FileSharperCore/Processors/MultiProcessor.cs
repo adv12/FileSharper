@@ -16,7 +16,7 @@ namespace FileSharperCore.Processors
 
         public override string Category => "\u0002Compound";
 
-        public override string Description => "";
+        public override string Description => null;
 
         public override object Parameters => null;
 

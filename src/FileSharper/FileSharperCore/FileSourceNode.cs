@@ -48,9 +48,12 @@ namespace FileSharperCore
                     m_FileSourceInternal = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
+
+        public string Description => m_FileSourceInternal?.Description;
 
         public object Parameters
         {

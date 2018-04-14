@@ -163,9 +163,12 @@ namespace FileSharperCore
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
                     OnPropertyChanged(nameof(InputFileSource));
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
+
+        public string Description => m_ProcessorInternal?.Description;
 
         public InputFileSource InputFileSource
         {

@@ -61,6 +61,7 @@ namespace FileSharperCore
                                     starterNode.ConditionTypeName = oldCondition.GetType().FullName;
                                     starterNode.ConditionInternal = oldCondition;
                                 }
+                                starterNode.Loaded = Loaded;
                                 ChildNodes.Add(starterNode);
                             }
                         }
@@ -137,9 +138,12 @@ namespace FileSharperCore
                     m_ConditionInternal = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
+
+        public string Description => m_ConditionInternal?.Description;
 
         public object Parameters => m_ConditionInternal?.Parameters;
 

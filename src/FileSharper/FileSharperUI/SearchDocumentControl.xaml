@@ -25,7 +25,7 @@ full text of the license.
             <RowDefinition Height="4"/>
             <RowDefinition Height="{Binding ResultsPaneHeight}"/>
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Padding="10">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0" Padding="10">
             <Grid Height="Auto" Width="Auto" IsEnabled="{Binding NotSearching}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

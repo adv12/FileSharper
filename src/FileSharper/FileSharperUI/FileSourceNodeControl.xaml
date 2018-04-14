@@ -10,19 +10,21 @@ full text of the license.
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FileSharperUI"
              xmlns:helpers="clr-namespace:FileSharperUIHelpers;assembly=FileSharperUIHelpers"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="400">
     <UserControl.Resources>
         <helpers:ObjectToVisibilityConverter x:Key="converter"/>
         <helpers:TypeNameToFileSourceConverter x:Key="typeConverter"/>
+        <helpers:SubtractNumberConverter x:Key="subtractNumberConverter"/>
+        <sys:Double x:Key="widthMargin">20</sys:Double>
     </UserControl.Resources>
-    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+    <Grid x:Name="mainGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -43,6 +45,7 @@ full text of the license.
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSearchBox="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }" ShowSummary="False" ShowSortOptions="False"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" HorizontalAlignment="Left" TextWrapping="Wrap" Width="{Binding ElementName=mainGrid, Path=ActualWidth, Converter={StaticResource subtractNumberConverter}, ConverterParameter={StaticResource widthMargin}}" Height="Auto" Visibility="{Binding Path=Description, Converter={StaticResource converter}, TargetNullValue=Collapsed }" Text="{Binding Path=Description}" />
+        <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSearchBox="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }" ShowSummary="False" ShowSortOptions="False"/>
     </Grid>
 </UserControl>

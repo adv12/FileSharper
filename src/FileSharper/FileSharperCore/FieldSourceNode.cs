@@ -88,9 +88,12 @@ namespace FileSharperCore
                     m_FieldSourceInternal = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Parameters));
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
+
+        public string Description => m_FieldSourceInternal?.Description;
 
         public object Parameters
         {

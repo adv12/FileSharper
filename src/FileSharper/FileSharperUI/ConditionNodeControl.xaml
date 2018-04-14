@@ -10,15 +10,18 @@ full text of the license.
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FileSharperUI"
              xmlns:helpers="clr-namespace:FileSharperUIHelpers;assembly=FileSharperUIHelpers"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              x:Class="FileSharperUI.ConditionNodeControl"
              mc:Ignorable="d" d:DesignWidth="300">
     <UserControl.Resources>
         <helpers:ObjectToVisibilityConverter x:Key="converter"/>
         <helpers:TypeNameToConditionConverter x:Key="typeConverter"/>
+        <helpers:SubtractNumberConverter x:Key="subtractNumberConverter"/>
+        <sys:Double x:Key="widthMargin">20</sys:Double>
     </UserControl.Resources>
     <Border BorderThickness="1" Margin="4" CornerRadius="4" Padding="4" BorderBrush="LightGray" VerticalAlignment="Top" Width="Auto" Height="Auto">
-        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
+        <Grid x:Name="mainGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -46,8 +49,9 @@ full text of the license.
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
-            <local:ConditionNodeListControl Margin="4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Width="Auto"  Height="Auto" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" HorizontalAlignment="Left" TextWrapping="Wrap" Width="{Binding ElementName=mainGrid, Path=ActualWidth, Converter={StaticResource subtractNumberConverter}, ConverterParameter={StaticResource widthMargin}}" Height="Auto" Visibility="{Binding Path=Description, Converter={StaticResource converter}, TargetNullValue=Collapsed }" Text="{Binding Path=Description}"></TextBlock>
+            <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
+            <local:ConditionNodeListControl Margin="4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Width="Auto"  Height="Auto" />
         </Grid>
     </Border>
 </UserControl>
