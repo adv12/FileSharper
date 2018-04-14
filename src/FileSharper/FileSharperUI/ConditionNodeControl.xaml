@@ -50,7 +50,7 @@ full text of the license.
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" HorizontalAlignment="Left" TextWrapping="Wrap" Width="{Binding ElementName=mainGrid, Path=ActualWidth, Converter={StaticResource subtractNumberConverter}, ConverterParameter={StaticResource widthMargin}}" Height="Auto" Visibility="{Binding Path=Description, Converter={StaticResource converter}, TargetNullValue=Collapsed }" Text="{Binding Path=Description}"></TextBlock>
-            <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
+            <xctk:PropertyGrid x:Name="propertyGrid" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="4" VerticalAlignment="Top" MinWidth="400" MaxWidth="600" Width="Auto" Height="Auto" ShowTitle="False" ShowSummary="False" ShowSearchBox="False" ShowSortOptions="False" SelectedObject="{Binding Path=Parameters}" Visibility="{Binding Path=Parameters, Converter={StaticResource converter}, TargetNullValue=Collapsed }"/>
             <local:ConditionNodeListControl Margin="4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Width="Auto"  Height="Auto" />
         </Grid>
     </Border>
