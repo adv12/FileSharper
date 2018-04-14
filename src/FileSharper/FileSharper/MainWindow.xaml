@@ -26,7 +26,12 @@ full text of the license.
         <KeyBinding Command="{Binding NewSearchCommand}" Gesture="CTRL+N" />
         <KeyBinding Command="{Binding OpenSearchCommand}" Gesture="CTRL+O" />
         <KeyBinding Command="{Binding SaveSearchCommand}" Gesture="CTRL+S" />
-        <KeyBinding Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" Gesture="CTRL+SHIFT+S" />
+        <KeyBinding Command="{Binding SaveSearchCommand}"
+                    CommandParameter="{StaticResource True}" Gesture="CTRL+SHIFT+S" />
+        <KeyBinding Command="{Binding SaveTemplateCommand}"
+                          CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+T"/>
+        <KeyBinding Command="{Binding ResetTemplateCommand}"
+                          CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+SHIFT+T"/>
         <KeyBinding Command="{Binding CloseSearchCommand}"
               CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+W" />
         <KeyBinding Command="{Binding ExitCommand}" Gesture="ALT+F4" />
@@ -50,9 +55,9 @@ full text of the license.
                 <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" InputGestureText="Ctrl+S" />
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" InputGestureText="Ctrl+Shift+S"/>
                 <MenuItem Header="Save As _Template for New Searches" Command="{Binding SaveTemplateCommand}"
-                          CommandParameter="{Binding ElementName=ThisWindow}" />
+                          CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+T" />
                 <MenuItem Header="_Reset Template for New Searches" Command="{Binding ResetTemplateCommand}"
-                          CommandParameter="{Binding ElementName=ThisWindow}" />
+                          CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+Shift+T" />
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
