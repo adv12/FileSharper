@@ -76,14 +76,13 @@ full text of the license.
             </StackPanel>
             <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <TabItem Header="Results">
-                    <ListView  VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}">
+                    <ListView x:Name="resultsListView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" MouseDoubleClick="ListView_MouseDoubleClick">
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy Path(s)" Command="{Binding SearchViewModel.CopyPathCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                                 <MenuItem Header="Copy File(s)" Command="{Binding SearchViewModel.CopyFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                                 <MenuItem Header="Open File(s)" Command="{Binding SearchViewModel.OpenFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                                 <MenuItem Header="Open Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
