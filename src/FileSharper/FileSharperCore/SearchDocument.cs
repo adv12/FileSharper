@@ -33,6 +33,20 @@ namespace FileSharperCore
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [JsonIgnore]
+        public bool EverRun { get; set; } = false;
+
+        private int m_ResultsPaneHeight = 40;
+        [JsonIgnore]
+        public int ResultsPaneHeight
+        {
+            get => m_ResultsPaneHeight;
+            private set
+            {
+                SetField(ref m_ResultsPaneHeight, value);
+            }
+        }
+
         private string m_DisplayName = "New Search";
         [JsonIgnore]
         public string DisplayName {
@@ -278,6 +292,11 @@ namespace FileSharperCore
                     Document.MaxResultsDisplayed, Document.MaxExceptionsDisplayed);
                 Document.SearchViewModel = searchViewModel;
                 Document.Searching = true;
+                if (!Document.EverRun)
+                {
+                    Document.ResultsPaneHeight = 250;
+                    Document.EverRun = true;
+                }
                 try
                 {
                     await searchViewModel.SearchAsync();
