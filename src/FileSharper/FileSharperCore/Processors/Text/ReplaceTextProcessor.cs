@@ -23,20 +23,24 @@ namespace FileSharperCore.Processors.Text
         [Editor(typeof(FileSharperMultiLineTextEditor), typeof(FileSharperMultiLineTextEditor))]
         public string ReplacementText { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public bool UseRegex { get; set; }
+        public bool MatchOnlyWithinSingleLine { get; set; } = true;
         [PropertyOrder(4, UsageContextEnum.Both)]
-        public bool Multiline { get; set; }
+        public bool UseRegex { get; set; }
         [PropertyOrder(5, UsageContextEnum.Both)]
-        public bool CaseSensitive { get; set; }
+        public bool RegexStartAndEndMatchPerLine { get; set; }
         [PropertyOrder(6, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        public bool RegexDotMatchesNewline { get; set; }
         [PropertyOrder(7, UsageContextEnum.Both)]
-        public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
+        public bool CaseSensitive { get; set; }
         [PropertyOrder(8, UsageContextEnum.Both)]
-        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
         [PropertyOrder(9, UsageContextEnum.Both)]
-        public bool OverwriteExistingFile { get; set; } = true;
+        public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(10, UsageContextEnum.Both)]
+        public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
+        [PropertyOrder(11, UsageContextEnum.Both)]
+        public bool OverwriteExistingFile { get; set; } = true;
+        [PropertyOrder(12, UsageContextEnum.Both)]
         public bool MoveOriginalToRecycleBin { get; set; }
     }
 
@@ -63,9 +67,13 @@ namespace FileSharperCore.Processors.Text
             {
                 regexOptions |= RegexOptions.IgnoreCase;
             }
-            if (m_Parameters.Multiline)
+            if (m_Parameters.RegexStartAndEndMatchPerLine)
             {
                 regexOptions |= RegexOptions.Multiline;
+            }
+            if (m_Parameters.RegexDotMatchesNewline)
+            {
+                regexOptions |= RegexOptions.Singleline;
             }
             if (m_Parameters.UseRegex)
             {
@@ -87,9 +95,9 @@ namespace FileSharperCore.Processors.Text
                 tmpFile, detectedEncoding, m_Parameters.OutputEncoding))
             {
                 writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
-                if (m_Parameters.Multiline)
+                if (!m_Parameters.MatchOnlyWithinSingleLine)
                 {
-                    string text = File.ReadAllText(file.FullName);
+                    string text = File.ReadAllText(file.FullName, detectedEncoding);
                     text = m_Regex.Replace(text, m_ReplacementText);
                     writer.Write(text);
                 }
