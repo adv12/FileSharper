@@ -22,11 +22,21 @@ full text of the license.
         <sys:Boolean x:Key="True">True</sys:Boolean>
         <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding NewSearchCommand}" Gesture="CTRL+N" />
+        <KeyBinding Command="{Binding OpenSearchCommand}" Gesture="CTRL+O" />
+        <KeyBinding Command="{Binding SaveSearchCommand}" Gesture="CTRL+S" />
+        <KeyBinding Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" Gesture="CTRL+SHIFT+S" />
+        <KeyBinding Command="{Binding CloseSearchCommand}"
+              CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+W" />
+        <KeyBinding Command="{Binding ExitCommand}" Gesture="ALT+F4" />
+    </Window.InputBindings>
+
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" Command="{Binding NewSearchCommand}" />
-                <MenuItem Header="_Open" Command="{Binding OpenSearchCommand}" />
+                <MenuItem Header="_New" Command="{Binding NewSearchCommand}" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="_Open" Command="{Binding OpenSearchCommand}" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Open _Recent" ItemsSource="{Binding Settings.RecentDocuments}">
                     <MenuItem.ItemContainerStyle>
                         <Style>
@@ -37,15 +47,15 @@ full text of the license.
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" />
-                <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}"/>
+                <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" InputGestureText="Ctrl+S" />
+                <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" InputGestureText="Ctrl+Shift+S"/>
                 <MenuItem Header="Save As _Template for New Searches" Command="{Binding SaveTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" />
                 <MenuItem Header="_Reset Template for New Searches" Command="{Binding ResetTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" />
-                <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" />
+                <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />
-                <MenuItem Header="_Exit" Command="{Binding ExitCommand}" />
+                <MenuItem Header="_Exit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About FileSharper" Command="{Binding AboutCommand}"/>
@@ -59,13 +69,24 @@ full text of the license.
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TabControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
+            <TabControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="TabItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </TabControl.ItemContainerStyle>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding DisplayName}" Margin="4" ToolTip="{Binding FileName}"/>
-                            <Button Height="Auto" Width="Auto" Padding="4" Margin="4" Command="{Binding Path=DataContext.CloseSearchCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">x</Button>
-                        </StackPanel>
+                        <DockPanel HorizontalAlignment="Stretch">
+                            <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" Text="{Binding DisplayName}" Margin="4" ToolTip="{Binding FileName}"/>
+                            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Height="Auto" Width="Auto" Padding="2" Margin="4" Command="{Binding Path=DataContext.CloseSearchCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">
+                                <Canvas Width="10" Height="10">
+                                    <Line Stroke="Black" X1="0" X2="9" Y1="0" Y2="10"/>
+                                    <Line Stroke="Black" X1="0" X2="9" Y1="10" Y2="0"/>
+                                </Canvas>
+                            </Button>
+                        </DockPanel>
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
