@@ -41,7 +41,7 @@ full text of the license.
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{Binding NewSearchCommand}" InputGestureText="Ctrl+N"/>
-                <MenuItem Header="_Open" Command="{Binding OpenSearchCommand}" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="_Open..." Command="{Binding OpenSearchCommand}" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Open _Recent" ItemsSource="{Binding Settings.RecentDocuments}">
                     <MenuItem.ItemContainerStyle>
                         <Style>
@@ -54,9 +54,9 @@ full text of the license.
                 </MenuItem>
                 <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" InputGestureText="Ctrl+S" />
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" InputGestureText="Ctrl+Shift+S"/>
-                <MenuItem Header="Save As _Template for New Searches" Command="{Binding SaveTemplateCommand}"
+                <MenuItem Header="Save As _Template for New Searches..." Command="{Binding SaveTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+T" />
-                <MenuItem Header="_Reset Template for New Searches" Command="{Binding ResetTemplateCommand}"
+                <MenuItem Header="_Reset Template for New Searches..." Command="{Binding ResetTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+Shift+T" />
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />

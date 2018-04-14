@@ -26,7 +26,16 @@ full text of the license.
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <local:FieldSourceNodeControl Margin="4" Width="Auto" Height="Auto" Grid.Column="0" Grid.Row="0" />
-        <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Command="{Binding Path=DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=local:FieldSourcesNodeControl}}" CommandParameter="{Binding}" Visibility="{Binding Path=DataContext.FieldSourceNodes.Count, RelativeSource={RelativeSource AncestorType=local:FieldSourcesNodeControl}, Converter={StaticResource removeVisibilityConverter}, TargetNullValue=Collapsed }">−</Button>
-        <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0" Command="{Binding Path=DataContext.AddCommand, RelativeSource={RelativeSource AncestorType=local:FieldSourcesNodeControl}}" Visibility="{Binding Last, Converter={StaticResource boolToVisibilityConverter}}">+</Button>
+        <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Command="{Binding Path=DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=local:FieldSourcesNodeControl}}" CommandParameter="{Binding}" Visibility="{Binding Path=DataContext.FieldSourceNodes.Count, RelativeSource={RelativeSource AncestorType=local:FieldSourcesNodeControl}, Converter={StaticResource removeVisibilityConverter}, TargetNullValue=Collapsed }">
+            <Canvas Width="10" Height="10">
+                <Line Stroke="Black" X1="0" X2="10" Y1="5" Y2="5"/>
+            </Canvas>
+        </Button>
+        <Button Margin="4" Padding="4" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0" Command="{Binding Path=DataContext.AddCommand, RelativeSource={RelativeSource AncestorType=local:FieldSourcesNodeControl}}" Visibility="{Binding Last, Converter={StaticResource boolToVisibilityConverter}}">
+            <Canvas Width="10" Height="10">
+                <Line Stroke="Black" X1="0" X2="10" Y1="5" Y2="5"/>
+                <Line Stroke="Black" X1="5" X2="5" Y1="0" Y2="10"/>
+            </Canvas>
+        </Button>
     </Grid>
 </UserControl>
