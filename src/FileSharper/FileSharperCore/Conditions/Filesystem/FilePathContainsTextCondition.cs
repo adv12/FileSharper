@@ -7,15 +7,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
-using FileSharperCore.Conditions.Text;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Conditions
+namespace FileSharperCore.Conditions.Filesystem
 {
+    public class FilePathContainsTextParameters
+    {
+        [PropertyOrder(1, UsageContextEnum.Both)]
+        public string Text { get; set; }
+        [PropertyOrder(2, UsageContextEnum.Both)]
+        public bool UseRegex { get; set; }
+        [PropertyOrder(3, UsageContextEnum.Both)]
+        public bool CaseSensitive { get; set; }
+    }
+
     public class FilePathContainsTextCondition : ConditionBase
     {
-        private ContainsTextParameters m_Parameters = new ContainsTextParameters();
+        private FilePathContainsTextParameters m_Parameters = new FilePathContainsTextParameters();
         private Regex m_Regex;
-        private string m_LowerCaseText;
 
         public override string Name => "File Path Contains Text";
 
@@ -42,51 +51,26 @@ namespace FileSharperCore.Conditions
         public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
         {
             base.LocalInit(exceptionProgress);
-            if (m_Parameters.Text == null)
+            RegexOptions regexOptions = RegexOptions.None;
+            if (!m_Parameters.CaseSensitive)
             {
-                m_Parameters.Text = string.Empty;
+                regexOptions |= RegexOptions.IgnoreCase;
             }
             if (m_Parameters.UseRegex)
             {
-                RegexOptions opts = RegexOptions.None;
-                if (!m_Parameters.CaseSensitive)
-                {
-                    opts |= RegexOptions.IgnoreCase;
-                }
-                m_Regex = new Regex(m_Parameters.Text, opts);
+                m_Regex = new Regex(m_Parameters.Text, regexOptions);
             }
             else
             {
-                m_LowerCaseText = m_Parameters.Text.ToLower();
+                m_Regex = new Regex(Regex.Escape(m_Parameters.Text), regexOptions);
             }
         }
 
         public override MatchResult Matches(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)
         {
-            string path = file.FullName;
-            if (m_Parameters.UseRegex)
+            if (m_Regex.IsMatch(file.FullName))
             {
-                if (m_Regex.IsMatch(path))
-                {
-                    return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
-                }
-            }
-            else
-            {
-                if (m_Parameters.CaseSensitive)
-                {
-                    if (path.Contains(m_Parameters.Text))
-                    {
-                        return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
-                    }
-                }
-                else
-                {
-                    if (path.ToLower().Contains(m_LowerCaseText))
-                    {
-                        return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
-                    }
-                }
+                return new MatchResult(MatchResultType.Yes, new string[] { "Yes" });
             }
             return new MatchResult(MatchResultType.No, new string[] { "No" });
         }

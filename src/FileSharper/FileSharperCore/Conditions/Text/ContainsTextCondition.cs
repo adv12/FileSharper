@@ -34,7 +34,6 @@ namespace FileSharperCore.Conditions.Text
     {
         private ContainsTextParameters m_Parameters = new ContainsTextParameters();
         private Regex m_Regex;
-        private string m_LowerCaseText;
 
         public override string Name => "Contains Text";
 
