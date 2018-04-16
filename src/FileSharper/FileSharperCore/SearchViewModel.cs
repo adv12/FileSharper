@@ -137,6 +137,8 @@ namespace FileSharperCore
 
         public ICommand OpenContainingFolderCommand { get; }
 
+        public ICommand OpenContainingFolderCommandPromptCommand { get; }
+
         public SearchViewModel(SharperEngine engine, int maxResults, int maxExceptions)
         {
             Engine = engine;
@@ -148,6 +150,7 @@ namespace FileSharperCore
             CopyFileCommand = new FileCopier(this);
             OpenFileCommand = new FileOpener(this);
             OpenContainingFolderCommand = new ContainingFolderOpener(this);
+            OpenContainingFolderCommandPromptCommand = new ContainingFolderCommandPromptOpener(this);
             foreach (string columnHeader in BindingColumnHeaders)
             {
                 DataColumn column = new DataColumn(columnHeader);
@@ -335,6 +338,53 @@ namespace FileSharperCore
                             {
                                 openedFolders.Add(dirName);
                                 Process.Start(dirName);
+                            }
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public class ContainingFolderCommandPromptOpener : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public SearchViewModel ViewModel { get; private set; }
+
+            public ContainingFolderCommandPromptOpener(SearchViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                System.Collections.IList rowViews = (System.Collections.IList)parameter;
+                if (rowViews != null)
+                {
+                    HashSet<string> openedFolders = new HashSet<string>();
+                    foreach (DataRowView rowView in rowViews)
+                    {
+                        DataRow row = rowView.Row;
+                        try
+                        {
+                            string dirName = (string)row[1];
+                            if (!openedFolders.Contains(dirName))
+                            {
+                                openedFolders.Add(dirName);
+                                ProcessStartInfo info = new ProcessStartInfo();
+                                info.FileName = "cmd.exe";
+                                info.WorkingDirectory = dirName;
+                                info.UseShellExecute = false;
+                                Process.Start(info);
                             }
                         }
                         catch

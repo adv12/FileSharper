@@ -83,6 +83,7 @@ full text of the license.
                                 <MenuItem Header="Copy File(s)" Command="{Binding SearchViewModel.CopyFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                                 <MenuItem Header="Open File(s)" Command="{Binding SearchViewModel.OpenFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                                 <MenuItem Header="Open Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                                <MenuItem Header="Open Command Prompt(s) to Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommandPromptCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
