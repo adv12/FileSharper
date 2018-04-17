@@ -34,21 +34,21 @@ full text of the license.
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <GroupBox x:Name="fileSourceGroupBox" Grid.Row="0" Header="File Source" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
-                    <local:FileSourceNodeControl x:Name="fileSourceNodeControl" DataContext="{Binding FileSourceNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                </GroupBox>
-                <GroupBox x:Name="conditionGroupBox" Grid.Row="1" Header="Condition" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
-                    <local:ConditionNodeControl x:Name="conditionNodeControl" DataContext="{Binding ConditionNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                </GroupBox>
-                <GroupBox x:Name="fieldSourcesGroupBox" Grid.Row="2" Header="Additional Fields" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
-                    <local:FieldSourcesNodeControl x:Name="fieldSourcessNodeControl" Grid.Row="2" DataContext="{Binding FieldSourcesNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                </GroupBox>
-                <GroupBox x:Name="testedProcessorsGroupBox" Grid.Row="3" Header="When Tested..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
-                    <local:ProcessorsNodeControl x:Name="testedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding TestedProcessorsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                </GroupBox>
-                <GroupBox x:Name="matchedProcessorsGroupBox" Grid.Row="4" Header="When Matched..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto">
-                    <local:ProcessorsNodeControl x:Name="matchedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding MatchedProcessorsNode}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                </GroupBox>
+                <Expander x:Name="fileSourceExpander" Grid.Row="0" Header="File Source" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding FileSourceExpanded}">
+                    <local:FileSourceNodeControl x:Name="fileSourceNodeControl" DataContext="{Binding FileSourceNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Expander>
+                <Expander x:Name="conditionExpander" Grid.Row="1" Header="Condition" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding ConditionExpanded}">
+                    <local:ConditionNodeControl x:Name="conditionNodeControl" DataContext="{Binding ConditionNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Expander>
+                <Expander x:Name="fieldSourcesExpander" Grid.Row="2" Header="Additional Fields" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding FieldSourcesExpanded}">
+                    <local:FieldSourcesNodeControl x:Name="fieldSourcessNodeControl" Grid.Row="2" DataContext="{Binding FieldSourcesNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Expander>
+                <Expander x:Name="testedProcessorsExpander" Grid.Row="3" Header="When Tested..." Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding TestedProcessorsExpanded}">
+                    <local:ProcessorsNodeControl x:Name="testedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding TestedProcessorsNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Expander>
+                <Expander x:Name="matchedProcessorsExpander" Grid.Row="4" Header="When Matched..." Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding MatchedProcessorsExpanded}">
+                    <local:ProcessorsNodeControl x:Name="matchedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding MatchedProcessorsNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Expander>
             </Grid>
         </ScrollViewer>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>

@@ -72,6 +72,41 @@ namespace FileSharperCore
             }
         }
 
+        private bool m_FileSourceExpanded = true;
+        public bool FileSourceExpanded
+        {
+            get => m_FileSourceExpanded;
+            set => SetField(ref m_FileSourceExpanded, value);
+        }
+
+        private bool m_ConditionExpanded = true;
+        public bool ConditionExpanded
+        {
+            get => m_ConditionExpanded;
+            set => SetField(ref m_ConditionExpanded, value);
+        }
+
+        private bool m_FieldSourcesExpanded = true;
+        public bool FieldSourcesExpanded
+        {
+            get => m_FieldSourcesExpanded;
+            set => SetField(ref m_FieldSourcesExpanded, value);
+        }
+
+        private bool m_TestedProcessorsExpanded = true;
+        public bool TestedProcessorsExpanded
+        {
+            get => m_TestedProcessorsExpanded;
+            set => SetField(ref m_TestedProcessorsExpanded, value);
+        }
+
+        private bool m_MatchedProcessorsExpanded = true;
+        public bool MatchedProcessorsExpanded
+        {
+            get => m_MatchedProcessorsExpanded;
+            set => SetField(ref m_MatchedProcessorsExpanded, value);
+        }
+
         public FileSourceNode FileSourceNode { get; set; } = new FileSourceNode();
         public ConditionNode ConditionNode { get; set; } = new ConditionNode();
         public FieldSourcesNode FieldSourcesNode { get; set; } = new FieldSourcesNode();
