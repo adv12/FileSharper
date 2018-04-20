@@ -8,14 +8,15 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using FileSharperCore.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace FileSharperCore
 {
     public class SearchDocument : INotifyPropertyChanged, ICloneable
     {
-
         public static SearchDocument FromFile(string path)
         {
             string json = File.ReadAllText(path);
@@ -26,11 +27,13 @@ namespace FileSharperCore
 
         public static SearchDocument FromString(string json)
         {
-            SearchDocument doc = JsonConvert.DeserializeObject<SearchDocument>(json);
+            JObject obj = JObject.Parse(json);
+            UpgradeUtil.Upgrade(obj);
+            SearchDocument doc = obj.ToObject<SearchDocument>();
             doc.Loaded = true;
             return doc;
         }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [JsonIgnore]

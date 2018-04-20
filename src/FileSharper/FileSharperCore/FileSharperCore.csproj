@@ -190,6 +190,7 @@
     <Compile Include="Util\ReverseComparer.cs" />
     <Compile Include="Util\TextUtil.cs" />
     <Compile Include="Util\UnitUtil.cs" />
+    <Compile Include="Util\UpgradeUtil.cs" />
     <Compile Include="Util\XmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>

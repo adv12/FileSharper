@@ -79,5 +79,43 @@ namespace FileSharperCore
             }
             return null;
         }
+
+
+        public Type GetFileSourceType(string typeName)
+        {
+            foreach (IFileSource fileSource in m_FileSources)
+            {
+                Type t = fileSource.GetType();
+                if (t.FullName == typeName)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        public Type FindFileSourceTypeWithSameName(string typeName)
+        {
+            if (typeName == null)
+            {
+                return null;
+            }
+            string name = typeName;
+            int idx = typeName.LastIndexOf(".");
+            if (idx > -1)
+            {
+                name = typeName.Substring(idx + 1);
+            }
+            foreach (IFileSource fileSource in m_FileSources)
+            {
+                Type t = fileSource.GetType();
+                if (t.Name == name)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
     }
 }

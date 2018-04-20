@@ -82,5 +82,41 @@ namespace FileSharperCore
             }
             return null;
         }
+
+        public Type GetFieldSourceType(string typeName)
+        {
+            foreach (IFieldSource fieldSource in m_FieldSources)
+            {
+                Type t = fieldSource.GetType();
+                if (t.FullName == typeName)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        public Type FindFieldSourceTypeWithSameName(string typeName)
+        {
+            if (typeName == null)
+            {
+                return null;
+            }
+            string name = typeName;
+            int idx = typeName.LastIndexOf(".");
+            if (idx > -1)
+            {
+                name = typeName.Substring(idx + 1);
+            }
+            foreach (IFieldSource fieldSource in m_FieldSources)
+            {
+                Type t = fieldSource.GetType();
+                if (t.Name == name)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
     }
 }

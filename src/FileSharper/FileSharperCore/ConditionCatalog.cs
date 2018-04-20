@@ -80,5 +80,41 @@ namespace FileSharperCore
             }
             return null;
         }
+
+        public Type GetConditionType(string typeName)
+        {
+            foreach (ICondition condition in m_Conditions)
+            {
+                Type t = condition.GetType();
+                if (t.FullName == typeName)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        public Type FindConditionTypeWithSameName(string typeName)
+        {
+            if (typeName == null)
+            {
+                return null;
+            }
+            string name = typeName;
+            int idx = typeName.LastIndexOf(".");
+            if (idx > -1)
+            {
+                name = typeName.Substring(idx + 1);
+            }
+            foreach (ICondition condition in m_Conditions)
+            {
+                Type t = condition.GetType();
+                if (t.Name == name)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
     }
 }

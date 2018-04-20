@@ -81,5 +81,42 @@ namespace FileSharperCore
             }
             return null;
         }
+
+        public Type GetProcessorType(string typeName)
+        {
+            foreach (IProcessor processor in m_Processors)
+            {
+                Type t = processor.GetType();
+                if (t.FullName == typeName)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        public Type FindProcessorTypeWithSameName(string typeName)
+        {
+            if (typeName == null)
+            {
+                return null;
+            }
+            string name = typeName;
+            int idx = typeName.LastIndexOf(".");
+            if (idx > -1)
+            {
+                name = typeName.Substring(idx + 1);
+            }
+            foreach (IProcessor processor in m_Processors)
+            {
+                Type t = processor.GetType();
+                if (t.Name == name)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
     }
 }
