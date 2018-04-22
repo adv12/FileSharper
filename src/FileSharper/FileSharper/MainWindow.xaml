@@ -41,6 +41,17 @@ full text of the license.
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{Binding NewSearchCommand}" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="New From _Template" ItemsSource="{Binding Settings.Templates}" IsEnabled="{Binding AnyTemplates}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="MenuItem.Header" Value="{Binding DisplayName}"/>
+                            <Setter Property="MenuItem.Command" Value="{Binding RelativeSource={RelativeSource AncestorType=MenuItem},
+                             Path=DataContext.NewSearchFromTemplateCommand}"/>
+                            <Setter Property="MenuItem.CommandParameter" Value="{Binding FileFullName}"/>
+                            <Setter Property="MenuItem.Visibility" Value="{Binding Path=Hidden, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
                 <MenuItem Header="_Open..." Command="{Binding OpenSearchCommand}" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Open _Recent" ItemsSource="{Binding Settings.RecentDocuments}" IsEnabled="{Binding AnyRecentDocuments}">
                     <MenuItem.ItemContainerStyle>
@@ -54,9 +65,9 @@ full text of the license.
                 </MenuItem>
                 <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" InputGestureText="Ctrl+S" />
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" InputGestureText="Ctrl+Shift+S"/>
-                <MenuItem Header="Save As _Template for New Searches..." Command="{Binding SaveTemplateCommand}"
+                <MenuItem Header="Save As _Default Template..." Command="{Binding SaveTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+T" />
-                <MenuItem Header="_Reset Template for New Searches..." Command="{Binding ResetTemplateCommand}"
+                <MenuItem Header="_Reset Default Template..." Command="{Binding ResetTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+Shift+T" />
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />

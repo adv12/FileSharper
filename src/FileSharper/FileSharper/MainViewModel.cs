@@ -5,6 +5,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -22,6 +24,8 @@ namespace FileSharper
         private bool m_AnyOpenFiles = false;
 
         private bool m_AnyRecentDocuments = false;
+
+        private bool m_AnyTemplates = false;
 
         private bool m_ShowingAbout = false;
 
@@ -68,6 +72,19 @@ namespace FileSharper
                 if (m_AnyRecentDocuments != value)
                 {
                     m_AnyRecentDocuments = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool AnyTemplates
+        {
+            get => m_AnyTemplates;
+            private set
+            {
+                if (m_AnyTemplates != value)
+                {
+                    m_AnyTemplates = value;
                     OnPropertyChanged();
                 }
             }
@@ -128,6 +145,7 @@ namespace FileSharper
         }
 
         public ICommand NewSearchCommand { get; private set; }
+        public ICommand NewSearchFromTemplateCommand { get; private set; }
         public ICommand OpenSearchCommand { get; private set; }
         public ICommand OpenRecentCommand { get; private set; }
         public ICommand CloseSearchCommand { get; private set; }
@@ -151,10 +169,14 @@ namespace FileSharper
             Settings.RecentDocuments.CollectionChanged += RecentDocuments_CollectionChanged;
             AnyRecentDocuments = Settings.RecentDocuments.Count > 0;
 
+            Settings.Templates.CollectionChanged += Templates_CollectionChanged;
+            AnyTemplates = Settings.Templates.Count(t => !t.Hidden) > 0;
+
             SearchDocuments.CollectionChanged += SearchDocuments_CollectionChanged;
 
             AddNewSearch();
             NewSearchCommand = new NewSearchMaker(this);
+            NewSearchFromTemplateCommand = new NewSearchFromTemplateMaker(this);
             OpenSearchCommand = new SearchOpener(this);
             OpenRecentCommand = new RecentSearchOpener(this);
             CloseSearchCommand = new SearchCloser(this);
@@ -172,6 +194,11 @@ namespace FileSharper
             NavigateCommand = new LinkNavigator(this);
         }
 
+        private void Templates_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            AnyTemplates = Settings.Templates.Count(t => !t.Hidden) > 0;
+        }
+
         private void RecentDocuments_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             AnyRecentDocuments = Settings.RecentDocuments.Count > 0;
@@ -184,15 +211,34 @@ namespace FileSharper
 
         public void AddNewSearch()
         {
-            if (Settings?.NewSearchTemplate != null)
+            if (!AddNewSearchFromTemplate(FileSharperSettings.DefaultTemplatePath))
             {
-                SearchDocuments.Add((SearchDocument)Settings.NewSearchTemplate.Clone());
+                SearchDocument doc = new SearchDocument(true);
+                SearchDocuments.Add(doc);
+                SelectedIndex = SearchDocuments.Count - 1;
             }
-            else
+        }
+
+        public bool AddNewSearchFromTemplate(string templatePath)
+        {
+            SearchDocument doc = null;
+            if (File.Exists(templatePath))
             {
-                SearchDocuments.Add(new SearchDocument(true));
+                try
+                {
+                    doc = SearchDocument.FromFile(templatePath, true);
+                }
+                catch (Exception)
+                {
+                }
             }
-            SelectedIndex = SearchDocuments.Count - 1;
+            if (doc != null)
+            {
+                SearchDocuments.Add(doc);
+                SelectedIndex = SearchDocuments.Count - 1;
+                return true;
+            }
+            return false;
         }
 
         public void OpenFile(string filename)
@@ -233,6 +279,35 @@ namespace FileSharper
             public void Execute(object parameter)
             {
                 ViewModel.AddNewSearch();
+            }
+        }
+
+        public class NewSearchFromTemplateMaker : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public NewSearchFromTemplateMaker(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                string templatePath = parameter as string;
+                if (templatePath != null)
+                {
+                    ViewModel.AddNewSearchFromTemplate(templatePath);
+                }
             }
         }
 
@@ -292,9 +367,17 @@ namespace FileSharper
 
             public void Execute(object parameter)
             {
-                if (parameter is string)
+                string filename = parameter as string;
+                if (filename != null)
                 {
-                    ViewModel.OpenFile((string)parameter);
+                    if (File.Exists(filename))
+                    {
+                        ViewModel.OpenFile(filename);
+                    }
+                    else
+                    {
+                        ViewModel.Settings.RemoveRecentDocument(filename);
+                    }
                 }
             }
         }
@@ -457,7 +540,7 @@ namespace FileSharper
                             SearchDocument doc = ViewModel.SearchDocuments[idx];
                             if (doc != null)
                             {
-                                ViewModel.Settings.NewSearchTemplate = doc.Clone() as SearchDocument;
+                                ViewModel.Settings.SetDefaultTemplate(doc);
                             }
                         }
                     }
@@ -495,7 +578,7 @@ namespace FileSharper
                 }
                 if (result == MessageBoxResult.OK)
                 {
-                    ViewModel.Settings.NewSearchTemplate = null;
+                    ViewModel.Settings.ResetDefaultTemplate();
                 }
             }
         }

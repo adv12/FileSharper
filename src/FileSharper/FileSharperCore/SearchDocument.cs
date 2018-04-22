@@ -17,11 +17,14 @@ namespace FileSharperCore
 {
     public class SearchDocument : INotifyPropertyChanged, ICloneable
     {
-        public static SearchDocument FromFile(string path)
+        public static SearchDocument FromFile(string path, bool newdoc = false)
         {
             string json = File.ReadAllText(path);
             SearchDocument doc = FromString(json);
-            doc.FileName = path;
+            if (!newdoc)
+            {
+                doc.FileName = path;
+            }
             return doc;
         }
 
