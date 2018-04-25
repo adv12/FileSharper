@@ -180,6 +180,7 @@ namespace FileSharper
             {
                 filename = baseFilename + j++;
             }
+            filename += ".fsh";
             doc.Save(filename);
             Templates.Add(new SearchTemplateInfo(filename, displayName));
         }
