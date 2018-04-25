@@ -28,9 +28,9 @@ full text of the license.
         <KeyBinding Command="{Binding SaveSearchCommand}" Gesture="CTRL+S" />
         <KeyBinding Command="{Binding SaveSearchCommand}"
                     CommandParameter="{StaticResource True}" Gesture="CTRL+SHIFT+S" />
-        <KeyBinding Command="{Binding SaveTemplateCommand}"
+        <KeyBinding Command="{Binding SaveDefaultTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+T"/>
-        <KeyBinding Command="{Binding ResetTemplateCommand}"
+        <KeyBinding Command="{Binding ResetDefaultTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+SHIFT+T"/>
         <KeyBinding Command="{Binding CloseSearchCommand}"
               CommandParameter="{Binding ElementName=ThisWindow}" Gesture="CTRL+W" />
@@ -65,9 +65,10 @@ full text of the license.
                 </MenuItem>
                 <MenuItem Header="_Save" Command="{Binding SaveSearchCommand}" InputGestureText="Ctrl+S" />
                 <MenuItem Header="Save _As..." Command="{Binding SaveSearchCommand}" CommandParameter="{StaticResource True}" InputGestureText="Ctrl+Shift+S"/>
-                <MenuItem Header="Save As _Default Template..." Command="{Binding SaveTemplateCommand}"
+                <MenuItem Header="Save As Template..." Command="{Binding ShowSaveTemplateCommand}"/>
+                <MenuItem Header="Save As _Default Template..." Command="{Binding SaveDefaultTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+T" />
-                <MenuItem Header="_Reset Default Template..." Command="{Binding ResetTemplateCommand}"
+                <MenuItem Header="_Reset Default Template..." Command="{Binding ResetDefaultTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+Shift+T" />
                 <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />
@@ -85,7 +86,23 @@ full text of the license.
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TabControl Grid.Row="0" Grid.Column="0" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
+            <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
+                <Grid DockPanel.Dock="Top" Visibility="{Binding ShowingSaveTemplateUI, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Margin="5">Template Name:</Label>
+                    <TextBox x:Name="templateNameTextBox" Grid.Column="1" Grid.Row="0" Margin="5" Padding="4" HorizontalAlignment="Stretch" Text="{Binding SaveTemplateDisplayName}"/>
+                    <Button Grid.Column="2" Grid.Row="0" Margin="5" Width="75" Command="{Binding SaveTemplateCommand}" CommandParameter="{Binding ElementName=templateNameTextBox, Path=Text}" IsEnabled="{Binding ElementName=templateNameTextBox,Path=Text.Length}">Save</Button>
+                    <Button Grid.Column="3" Grid.Row="0" Margin="5" Width="75" Command="{Binding ShowSaveTemplateCommand}" CommandParameter="{StaticResource True}">Cancel</Button>
+                </Grid>
+                <TabControl IsEnabled="{Binding SearchDocumentsEnabled}" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalContentAlignment="Stretch" >
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="TabItem">
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -111,6 +128,7 @@ full text of the license.
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
+            </DockPanel>
             <ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ShowingAbout, Converter={StaticResource boolToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
                 <local:AboutControl />
             </ScrollViewer>

@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -33,6 +34,10 @@ namespace FileSharper
 
         private bool m_ShowingMainUI = true;
 
+        private bool m_ShowingSaveTemplateUI = false;
+
+        private string m_SaveTemplateDisplayName = "";
+
         public FileSharperSettings Settings { get; }
 
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
@@ -41,53 +46,25 @@ namespace FileSharper
         public int SelectedIndex
         {
             get => m_SelectedIndex;
-            set
-            {
-                if (m_SelectedIndex != value)
-                {
-                    m_SelectedIndex = value;
-                    OnPropertyChanged();
-                }
-            }
+            set => SetField(ref m_SelectedIndex, value);
         }
 
         public bool AnyOpenFiles
         {
             get => m_AnyOpenFiles;
-            private set
-            {
-                if (m_AnyOpenFiles != value)
-                {
-                    m_AnyOpenFiles = value;
-                    OnPropertyChanged();
-                }
-            }
+            private set => SetField(ref m_AnyOpenFiles, value);
         }
 
         public bool AnyRecentDocuments
         {
             get => m_AnyRecentDocuments;
-            private set
-            {
-                if (m_AnyRecentDocuments != value)
-                {
-                    m_AnyRecentDocuments = value;
-                    OnPropertyChanged();
-                }
-            }
+            private set => SetField(ref m_AnyRecentDocuments, value);
         }
 
         public bool AnyTemplates
         {
             get => m_AnyTemplates;
-            private set
-            {
-                if (m_AnyTemplates != value)
-                {
-                    m_AnyTemplates = value;
-                    OnPropertyChanged();
-                }
-            }
+            private set => SetField(ref m_AnyTemplates, value);
         }
 
         public bool ShowingAbout
@@ -144,6 +121,29 @@ namespace FileSharper
             }
         }
 
+        public bool ShowingSaveTemplateUI
+        {
+            get => m_ShowingSaveTemplateUI;
+            set
+            {
+                if (m_ShowingSaveTemplateUI != value)
+                {
+                    m_ShowingSaveTemplateUI = value;
+                    SaveTemplateDisplayName = string.Empty;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SearchDocumentsEnabled));
+                }
+            }
+        }
+
+        public string SaveTemplateDisplayName
+        {
+            get => m_SaveTemplateDisplayName;
+            set => SetField(ref m_SaveTemplateDisplayName, value);
+        }
+
+        public bool SearchDocumentsEnabled => !ShowingSaveTemplateUI;
+
         public ICommand NewSearchCommand { get; private set; }
         public ICommand NewSearchFromTemplateCommand { get; private set; }
         public ICommand OpenSearchCommand { get; private set; }
@@ -151,7 +151,8 @@ namespace FileSharper
         public ICommand CloseSearchCommand { get; private set; }
         public ICommand SaveSearchCommand { get; private set; }
         public ICommand SaveTemplateCommand { get; private set; }
-        public ICommand ResetTemplateCommand { get; private set; }
+        public ICommand SaveDefaultTemplateCommand { get; private set; }
+        public ICommand ResetDefaultTemplateCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
 
         public ICommand AboutCommand { get; private set; }
@@ -161,6 +162,9 @@ namespace FileSharper
         public ICommand HidePathHelpCommand { get; private set; }
 
         public ICommand NavigateCommand { get; private set; }
+
+        public ICommand ShowSaveTemplateCommand { get; private set; }
+        public ICommand HideSaveTemplateCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -181,8 +185,10 @@ namespace FileSharper
             OpenRecentCommand = new RecentSearchOpener(this);
             CloseSearchCommand = new SearchCloser(this);
             SaveSearchCommand = new SearchSaver(this);
+            ShowSaveTemplateCommand = new ShowSaveTemplateSetter(this);
             SaveTemplateCommand = new SearchTemplateSaver(this);
-            ResetTemplateCommand = new SearchTemplateClearer(this);
+            SaveDefaultTemplateCommand = new DefaultSearchTemplateSaver(this);
+            ResetDefaultTemplateCommand = new DefaultSearchTemplateClearer(this);
             ExitCommand = new ApplicationExiter(this);
 
             AboutCommand = new AboutBoxShower(this);
@@ -255,6 +261,14 @@ namespace FileSharper
             {
                 ShowingMainUI = true;
             }
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
 
         public class NewSearchMaker : ICommand
@@ -529,6 +543,53 @@ namespace FileSharper
                 int idx = ViewModel.SelectedIndex;
                 if (idx >= 0 && idx < ViewModel.SearchDocuments.Count)
                 {
+                    string templateName = parameter as string;
+                    if (!string.IsNullOrEmpty(templateName))
+                    {
+                        SearchDocument doc = ViewModel.SearchDocuments[idx];
+                        if (doc != null)
+                        {
+                            ViewModel.Settings.AddTemplate(doc, (string)parameter);
+                        }
+                    }
+                }
+                ViewModel.ShowingSaveTemplateUI = false;
+            }
+        }
+
+        public class DefaultSearchTemplateSaver : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public DefaultSearchTemplateSaver(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            }
+
+            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
+                {
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return ViewModel.AnyOpenFiles;
+            }
+
+            public void Execute(object parameter)
+            {
+                int idx = ViewModel.SelectedIndex;
+                if (idx >= 0 && idx < ViewModel.SearchDocuments.Count)
+                {
                     MessageBoxResult result = MessageBoxResult.OK;
                     if (parameter is Window)
                     {
@@ -548,7 +609,7 @@ namespace FileSharper
             }
         }
 
-        public class SearchTemplateClearer : ICommand
+        public class DefaultSearchTemplateClearer : ICommand
         {
             public event EventHandler CanExecuteChanged;
 
@@ -557,7 +618,7 @@ namespace FileSharper
                 get; set;
             }
 
-            public SearchTemplateClearer(MainViewModel viewModel)
+            public DefaultSearchTemplateClearer(MainViewModel viewModel)
             {
                 ViewModel = viewModel;
             }
@@ -744,5 +805,40 @@ namespace FileSharper
                 }
             }
         }
+
+        public class ShowSaveTemplateSetter : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public ShowSaveTemplateSetter(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                bool? hide = parameter as bool?;
+                if (hide.HasValue && hide.Value)
+                {
+                    ViewModel.ShowingSaveTemplateUI = false;
+                }
+                else
+                {
+                    ViewModel.ShowingSaveTemplateUI = true;
+                }
+            }
+        }
+
+
     }
 }
