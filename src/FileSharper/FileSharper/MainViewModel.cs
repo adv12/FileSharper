@@ -549,7 +549,7 @@ namespace FileSharper
                         SearchDocument doc = ViewModel.SearchDocuments[idx];
                         if (doc != null)
                         {
-                            ViewModel.Settings.AddTemplate(doc, (string)parameter);
+                            ViewModel.Settings.AddTemplate(doc, templateName);
                         }
                     }
                 }

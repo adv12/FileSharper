@@ -16,13 +16,28 @@ namespace FileSharper
 
         public string FileName { get; }
 
-        public string FileFullName => Path.Combine(FileSharperSettings.TemplatesDirectoryPath, FileName);
+        public string FileFullName
+        {
+            get {
+                string dirPath = Stock ?
+                    FileSharperSettings.StockTemplatesDirectoryPath:
+                    FileSharperSettings.UserTemplatesDirectoryPath;
+                return Path.Combine(dirPath, FileName);
+            }
+        }
 
         private string m_DisplayName;
         public string DisplayName
         {
             get => m_DisplayName;
             set => SetField(ref m_DisplayName, value);
+        }
+
+        private bool m_Stock;
+        public bool Stock
+        {
+            get => m_Stock;
+            set => SetField(ref m_Stock, value);
         }
 
         private bool m_Hidden;
@@ -32,10 +47,11 @@ namespace FileSharper
             set => SetField(ref m_Hidden, value);
         }
 
-        public SearchTemplateInfo(string fileName, string displayName, bool hidden = false)
+        public SearchTemplateInfo(string fileName, string displayName, bool stock = false, bool hidden = false)
         {
             FileName = fileName;
             DisplayName = displayName;
+            Stock = stock;
             Hidden = hidden;
         }
 

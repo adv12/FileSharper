@@ -23,7 +23,9 @@ namespace FileSharper
 
         public static string SettingsPath => Path.Combine(SettingsDirectoryPath, "settings.json");
 
-        public static string TemplatesDirectoryPath => Path.Combine(SettingsDirectoryPath, "Templates");
+        public static string UserTemplatesDirectoryPath => Path.Combine(SettingsDirectoryPath, "Templates");
+
+        public static string StockTemplatesDirectoryPath => Path.Combine(AppDirectoryPath, "Templates");
 
         public static string DefaultTemplatePath => Path.Combine(SettingsDirectoryPath, "defaultTemplate.fsh");
 
@@ -49,14 +51,6 @@ namespace FileSharper
             }
             try
             {
-                InstallStockTemplates();
-            }
-            catch (Exception)
-            {
-
-            }
-            try
-            {
                 SyncTemplatesToFilesystem(settings);
             }
             catch (Exception)
@@ -66,50 +60,37 @@ namespace FileSharper
             return settings;
         }
 
-        public static void InstallStockTemplates()
-        {
-            string sourceDirPath = Path.Combine(AppDirectoryPath, "Templates");
-            string destDirPath = TemplatesDirectoryPath;
-            EnsureTemplatesDirectoryPath();
-            if (Directory.Exists(sourceDirPath) && Directory.Exists(destDirPath))
-            {
-                DirectoryInfo sourceDir = new DirectoryInfo(sourceDirPath);
-                FileInfo[] files = sourceDir.GetFiles("*.fsh");
-                foreach (FileInfo file in files)
-                {
-                    try
-                    {
-                        string destPath = Path.Combine(destDirPath, file.Name);
-                        if (!File.Exists(destPath))
-                        {
-                            File.Copy(file.FullName, destPath);
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-            }
-        }
-
         public static void SyncTemplatesToFilesystem(FileSharperSettings settings)
         {
             EnsureTemplatesDirectoryPath();
-            DirectoryInfo dir = new DirectoryInfo(TemplatesDirectoryPath);
-            FileInfo[] templateFiles = dir.GetFiles("*.fsh");
-            foreach (FileInfo file in templateFiles.OrderBy(f => f.Name))
+            IEnumerable<FileInfo> templateFiles;
+            DirectoryInfo dir;
+            dir = new DirectoryInfo(StockTemplatesDirectoryPath);
+            templateFiles = dir.GetFiles("*.fsh").OrderBy(f => f.Name);
+            foreach (FileInfo file in templateFiles)
             {
-                if (!settings.Templates.Any(t => file.Name.Equals(t.FileName)))
+                if (!settings.Templates.Any(t => t.Stock && file.Name.Equals(t.FileName)))
+                {
+                    string displayName = Path.GetFileNameWithoutExtension(file.Name);
+                    displayName = Regex.Replace(displayName, @"^\d+\s*", string.Empty);
+                    settings.Templates.Add(new SearchTemplateInfo(file.Name, displayName, true));
+                }
+            }
+            dir = new DirectoryInfo(UserTemplatesDirectoryPath);
+            templateFiles = dir.GetFiles("*.fsh").OrderBy(f => f.Name);
+            foreach (FileInfo file in templateFiles)
+            {
+                if (!settings.Templates.Any(t => !t.Stock && file.Name.Equals(t.FileName)))
                 {
                     settings.Templates.Add(new SearchTemplateInfo(file.Name,
-                        Path.GetFileNameWithoutExtension(file.FullName)));
+                        Path.GetFileNameWithoutExtension(file.Name)));
                 }
             }
             List<SearchTemplateInfo> toRemove = new List<SearchTemplateInfo>();
             foreach (SearchTemplateInfo template in settings.Templates)
             {
-                string path = Path.Combine(TemplatesDirectoryPath, template.FileName);
+                string dirPath = template.Stock ? StockTemplatesDirectoryPath : UserTemplatesDirectoryPath;
+                string path = Path.Combine(dirPath, template.FileName);
                 if (!File.Exists(path))
                 {
                     toRemove.Add(template);
@@ -128,7 +109,7 @@ namespace FileSharper
 
         public static void EnsureTemplatesDirectoryPath()
         {
-            Directory.CreateDirectory(TemplatesDirectoryPath);
+            Directory.CreateDirectory(UserTemplatesDirectoryPath);
         }
 
         public ObservableCollection<string> RecentDocuments { get; } =
@@ -173,21 +154,16 @@ namespace FileSharper
                 }
             }
             // Use just letters, digits, and underscores for filenames
-            string baseFilename = GetTemplateFullName(Regex.Replace(displayName, @"\W", ""));
-            string filename = baseFilename;
+            string safeName = Regex.Replace(displayName, @"\W", "");
+            string baseFilename = Path.Combine(UserTemplatesDirectoryPath, safeName);
+            string filename = baseFilename + ".fsh";
             int j = 1;
             while (File.Exists(filename))
             {
-                filename = baseFilename + j++;
+                filename = baseFilename + j++ + ".fsh";
             }
-            filename += ".fsh";
             doc.Save(filename);
-            Templates.Add(new SearchTemplateInfo(filename, displayName));
-        }
-
-        public string GetTemplateFullName(string templateFileName)
-        {
-            return Path.Combine(TemplatesDirectoryPath, templateFileName);
+            Templates.Add(new SearchTemplateInfo(Path.GetFileName(filename), displayName));
         }
 
         public void SetDefaultTemplate(SearchDocument doc)

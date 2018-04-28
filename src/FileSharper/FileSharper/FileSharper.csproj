@@ -149,10 +149,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Content Include="Templates\Simple Search.fsh">
+    <Content Include="Templates\01 Simple Search.fsh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Templates\Regex Replace.fsh">
+    <Content Include="Templates\02 Regex Replace.fsh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
