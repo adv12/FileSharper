@@ -21,6 +21,11 @@ full text of the license.
     <Window.Resources>
         <sys:Boolean x:Key="True">True</sys:Boolean>
         <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <sys:Int32 x:Key="zero">0</sys:Int32>
+        <sys:Int32 x:Key="one">1</sys:Int32>
+        <sys:Int32 x:Key="two">2</sys:Int32>
+        <sys:Int32 x:Key="three">3</sys:Int32>
+        <sys:Int32 x:Key="four">4</sys:Int32>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding NewSearchCommand}" Gesture="CTRL+N" />
@@ -75,67 +80,102 @@ full text of the license.
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About FileSharper" Command="{Binding AboutCommand}"/>
-                <MenuItem Header="Specifying _Paths in FileSharper" Command="{Binding PathHelpCommand}"/>
+                <MenuItem Header="_About FileSharper" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource one}"/>
+                <MenuItem Header="Specifying _Paths in FileSharper" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource two}"/>
             </MenuItem>
         </Menu>
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
-                <Grid DockPanel.Dock="Top" Visibility="{Binding ShowingSaveTemplateUI, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0" Margin="5">Template Name:</Label>
-                    <TextBox x:Name="templateNameTextBox" Grid.Column="1" Grid.Row="0" Margin="5" Padding="4" HorizontalAlignment="Stretch" Text="{Binding SaveTemplateDisplayName}"/>
-                    <Button Grid.Column="2" Grid.Row="0" Margin="5" Width="75" Command="{Binding SaveTemplateCommand}" CommandParameter="{Binding ElementName=templateNameTextBox, Path=Text}" IsEnabled="{Binding ElementName=templateNameTextBox,Path=Text.Length}">Save</Button>
-                    <Button Grid.Column="3" Grid.Row="0" Margin="5" Width="75" Command="{Binding ShowSaveTemplateCommand}" CommandParameter="{StaticResource True}">Cancel</Button>
-                </Grid>
-                <TabControl IsEnabled="{Binding SearchDocumentsEnabled}" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalContentAlignment="Stretch" >
-                <TabControl.ItemContainerStyle>
-                    <Style TargetType="TabItem">
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </TabControl.ItemContainerStyle>
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" Text="{Binding DisplayName}" Margin="4" ToolTip="{Binding FileName}"/>
-                            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Height="Auto" Width="Auto" Padding="2" Margin="4" Command="{Binding Path=DataContext.CloseSearchCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">
-                                <Canvas Width="10" Height="10">
-                                    <Line Stroke="Black" X1="0" X2="9" Y1="0" Y2="10"/>
-                                    <Line Stroke="Black" X1="0" X2="9" Y1="10" Y2="0"/>
-                                </Canvas>
-                            </Button>
-                        </DockPanel>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <FileSharperUI:SearchDocumentControl DataContext="{Binding}" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" />
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
-            </DockPanel>
-            <ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ShowingAbout, Converter={StaticResource boolToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
-                <local:AboutControl />
-            </ScrollViewer>
-            <ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ShowingPathHelp, Converter={StaticResource boolToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
-                <local:PathHelpControl />
-            </ScrollViewer>
-        </Grid>
+        <TabControl SelectedIndex="{Binding SelectedScreenIndex}" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabItem Header="Main" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Visibility="{Binding ShowingMainUI, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Grid DockPanel.Dock="Top" Visibility="{Binding ShowingSaveTemplateUI, Converter={StaticResource boolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Margin="5">Template Name:</Label>
+                        <TextBox x:Name="templateNameTextBox" Grid.Column="1" Grid.Row="0" Margin="5" Padding="4" HorizontalAlignment="Stretch" Text="{Binding SaveTemplateDisplayName}"/>
+                        <Button Grid.Column="2" Grid.Row="0" Margin="5" Width="75" Command="{Binding SaveTemplateCommand}" CommandParameter="{Binding ElementName=templateNameTextBox, Path=Text}" IsEnabled="{Binding ElementName=templateNameTextBox,Path=Text.Length}">Save</Button>
+                        <Button Grid.Column="3" Grid.Row="0" Margin="5" Width="75" Command="{Binding ShowSaveTemplateCommand}" CommandParameter="{StaticResource True}">Cancel</Button>
+                    </Grid>
+                    <TabControl IsEnabled="{Binding SearchDocumentsEnabled}" ItemsSource="{Binding SearchDocuments}" SelectedIndex="{Binding SelectedIndex}" HorizontalContentAlignment="Stretch" >
+                        <TabControl.ItemContainerStyle>
+                            <Style TargetType="TabItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </TabControl.ItemContainerStyle>
+                        <TabControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel HorizontalAlignment="Stretch">
+                                    <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" Text="{Binding DisplayName}" Margin="4" ToolTip="{Binding FileName}"/>
+                                    <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Height="Auto" Width="Auto" Padding="2" Margin="4" Command="{Binding Path=DataContext.CloseSearchCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">
+                                        <Canvas Width="10" Height="10">
+                                            <Line Stroke="Black" X1="0" X2="9" Y1="0" Y2="10"/>
+                                            <Line Stroke="Black" X1="0" X2="9" Y1="10" Y2="0"/>
+                                        </Canvas>
+                                    </Button>
+                                </DockPanel>
+                            </DataTemplate>
+                        </TabControl.ItemTemplate>
+                        <TabControl.ContentTemplate>
+                            <DataTemplate>
+                                <FileSharperUI:SearchDocumentControl DataContext="{Binding}" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" />
+                            </DataTemplate>
+                        </TabControl.ContentTemplate>
+                    </TabControl>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="About" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid DockPanel.Dock="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Content="Close" Padding="4" Margin="4" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
+                    </Grid>
+                    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                        <local:AboutControl />
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="PathHelp" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid DockPanel.Dock="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Content="Close" Padding="4" Margin="4" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
+                    </Grid>
+                    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                        <local:PathHelpControl />
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
         <!--<FileSharperUI:SearchDocumentControl Name="searchDocumentControl" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>-->
     </DockPanel>
 </Window>

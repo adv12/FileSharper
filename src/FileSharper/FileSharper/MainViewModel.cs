@@ -20,6 +20,8 @@ namespace FileSharper
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private int m_SelectedScreenIndex = 0;
+
         private int m_SelectedIndex = 0;
 
         private bool m_AnyOpenFiles = false;
@@ -43,6 +45,12 @@ namespace FileSharper
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
             new ObservableCollection<SearchDocument>();
 
+        public int SelectedScreenIndex
+        {
+            get => m_SelectedScreenIndex;
+            set => SetField(ref m_SelectedScreenIndex, value);
+        }
+
         public int SelectedIndex
         {
             get => m_SelectedIndex;
@@ -65,60 +73,6 @@ namespace FileSharper
         {
             get => m_AnyTemplates;
             private set => SetField(ref m_AnyTemplates, value);
-        }
-
-        public bool ShowingAbout
-        {
-            get => m_ShowingAbout;
-            set
-            {
-                if (m_ShowingAbout != value)
-                {
-                    m_ShowingAbout = value;
-                    if (value)
-                    {
-                        ShowingPathHelp = false;
-                        ShowingMainUI = false;
-                    }
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public bool ShowingPathHelp
-        {
-            get => m_ShowingPathHelp;
-            set
-            {
-                if (m_ShowingPathHelp != value)
-                {
-                    m_ShowingPathHelp = value;
-                    if (value)
-                    {
-                        ShowingAbout = false;
-                        ShowingMainUI = false;
-                    }
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public bool ShowingMainUI
-        {
-            get => m_ShowingMainUI;
-            set
-            {
-                if (m_ShowingMainUI != value)
-                {
-                    m_ShowingMainUI = value;
-                    if (value)
-                    {
-                        ShowingAbout = false;
-                        ShowingPathHelp = false;
-                    }
-                    OnPropertyChanged();
-                }
-            }
         }
 
         public bool ShowingSaveTemplateUI
@@ -155,11 +109,7 @@ namespace FileSharper
         public ICommand ResetDefaultTemplateCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
 
-        public ICommand AboutCommand { get; private set; }
-        public ICommand HideAboutCommand { get; private set; }
-
-        public ICommand PathHelpCommand { get; private set; }
-        public ICommand HidePathHelpCommand { get; private set; }
+        public ICommand SetSelectedScreenIndexCommand { get; private set; }
 
         public ICommand NavigateCommand { get; private set; }
 
@@ -191,12 +141,8 @@ namespace FileSharper
             ResetDefaultTemplateCommand = new DefaultSearchTemplateClearer(this);
             ExitCommand = new ApplicationExiter(this);
 
-            AboutCommand = new AboutBoxShower(this);
-            HideAboutCommand = new AboutBoxHider(this);
-
-            PathHelpCommand = new PathHelpShower(this);
-            HidePathHelpCommand = new PathHelpHider(this);
-
+            SetSelectedScreenIndexCommand = new SelectedScreenIndexSetter(this);
+            
             NavigateCommand = new LinkNavigator(this);
         }
 
@@ -257,10 +203,6 @@ namespace FileSharper
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            if (!ShowingAbout && !ShowingPathHelp)
-            {
-                ShowingMainUI = true;
-            }
         }
 
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
@@ -269,6 +211,36 @@ namespace FileSharper
             field = value;
             OnPropertyChanged(propertyName);
             return true;
+        }
+
+        public class SelectedScreenIndexSetter : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
+
+            public SelectedScreenIndexSetter(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                if (parameter is int)
+                {
+                    int index = (int)parameter;
+                    ViewModel.SelectedScreenIndex = index;
+                }
+            }
         }
 
         public class NewSearchMaker : ICommand
@@ -667,106 +639,6 @@ namespace FileSharper
             public void Execute(object parameter)
             {
                 System.Windows.Application.Current.Shutdown();
-            }
-        }
-
-        public class AboutBoxShower : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public AboutBoxShower(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                ViewModel.ShowingAbout = true;
-            }
-        }
-
-        public class AboutBoxHider : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public AboutBoxHider(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                ViewModel.ShowingAbout = false;
-            }
-        }
-
-        public class PathHelpShower : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public PathHelpShower(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                ViewModel.ShowingPathHelp = true;
-            }
-        }
-
-        public class PathHelpHider : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public PathHelpHider(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                ViewModel.ShowingPathHelp = false;
             }
         }
 

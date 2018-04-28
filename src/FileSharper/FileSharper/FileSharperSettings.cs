@@ -89,9 +89,7 @@ namespace FileSharper
             List<SearchTemplateInfo> toRemove = new List<SearchTemplateInfo>();
             foreach (SearchTemplateInfo template in settings.Templates)
             {
-                string dirPath = template.Stock ? StockTemplatesDirectoryPath : UserTemplatesDirectoryPath;
-                string path = Path.Combine(dirPath, template.FileName);
-                if (!File.Exists(path))
+                if (!File.Exists(template.FileFullName))
                 {
                     toRemove.Add(template);
                 }

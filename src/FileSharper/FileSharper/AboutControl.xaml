@@ -40,6 +40,5 @@ full text of the license.
                     FileSharper uses UDE, a C# port of Mozilla Universal Charset Detector.
                     UDE is distributed under the Mozilla Public License version 1.1.
                     The code is available on GitHub: <Hyperlink Command="{Binding NavigateCommand}" CommandParameter="https://github.com/errepi/ude">https://github.com/errepi/ude</Hyperlink></TextBlock>
-        <Button Padding="4" HorizontalAlignment="Center" Command="{Binding HideAboutCommand}">OK</Button>
     </StackPanel>
 </UserControl>

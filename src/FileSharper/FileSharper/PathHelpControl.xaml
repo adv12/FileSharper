@@ -93,6 +93,5 @@ full text of the license.
         <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold"><Run FontWeight="Normal">The following variables are also supported:</Run><LineBreak/><LineBreak/>
             <Run>Now</Run><LineBreak/>
         </TextBlock>
-        <Button Padding="4" HorizontalAlignment="Center" Command="{Binding HidePathHelpCommand}">OK</Button>
     </StackPanel>
 </UserControl>
