@@ -152,6 +152,7 @@ namespace FileSharper
                         }
                     }
                 }
+                displayName = name;
             }
             // Use just letters, digits, and underscores for filenames
             string safeName = Regex.Replace(displayName, @"\W", "");
