@@ -5,15 +5,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using FileSharperCore;
 using Newtonsoft.Json;
 
 namespace FileSharper
 {
-    public class FileSharperSettings
+    public class FileSharperSettings: INotifyPropertyChanged
     {
         public static string AppDirectoryPath => AppDomain.CurrentDomain.BaseDirectory;
 
@@ -110,11 +112,20 @@ namespace FileSharper
             Directory.CreateDirectory(UserTemplatesDirectoryPath);
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ObservableCollection<string> RecentDocuments { get; } =
             new ObservableCollection<string>();
 
         public ObservableCollection<SearchTemplateInfo> Templates { get; } =
             new ObservableCollection<SearchTemplateInfo>();
+
+        private bool m_EulaAccepted;
+        public bool EulaAccepted
+        {
+            get => m_EulaAccepted;
+            set => SetField(ref m_EulaAccepted, value);
+        }
 
         public void AddRecentDocument(string path)
         {
@@ -190,6 +201,19 @@ namespace FileSharper
             EnsureSettingsDirectoryPath();
             string text = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(settingsPath, text);
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
 
     }

@@ -30,12 +30,6 @@ namespace FileSharper
 
         private bool m_AnyTemplates = false;
 
-        private bool m_ShowingAbout = false;
-
-        private bool m_ShowingPathHelp = false;
-
-        private bool m_ShowingMainUI = true;
-
         private bool m_ShowingSaveTemplateUI = false;
 
         private string m_SaveTemplateDisplayName = "";
@@ -98,6 +92,7 @@ namespace FileSharper
 
         public bool SearchDocumentsEnabled => !ShowingSaveTemplateUI;
 
+        public ICommand AcceptEulaCommand { get; private set; }
         public ICommand NewSearchCommand { get; private set; }
         public ICommand NewSearchFromTemplateCommand { get; private set; }
         public ICommand OpenSearchCommand { get; private set; }
@@ -129,6 +124,8 @@ namespace FileSharper
             SearchDocuments.CollectionChanged += SearchDocuments_CollectionChanged;
 
             AddNewSearch();
+
+            AcceptEulaCommand = new EulaAccepter(this);
             NewSearchCommand = new NewSearchMaker(this);
             NewSearchFromTemplateCommand = new NewSearchFromTemplateMaker(this);
             OpenSearchCommand = new SearchOpener(this);
@@ -213,11 +210,35 @@ namespace FileSharper
             return true;
         }
 
-        public class SelectedScreenIndexSetter : ICommand
+        public class EulaAccepter: ICommand
         {
             public event EventHandler CanExecuteChanged;
 
+            public MainViewModel ViewModel
+            {
+                get; set;
+            }
 
+            public EulaAccepter(MainViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                ViewModel.Settings.EulaAccepted = true;
+            }
+        }
+
+        public class SelectedScreenIndexSetter : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+            
             public MainViewModel ViewModel
             {
                 get; set;

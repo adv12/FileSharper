@@ -93,8 +93,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EulaControl.xaml.cs">
+      <DependentUpon>EulaControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SearchTemplateInfo.cs" />
     <Page Include="AboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EulaControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
