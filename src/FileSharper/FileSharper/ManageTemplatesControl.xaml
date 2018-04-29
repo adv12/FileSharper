@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="FileSharper.ManageTemplatesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharper"
+             xmlns:FileSharperUI="clr-namespace:FileSharperUI;assembly=FileSharperUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Name="outerGrid" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="150"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="24" Margin="10">
+            Templates
+        </TextBlock>
+        <DataGrid Name="templatesGrid" Grid.Row="1" Grid.Column="0" Margin="10 0 5 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Settings.Templates}" AutoGenerateColumns="False" CanUserSortColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding DisplayName}" />
+                <DataGridCheckBoxColumn Header="Stock" Binding="{Binding Stock}" IsReadOnly="True" />
+                <DataGridCheckBoxColumn Header="Hidden" Binding="{Binding Hidden}"/>
+                <DataGridTextColumn Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <StackPanel Margin="10 0 20 0">
+                <Button Content="▲" Padding="8" Margin="0 0 0 10" Command="{Binding MoveTemplatesUpCommand}" CommandParameter="{Binding ElementName=templatesGrid, Path=SelectedItems}"/>
+                <Button Content="▼" Padding="8" Margin="0 0 0 10" Command="{Binding MoveTemplatesDownCommand}" CommandParameter="{Binding ElementName=templatesGrid, Path=SelectedItems}"/>
+                <Button Content="Delete" Padding="8" Margin="0 0 0 0" IsEnabled="{Binding ElementName=templatesGrid, Path=SelectedItem.User, TargetNullValue=True}" Command="{Binding DeleteTemplatesCommand}" CommandParameter="{Binding ElementName=templatesGrid, Path=SelectedItems}"/>
+            </StackPanel>
+        </Grid>
+        <GridSplitter Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch"/>
+        <ScrollViewer Name="previewScrollViewer" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="10">
+            <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=templatesGrid, Path=SelectedItem.SampleInstance}">
+                <FileSharperUI:SearchDocumentSetupControl Width="Auto" Height="Auto" IsEnabled="False"/>
+                <FileSharperUI:MatchLimitsControl Width="Auto" Height="Auto" IsEnabled="False"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

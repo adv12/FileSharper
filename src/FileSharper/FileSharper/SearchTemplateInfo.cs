@@ -2,10 +2,13 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using FileSharperCore;
+using Newtonsoft.Json;
 
 namespace FileSharper
 {
@@ -37,7 +40,17 @@ namespace FileSharper
         public bool Stock
         {
             get => m_Stock;
-            set => SetField(ref m_Stock, value);
+            set
+            {
+                SetField(ref m_Stock, value);
+                OnPropertyChanged(nameof(User));
+            }
+        }
+
+        [JsonIgnore]
+        public bool User
+        {
+            get => !Stock;
         }
 
         private bool m_Hidden;
@@ -45,6 +58,15 @@ namespace FileSharper
         {
             get => m_Hidden;
             set => SetField(ref m_Hidden, value);
+        }
+
+        [JsonIgnore]
+        public SearchDocument SampleInstance
+        {
+            get
+            {
+                return SearchDocument.FromFile(FileFullName, true);
+            }
         }
 
         public SearchTemplateInfo(string fileName, string displayName, bool stock = false, bool hidden = false)

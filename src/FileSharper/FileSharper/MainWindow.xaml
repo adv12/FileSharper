@@ -102,7 +102,8 @@ full text of the license.
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+T" />
                 <MenuItem Header="_Reset Default Template..." Command="{Binding ResetDefaultTemplateCommand}"
                           CommandParameter="{Binding ElementName=ThisWindow}" InputGestureText="Ctrl+Shift+T" />
-                <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
+                    <MenuItem Header="_Manage Templates..." Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource three}"/>
+                    <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>
@@ -175,14 +176,14 @@ full text of the license.
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Button Content="Close" Padding="4" Margin="4" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
+                        <Button Content="Close" Padding="4" Margin="10" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
                     </Grid>
                     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
                         <local:AboutControl />
                     </ScrollViewer>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="PathHelp" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TabItem Header="Path Help" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid DockPanel.Dock="Bottom">
                         <Grid.ColumnDefinitions>
@@ -195,14 +196,32 @@ full text of the license.
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Button Content="Close" Padding="4" Margin="4" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
+                        <Button Content="Close" Padding="4" Margin="10" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
                     </Grid>
                     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
                         <local:PathHelpControl />
                     </ScrollViewer>
                 </DockPanel>
             </TabItem>
-        </TabControl>
+                <TabItem Header="Manage Templates" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid DockPanel.Dock="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Button Content="Close" Padding="4" Margin="10" Grid.Column="1" Grid.Row="1" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource zero}"/>
+                        </Grid>
+                        <local:ManageTemplatesControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
         <!--<FileSharperUI:SearchDocumentControl Name="searchDocumentControl" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>-->
     </DockPanel>
     </Grid>

@@ -26,30 +26,7 @@ full text of the license.
             <RowDefinition Height="{Binding ResultsPaneHeight}"/>
         </Grid.RowDefinitions>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0" Padding="10">
-            <Grid Height="Auto" Width="Auto" IsEnabled="{Binding NotSearching}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Expander x:Name="fileSourceExpander" Grid.Row="0" Header="File Source" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding FileSourceExpanded}">
-                    <local:FileSourceNodeControl x:Name="fileSourceNodeControl" DataContext="{Binding FileSourceNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
-                </Expander>
-                <Expander x:Name="conditionExpander" Grid.Row="1" Header="Condition" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding ConditionExpanded}">
-                    <local:ConditionNodeControl x:Name="conditionNodeControl" DataContext="{Binding ConditionNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
-                </Expander>
-                <Expander x:Name="fieldSourcesExpander" Grid.Row="2" Header="Additional Fields" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding FieldSourcesExpanded}">
-                    <local:FieldSourcesNodeControl x:Name="fieldSourcessNodeControl" Grid.Row="2" DataContext="{Binding FieldSourcesNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
-                </Expander>
-                <Expander x:Name="testedProcessorsExpander" Grid.Row="3" Header="When Tested..." Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding TestedProcessorsExpanded}">
-                    <local:ProcessorsNodeControl x:Name="testedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding TestedProcessorsNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
-                </Expander>
-                <Expander x:Name="matchedProcessorsExpander" Grid.Row="4" Header="When Matched..." Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding MatchedProcessorsExpanded}">
-                    <local:ProcessorsNodeControl x:Name="matchedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding MatchedProcessorsNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
-                </Expander>
-            </Grid>
+            <local:SearchDocumentSetupControl Width="Auto" Height="Auto" />
         </ScrollViewer>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
         <Grid Grid.Row="2">
@@ -65,15 +42,7 @@ full text of the license.
             <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
             <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding RequestStopCommand}" Visibility="{Binding CanRequestStop, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
             <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding CanCancel, Converter={StaticResource boolToVisibilityConverter}}">Kill</Button>
-            <StackPanel x:Name="matchLimitsStackPanel" IsEnabled="{Binding NotSearching}" Orientation="Horizontal" Margin="4" Grid.Row="0" Grid.Column="1">
-                <Label Margin="4" VerticalAlignment="Center">Display only first</Label>
-                <TextBox Text="{Binding MaxResultsDisplayed}" VerticalAlignment="Center" Width="50" Padding="2" />
-                <Label VerticalAlignment="Center" Margin="4">matches</Label>
-                <Label VerticalAlignment="Center" Margin="4"></Label>
-                <CheckBox x:Name="limitMatchesCheckBox" Margin="4" VerticalAlignment="Center" IsChecked="{Binding LimitMatches}">Stop after</CheckBox>
-                <TextBox Text="{Binding MaxToMatch}" VerticalAlignment="Center"  IsEnabled="{Binding ElementName=limitMatchesCheckBox, Path=IsChecked}" Width="50" Padding="2" />
-                <Label VerticalAlignment="Center" Margin="4">matches</Label>
-            </StackPanel>
+            <local:MatchLimitsControl Grid.Row="0" Grid.Column="1"/>
             <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <TabItem Header="Results">
                     <ListView x:Name="resultsListView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" MouseDoubleClick="ListView_MouseDoubleClick">

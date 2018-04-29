@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="FileSharperUI.SearchDocumentSetupControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileSharperUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Height="Auto" Width="Auto" IsEnabled="{Binding NotSearching}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Expander x:Name="fileSourceExpander" Grid.Row="0" Header="File Source" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding FileSourceExpanded}">
+            <local:FileSourceNodeControl x:Name="fileSourceNodeControl" DataContext="{Binding FileSourceNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+        </Expander>
+        <Expander x:Name="conditionExpander" Grid.Row="1" Header="Condition" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding ConditionExpanded}">
+            <local:ConditionNodeControl x:Name="conditionNodeControl" DataContext="{Binding ConditionNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+        </Expander>
+        <Expander x:Name="fieldSourcesExpander" Grid.Row="2" Header="Additional Fields" Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding FieldSourcesExpanded}">
+            <local:FieldSourcesNodeControl x:Name="fieldSourcessNodeControl" Grid.Row="2" DataContext="{Binding FieldSourcesNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+        </Expander>
+        <Expander x:Name="testedProcessorsExpander" Grid.Row="3" Header="When Tested..." Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding TestedProcessorsExpanded}">
+            <local:ProcessorsNodeControl x:Name="testedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding TestedProcessorsNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+        </Expander>
+        <Expander x:Name="matchedProcessorsExpander" Grid.Row="4" Header="When Matched..." Margin="0,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsExpanded="{Binding MatchedProcessorsExpanded}">
+            <local:ProcessorsNodeControl x:Name="matchedProcessorsNodeControl" Grid.Row="4" DataContext="{Binding MatchedProcessorsNode}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+        </Expander>
+    </Grid>
+</UserControl>

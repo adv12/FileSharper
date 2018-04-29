@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -102,6 +103,9 @@ namespace FileSharper
         public ICommand SaveTemplateCommand { get; private set; }
         public ICommand SaveDefaultTemplateCommand { get; private set; }
         public ICommand ResetDefaultTemplateCommand { get; private set; }
+        public ICommand DeleteTemplatesCommand { get; private set; }
+        public ICommand MoveTemplatesUpCommand { get; private set; }
+        public ICommand MoveTemplatesDownCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
 
         public ICommand SetSelectedScreenIndexCommand { get; private set; }
@@ -125,22 +129,25 @@ namespace FileSharper
 
             AddNewSearch();
 
-            AcceptEulaCommand = new EulaAccepter(this);
-            NewSearchCommand = new NewSearchMaker(this);
-            NewSearchFromTemplateCommand = new NewSearchFromTemplateMaker(this);
-            OpenSearchCommand = new SearchOpener(this);
-            OpenRecentCommand = new RecentSearchOpener(this);
-            CloseSearchCommand = new SearchCloser(this);
-            SaveSearchCommand = new SearchSaver(this);
-            ShowSaveTemplateCommand = new ShowSaveTemplateSetter(this);
-            SaveTemplateCommand = new SearchTemplateSaver(this);
-            SaveDefaultTemplateCommand = new DefaultSearchTemplateSaver(this);
-            ResetDefaultTemplateCommand = new DefaultSearchTemplateClearer(this);
-            ExitCommand = new ApplicationExiter(this);
+            AcceptEulaCommand = new MainViewModelCommand(this, p => { Settings.EulaAccepted = true; }, false, p => true);
+            NewSearchCommand = new MainViewModelCommand(this, p => { AddNewSearch(); });
+            NewSearchFromTemplateCommand = new MainViewModelCommand(this, NewSearchFromTemplate);
+            OpenSearchCommand = new MainViewModelCommand(this, OpenSearch);
+            OpenRecentCommand = new MainViewModelCommand(this, OpenRecentSearch);
+            CloseSearchCommand = new MainViewModelCommand(this, CloseSearch, true);
+            SaveSearchCommand = new MainViewModelCommand(this, SaveSearch, true);
+            ShowSaveTemplateCommand = new MainViewModelCommand(this, SetShowSaveTemplates, true);
+            SaveTemplateCommand = new MainViewModelCommand(this, SaveSearchTemplate, true);
+            SaveDefaultTemplateCommand = new MainViewModelCommand(this, SaveDefaultSearchTemplate, true);
+            ResetDefaultTemplateCommand = new MainViewModelCommand(this, ResetDefaultSearchTemplate);
+            DeleteTemplatesCommand = new MainViewModelCommand(this, DeleteTemplates);
+            MoveTemplatesUpCommand = new MainViewModelCommand(this, MoveTemplatesUp);
+            MoveTemplatesDownCommand = new MainViewModelCommand(this, MoveTemplatesDown);
+            ExitCommand = new MainViewModelCommand(this, p => { Application.Current.Shutdown(); });
 
-            SetSelectedScreenIndexCommand = new SelectedScreenIndexSetter(this);
+            SetSelectedScreenIndexCommand = new MainViewModelCommand(this, SetSelectedScreenIndex, false, p => true );
             
-            NavigateCommand = new LinkNavigator(this);
+            NavigateCommand = new MainViewModelCommand(this, Navigate);
         }
 
         private void Templates_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -166,6 +173,129 @@ namespace FileSharper
                 SearchDocuments.Add(doc);
                 SelectedIndex = SearchDocuments.Count - 1;
             }
+        }
+
+        public void NewSearchFromTemplate(object parameter)
+        {
+            string templatePath = parameter as string;
+            if (templatePath != null)
+            {
+                AddNewSearchFromTemplate(templatePath);
+            }
+        }
+
+        public void SetSelectedScreenIndex(object parameter)
+        {
+            if (parameter is int)
+            {
+                int index = (int)parameter;
+                SelectedScreenIndex = index;
+            }
+        }
+
+        public void OpenSearch(object parameter)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+            openFileDialog.Filter = "FileSharper files (*.fsh)|*.fsh";
+            bool? success = openFileDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                foreach (string filename in openFileDialog.FileNames)
+                {
+                    OpenFile(filename);
+                }
+            }
+        }
+
+        public void OpenRecentSearch(object parameter)
+        {
+            string filename = parameter as string;
+            if (filename != null)
+            {
+                if (File.Exists(filename))
+                {
+                    OpenFile(filename);
+                }
+                else
+                {
+                    Settings.RemoveRecentDocument(filename);
+                }
+            }
+        }
+
+        public void CloseSearch(object parameter)
+        {
+            bool close = true;
+            int idx = -1;
+            if (parameter is SearchDocument)
+            {
+                SearchDocument doc = (SearchDocument)parameter;
+                idx = SearchDocuments.IndexOf(doc);
+            }
+            else
+            {
+                idx = SelectedIndex;
+                if (idx < 0 || idx >= SearchDocuments.Count)
+                {
+                    close = false;
+                }
+            }
+            if (close)
+            {
+                SearchDocuments.RemoveAt(idx);
+            }
+        }
+
+        public void SaveSearch(object parameter)
+        {
+            bool saveAs = parameter != null && (bool)parameter;
+            int idx = SelectedIndex;
+            bool save = false;
+            if (idx >= 0 && idx < SearchDocuments.Count)
+            {
+                SearchDocument doc = SearchDocuments[idx];
+                string path = doc.FileName;
+                if (saveAs || string.IsNullOrEmpty(path))
+                {
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = "FileSharper files (*.fsh)|*.fsh";
+                    bool? result = sfd.ShowDialog();
+                    if (result.HasValue && result.Value)
+                    {
+                        path = sfd.FileName;
+                        save = true;
+                    }
+                }
+                else
+                {
+                    save = true;
+                }
+                if (save)
+                {
+                    doc.Save(path);
+                    doc.FileName = path;
+                    Settings.AddRecentDocument(path);
+                }
+            }
+        }
+
+        public void SaveSearchTemplate(object parameter)
+        {
+            int idx = SelectedIndex;
+            if (idx >= 0 && idx < SearchDocuments.Count)
+            {
+                string templateName = parameter as string;
+                if (!string.IsNullOrEmpty(templateName))
+                {
+                    SearchDocument doc = SearchDocuments[idx];
+                    if (doc != null)
+                    {
+                        Settings.AddTemplate(doc, templateName);
+                    }
+                }
+            }
+            ShowingSaveTemplateUI = false;
         }
 
         public bool AddNewSearchFromTemplate(string templatePath)
@@ -197,6 +327,151 @@ namespace FileSharper
             Settings.AddRecentDocument(filename);
         }
 
+        public void SaveDefaultSearchTemplate(object parameter)
+        {
+            int idx = SelectedIndex;
+            if (idx >= 0 && idx < SearchDocuments.Count)
+            {
+                MessageBoxResult result = MessageBoxResult.OK;
+                if (parameter is Window)
+                {
+                    result = MessageBox.Show(parameter as Window,
+                        "Save the current search as the template for new searches?", "Save Template?",
+                        MessageBoxButton.OKCancel);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        SearchDocument doc = SearchDocuments[idx];
+                        if (doc != null)
+                        {
+                            Settings.SetDefaultTemplate(doc);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ResetDefaultSearchTemplate(object parameter)
+        {
+            MessageBoxResult result = MessageBoxResult.OK;
+            if (parameter is Window)
+            {
+                result = MessageBox.Show(parameter as Window,
+                    "Reset the template for new searches to an empty search?", "Reset Template?",
+                    MessageBoxButton.OKCancel);
+            }
+            if (result == MessageBoxResult.OK)
+            {
+                Settings.ResetDefaultTemplate();
+            }
+        }
+
+        public void Navigate(object parameter)
+        {
+            string url = parameter as string;
+            if (url != null)
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(url);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Could not open hyperlink {url}: {ex}");
+                }
+            }
+        }
+
+        public void SetShowSaveTemplates(object parameter)
+        {
+            bool? hide = parameter as bool?;
+            if (hide.HasValue && hide.Value)
+            {
+                ShowingSaveTemplateUI = false;
+            }
+            else
+            {
+                ShowingSaveTemplateUI = true;
+            }
+        }
+
+        public void DeleteTemplates(object parameter)
+        {
+            IList list = parameter as IList;
+            if (list != null)
+            {
+                List<SearchTemplateInfo> templatesToRemove = list.OfType<SearchTemplateInfo>().ToList();
+                foreach (SearchTemplateInfo template in templatesToRemove)
+                {
+                    if (!template.Stock)
+                    {
+                        Settings.Templates.Remove(template);
+                        try
+                        {
+                            File.Delete(template.FileFullName);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public void MoveTemplatesUp(object parameter)
+        {
+            IList list = parameter as IList;
+            if (list != null)
+            {
+                ObservableCollection<SearchTemplateInfo> templates = Settings.Templates;
+                List<SearchTemplateInfo> templatesToMove = list.OfType<SearchTemplateInfo>()
+                    .OrderBy(t => templates.IndexOf(t)).ToList();
+                int lowestIndex = templates.Count - 1;
+                foreach (SearchTemplateInfo template in templatesToMove)
+                {
+                    int index = templates.IndexOf(template);
+                    if (index > -1 && index < lowestIndex)
+                    {
+                        lowestIndex = index;
+                    }
+                }
+                int insertionIndex = lowestIndex == 0 ? 0 : lowestIndex - 1;
+                for (int i = templatesToMove.Count - 1; i >= 0; i--)
+                {
+                    templates.Move(templates.IndexOf(templatesToMove[i]), insertionIndex);
+                }
+            }
+        }
+
+        public void MoveTemplatesDown(object parameter)
+        {
+            IList list = parameter as IList;
+            if (list != null)
+            {
+                ObservableCollection<SearchTemplateInfo> templates = Settings.Templates;
+                List<SearchTemplateInfo> templatesToMove = list.OfType<SearchTemplateInfo>()
+                    .OrderBy(t => templates.IndexOf(t)).ToList();
+                int highestIndex = -1;
+                foreach (SearchTemplateInfo template in templatesToMove)
+                {
+                    int index = templates.IndexOf(template);
+                    if (index > highestIndex)
+                    {
+                        highestIndex = index;
+                    }
+                }
+                int insertionIndex = highestIndex + 1;
+                if (insertionIndex >= templates.Count)
+                {
+                    insertionIndex = templates.Count - 1;
+                }
+                foreach (SearchTemplateInfo template in templatesToMove)
+                {
+                    templates.Move(templates.IndexOf(template), insertionIndex);
+                }
+            }
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -209,529 +484,60 @@ namespace FileSharper
             OnPropertyChanged(propertyName);
             return true;
         }
-
-        public class EulaAccepter: ICommand
+        
+        public class MainViewModelCommand : ICommand
         {
+
+            public delegate bool CanExecuteTester(object parameter);
+            public delegate void CommandExecutor(object parameter);
+
             public event EventHandler CanExecuteChanged;
 
             public MainViewModel ViewModel
             {
-                get; set;
+                get; private set;
             }
 
-            public EulaAccepter(MainViewModel viewModel)
+            private CanExecuteTester m_CanExecuteTester;
+            private CommandExecutor m_CommandExecutor;
+
+            private bool m_RequiresOpenFile;
+
+            public MainViewModelCommand(MainViewModel viewModel, CommandExecutor commandExecutor,
+                bool requiresOpenFile = false, CanExecuteTester canExecuteTester = null)
             {
                 ViewModel = viewModel;
+                ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+                ViewModel.Settings.PropertyChanged += Settings_PropertyChanged;
+                m_CommandExecutor = commandExecutor;
+                m_CanExecuteTester = canExecuteTester;
+                m_RequiresOpenFile = requiresOpenFile;
             }
 
-            public bool CanExecute(object parameter)
+            private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
             {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                ViewModel.Settings.EulaAccepted = true;
-            }
-        }
-
-        public class SelectedScreenIndexSetter : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-            
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public SelectedScreenIndexSetter(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                if (parameter is int)
-                {
-                    int index = (int)parameter;
-                    ViewModel.SelectedScreenIndex = index;
-                }
-            }
-        }
-
-        public class NewSearchMaker : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public NewSearchMaker(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                ViewModel.AddNewSearch();
-            }
-        }
-
-        public class NewSearchFromTemplateMaker : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public NewSearchFromTemplateMaker(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                string templatePath = parameter as string;
-                if (templatePath != null)
-                {
-                    ViewModel.AddNewSearchFromTemplate(templatePath);
-                }
-            }
-        }
-
-        public class SearchOpener : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public SearchOpener(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Multiselect = true;
-                openFileDialog.Filter = "FileSharper files (*.fsh)|*.fsh";
-                bool? success = openFileDialog.ShowDialog();
-                if (success.HasValue && success.Value)
-                {
-                    foreach (string filename in openFileDialog.FileNames)
-                    {
-                        ViewModel.OpenFile(filename);
-                    }
-                }
-            }
-        }
-
-        public class RecentSearchOpener : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public RecentSearchOpener(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                string filename = parameter as string;
-                if (filename != null)
-                {
-                    if (File.Exists(filename))
-                    {
-                        ViewModel.OpenFile(filename);
-                    }
-                    else
-                    {
-                        ViewModel.Settings.RemoveRecentDocument(filename);
-                    }
-                }
-            }
-        }
-
-        public class SearchCloser : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public SearchCloser(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
 
             private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
             {
-                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
-                {
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-                }
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
 
             public bool CanExecute(object parameter)
             {
-                return ViewModel.AnyOpenFiles;
+                if (m_CanExecuteTester != null)
+                {
+                    return m_CanExecuteTester(parameter);
+                }
+                return ViewModel.Settings.EulaAccepted && (!m_RequiresOpenFile || ViewModel.AnyOpenFiles);
             }
 
             public void Execute(object parameter)
             {
-                bool close = true;
-                int idx = -1;
-                if (parameter is SearchDocument)
-                {
-                    SearchDocument doc = (SearchDocument)parameter;
-                    idx = ViewModel.SearchDocuments.IndexOf(doc);
-                }
-                else
-                {
-                    idx = ViewModel.SelectedIndex;
-                    if (idx < 0 || idx >= ViewModel.SearchDocuments.Count)
-                    {
-                        close = false;
-                    }
-                }
-                if (close)
-                {
-                    ViewModel.SearchDocuments.RemoveAt(idx);
-                }
+                m_CommandExecutor?.Invoke(parameter);
             }
         }
-
-        public class SearchSaver : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public SearchSaver(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-                viewModel.PropertyChanged += ViewModel_PropertyChanged;
-            }
-
-            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
-                {
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return ViewModel.AnyOpenFiles;
-            }
-
-            public void Execute(object parameter)
-            {
-                bool saveAs = parameter != null && (bool)parameter;
-                int idx = ViewModel.SelectedIndex;
-                bool save = false;
-                if (idx >= 0 && idx < ViewModel.SearchDocuments.Count)
-                {
-                    SearchDocument doc = ViewModel.SearchDocuments[idx];
-                    string path = doc.FileName;
-                    if (saveAs || string.IsNullOrEmpty(path))
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "FileSharper files (*.fsh)|*.fsh";
-                        bool? result = sfd.ShowDialog();
-                        if (result.HasValue && result.Value)
-                        {
-                            path = sfd.FileName;
-                            save = true;
-                        }
-                    }
-                    else
-                    {
-                        save = true;
-                    }
-                    if (save)
-                    {
-                        doc.Save(path);
-                        doc.FileName = path;
-                        ViewModel.Settings.AddRecentDocument(path);
-                    }
-                }
-            }
-        }
-
-        public class SearchTemplateSaver : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public SearchTemplateSaver(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-                viewModel.PropertyChanged += ViewModel_PropertyChanged;
-            }
-
-            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
-                {
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return ViewModel.AnyOpenFiles;
-            }
-
-            public void Execute(object parameter)
-            {
-                int idx = ViewModel.SelectedIndex;
-                if (idx >= 0 && idx < ViewModel.SearchDocuments.Count)
-                {
-                    string templateName = parameter as string;
-                    if (!string.IsNullOrEmpty(templateName))
-                    {
-                        SearchDocument doc = ViewModel.SearchDocuments[idx];
-                        if (doc != null)
-                        {
-                            ViewModel.Settings.AddTemplate(doc, templateName);
-                        }
-                    }
-                }
-                ViewModel.ShowingSaveTemplateUI = false;
-            }
-        }
-
-        public class DefaultSearchTemplateSaver : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public DefaultSearchTemplateSaver(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-                viewModel.PropertyChanged += ViewModel_PropertyChanged;
-            }
-
-            private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(ViewModel.AnyOpenFiles))
-                {
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return ViewModel.AnyOpenFiles;
-            }
-
-            public void Execute(object parameter)
-            {
-                int idx = ViewModel.SelectedIndex;
-                if (idx >= 0 && idx < ViewModel.SearchDocuments.Count)
-                {
-                    MessageBoxResult result = MessageBoxResult.OK;
-                    if (parameter is Window)
-                    {
-                        result = MessageBox.Show(parameter as Window,
-                            "Save the current search as the template for new searches?", "Save Template?",
-                            MessageBoxButton.OKCancel);
-                        if (result == MessageBoxResult.OK)
-                        {
-                            SearchDocument doc = ViewModel.SearchDocuments[idx];
-                            if (doc != null)
-                            {
-                                ViewModel.Settings.SetDefaultTemplate(doc);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public class DefaultSearchTemplateClearer : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public DefaultSearchTemplateClearer(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                MessageBoxResult result = MessageBoxResult.OK;
-                if (parameter is Window)
-                {
-                    result = MessageBox.Show(parameter as Window,
-                        "Reset the template for new searches to an empty search?", "Reset Template?",
-                        MessageBoxButton.OKCancel);
-                }
-                if (result == MessageBoxResult.OK)
-                {
-                    ViewModel.Settings.ResetDefaultTemplate();
-                }
-            }
-        }
-
-        public class ApplicationExiter : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public ApplicationExiter(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                System.Windows.Application.Current.Shutdown();
-            }
-        }
-
-        public class LinkNavigator : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public LinkNavigator(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                string url = parameter as string;
-                if (url != null)
-                {
-                    try
-                    {
-                        System.Diagnostics.Process.Start(url);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Could not open hyperlink {url}: {ex}");
-                    }
-                }
-            }
-        }
-
-        public class ShowSaveTemplateSetter : ICommand
-        {
-            public event EventHandler CanExecuteChanged;
-
-            public MainViewModel ViewModel
-            {
-                get; set;
-            }
-
-            public ShowSaveTemplateSetter(MainViewModel viewModel)
-            {
-                ViewModel = viewModel;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object parameter)
-            {
-                bool? hide = parameter as bool?;
-                if (hide.HasValue && hide.Value)
-                {
-                    ViewModel.ShowingSaveTemplateUI = false;
-                }
-                else
-                {
-                    ViewModel.ShowingSaveTemplateUI = true;
-                }
-            }
-        }
-
 
     }
 }

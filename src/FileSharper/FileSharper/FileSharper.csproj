@@ -96,6 +96,9 @@
     <Compile Include="EulaControl.xaml.cs">
       <DependentUpon>EulaControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ManageTemplatesControl.xaml.cs">
+      <DependentUpon>ManageTemplatesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SearchTemplateInfo.cs" />
     <Page Include="AboutControl.xaml">
       <SubType>Designer</SubType>
@@ -123,6 +126,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ManageTemplatesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PathHelpControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
