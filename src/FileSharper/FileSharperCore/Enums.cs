@@ -31,6 +31,21 @@ namespace FileSharperCore
         After
     }
 
+    public enum SimpleComparisonType
+    {
+        LessThan,
+        GreaterThan
+    }
+
+    public enum TimeSpanUnits
+    {
+        Days,
+        Hours,
+        Minutes,
+        Seconds,
+        Milliseconds
+    }
+
     public enum ComparisonType
     {
         LessThan,

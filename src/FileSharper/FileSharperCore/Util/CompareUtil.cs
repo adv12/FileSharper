@@ -60,5 +60,17 @@ namespace FileSharperCore.Util
             return MatchResultType.Yes;
         }
 
+        public static MatchResultType Compare(double value1, SimpleComparisonType comparisonType, double value2)
+        {
+            switch (comparisonType)
+            {
+                case SimpleComparisonType.LessThan:
+                    return value1 < value2 ? MatchResultType.Yes : MatchResultType.No;
+                case SimpleComparisonType.GreaterThan:
+                    return value1 > value2 ? MatchResultType.Yes : MatchResultType.No;
+            }
+            return MatchResultType.Yes;
+        }
+
     }
 }

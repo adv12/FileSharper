@@ -89,6 +89,7 @@
     <Compile Include="Conditions\AnyCondition.cs" />
     <Compile Include="Conditions\CompoundCondition.cs" />
     <Compile Include="Conditions\ConditionBase.cs" />
+    <Compile Include="Conditions\Filesystem\FileAgeCondition.cs" />
     <Compile Include="Conditions\Text\ContainsTextCondition.cs" />
     <Compile Include="Conditions\Filesystem\FilePathContainsTextCondition.cs" />
     <Compile Include="Conditions\Filesystem\FileDateCondition.cs" />
@@ -116,6 +117,7 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="ExceptionInfo.cs" />
+    <Compile Include="FieldSources\Filesystem\FileAgeFieldSource.cs" />
     <Compile Include="FieldSources\Text\TextEncodingFieldSource.cs" />
     <Compile Include="FieldSources\Xml\XPathNodeCountFieldSource.cs" />
     <Compile Include="FieldSources\Xml\XPathStringValueFieldSource.cs" />
