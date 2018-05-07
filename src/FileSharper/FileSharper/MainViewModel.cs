@@ -127,7 +127,28 @@ namespace FileSharper
 
             SearchDocuments.CollectionChanged += SearchDocuments_CollectionChanged;
 
-            AddNewSearch();
+            FileInfo[] startupFiles = App.StartupFiles;
+            if (startupFiles != null && startupFiles.Length > 0)
+            {
+                foreach (FileInfo file in startupFiles)
+                {
+                    if (file.Exists)
+                    {
+                        try
+                        {
+                            OpenFile(file.FullName);
+                        }
+                        catch
+                        {
+                            // do something better here
+                        }
+                    }
+                }
+            }
+            else
+            {
+                AddNewSearch();
+            }
 
             AcceptEulaCommand = new MainViewModelCommand(this, p => { Settings.EulaAccepted = true; }, false, p => true);
             NewSearchCommand = new MainViewModelCommand(this, p => { AddNewSearch(); });
