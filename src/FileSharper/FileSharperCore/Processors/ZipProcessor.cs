@@ -105,10 +105,6 @@ namespace FileSharperCore.Processors
                 m_Files.Add(file);
                 m_FileSet.Add(file.FullName);
             }
-            else
-            {
-                
-            }
         }
 
         public override void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
