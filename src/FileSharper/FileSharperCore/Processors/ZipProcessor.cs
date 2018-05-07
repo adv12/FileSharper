@@ -29,6 +29,7 @@ namespace FileSharperCore.Processors
     {
         private ZipParameters m_Parameters = new ZipParameters();
         private List<FileInfo> m_Files = new List<FileInfo>();
+        private HashSet<string> m_FileSet = new HashSet<string>();
 
         public override string Name => "Zip file(s)";
 
@@ -43,6 +44,7 @@ namespace FileSharperCore.Processors
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)
             {
                 m_Files.Clear();
+                m_FileSet.Clear();
             }
         }
 
@@ -58,7 +60,7 @@ namespace FileSharperCore.Processors
             List<FileInfo> outputFiles = new List<FileInfo>();
             if (scopedToMethod)
             {
-                m_Files.Clear();
+                ClearFiles();
             }
             if (whatToProcess == ProcessInput.GeneratedFiles)
             {
@@ -66,25 +68,47 @@ namespace FileSharperCore.Processors
                 {
                     foreach (FileInfo previousFile in generatedFiles)
                     {
-                        m_Files.Clear();
-                        m_Files.Add(previousFile);
+                        ClearFiles();
+                        AddFile(previousFile);
                         outputFiles.Add(GenerateZip(previousFile, token));
                     }
                 }
                 else
                 {
-                    m_Files.AddRange(generatedFiles);
+                    foreach (FileInfo f in generatedFiles)
+                    {
+                        AddFile(f);
+                    }
                 }
             }
             else
             {
-                m_Files.Add(file);
+                AddFile(file);
             }
             if (perInput)
             {
                 outputFiles.Add(GenerateZip(file, token));
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", outputFiles.ToArray());
+        }
+
+        private void ClearFiles()
+        {
+            m_Files.Clear();
+            m_FileSet.Clear();
+        }
+
+        private void AddFile(FileInfo file)
+        {
+            if (!m_FileSet.Contains(file.FullName))
+            {
+                m_Files.Add(file);
+                m_FileSet.Add(file.FullName);
+            }
+            else
+            {
+                
+            }
         }
 
         public override void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
