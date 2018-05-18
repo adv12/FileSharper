@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FileSharperCore.Editors;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -25,8 +26,10 @@ namespace FileSharperCore.FileSources
         [PropertyOrder(4, UsageContextEnum.Both)]
         public SearchOrder SearchOrder { get; set; }
         [PropertyOrder(5, UsageContextEnum.Both)]
-        public bool IncludeHidden { get; set; } = false;
+        public string SkipDirectoriesMatchingRegex { get; set; }
         [PropertyOrder(6, UsageContextEnum.Both)]
+        public bool IncludeHidden { get; set; } = false;
+        [PropertyOrder(7, UsageContextEnum.Both)]
         public bool IncludeSystem { get; set; } = false;
     }
 
@@ -39,6 +42,7 @@ namespace FileSharperCore.FileSources
         private bool m_Reverse = false;
         private Random m_Random = new Random();
         private string[] m_FilePatterns;
+        private Regex m_skipDirectoryRegex;
 
         public override object Parameters => m_Parameters;
 
@@ -68,6 +72,13 @@ namespace FileSharperCore.FileSources
         private IEnumerable<FileInfo> SearchDirectory(DirectoryInfo directoryInfo)
         {
             List<FileInfo> files = new List<FileInfo>();
+            if (m_skipDirectoryRegex != null)
+            {
+                if (m_skipDirectoryRegex.IsMatch(directoryInfo.Name))
+                {
+                    yield break;
+                }
+            }
             try
             {
                 HashSet<FileInfo> fileSet = new HashSet<FileInfo>();
@@ -172,6 +183,10 @@ namespace FileSharperCore.FileSources
             m_Reverse = false;
             SearchOrder order = m_Parameters.SearchOrder;
             m_FilePatterns = m_Parameters.FilePattern.Split('|');
+            if (m_Parameters.SkipDirectoriesMatchingRegex != null)
+            {
+                m_skipDirectoryRegex = new Regex(m_Parameters.SkipDirectoriesMatchingRegex);
+            }
             switch (order)
             {
                 case SearchOrder.SystemDefault:
