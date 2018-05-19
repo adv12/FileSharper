@@ -22,7 +22,7 @@ namespace FileSharperCore.Processors
         [PropertyOrder(2, UsageContextEnum.Both)]
         public PathFormat PathFormat { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; }
+        public LineEndingsNoFile LineEndings { get; set; } = LineEndingsNoFile.SystemDefault;
         [PropertyOrder(4, UsageContextEnum.Both)]
         public bool AutoOpen { get; set; }
     }

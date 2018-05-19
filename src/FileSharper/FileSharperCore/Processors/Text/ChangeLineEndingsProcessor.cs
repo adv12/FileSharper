@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Processors.Text
@@ -9,7 +10,7 @@ namespace FileSharperCore.Processors.Text
     public class ChangeLineEndingsParameters
     {
         [PropertyOrder(1, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        public LineEndingsNoFile LineEndings { get; set; } = LineEndingsNoFile.SystemDefault;
         [PropertyOrder(2, UsageContextEnum.Both)]
         public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(3, UsageContextEnum.Both)]
@@ -34,7 +35,7 @@ namespace FileSharperCore.Processors.Text
 
         protected override bool MoveOriginalToRecycleBin => m_Parameters.MoveOriginalToRecycleBin;
 
-        protected override LineEndings LineEndings => m_Parameters.LineEndings;
+        protected override LineEndings LineEndings => TextUtil.GetLineEndings(m_Parameters.LineEndings);
 
         protected override OutputEncodingType OutputEncodingType => m_Parameters.OutputEncoding;
 

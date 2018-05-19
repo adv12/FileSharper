@@ -12,10 +12,60 @@ namespace FileSharperCore.Util
 {
     public class TextUtil
     {
-        public static string GetNewline(LineEndings lineEndings)
+
+        public static LineEndings GetLineEndings(LineEndingsNoFile lineEndings)
+        {
+            LineEndings endings = LineEndings.SystemDefault;
+            switch (lineEndings)
+            {
+                case LineEndingsNoFile.SystemDefault:
+                    endings = LineEndings.SystemDefault;
+                    break;
+                case LineEndingsNoFile.Windows:
+                    endings = LineEndings.Windows;
+                    break;
+                case LineEndingsNoFile.Unix:
+                    endings = LineEndings.Unix;
+                    break;
+                case LineEndingsNoFile.OldMacOS:
+                    endings = LineEndings.OldMacOS;
+                    break;
+                default:
+                    endings = LineEndings.SystemDefault;
+                    break;
+            }
+            return endings;
+        }
+
+        public static string GetNewline(LineEndingsNoFile lineEndings)
+        {
+            return GetNewline(null, GetLineEndings(lineEndings));
+        }
+
+        public static string GetNewline(FileInfo file, LineEndings lineEndings)
         {
             switch (lineEndings)
             {
+                case LineEndings.MatchInput:
+                    if (file == null)
+                    {
+                        return Environment.NewLine;
+                    }
+                    using (StreamReader reader = new StreamReader(file.OpenRead()))
+                    {
+                        DetectedLineEndings detected = GetLineEndings(reader, true, CancellationToken.None);
+                        switch (detected)
+                        {
+                            case DetectedLineEndings.Windows:
+                                return "\r\n";
+                            case DetectedLineEndings.Unix:
+                                return "\n";
+                            case DetectedLineEndings.OldMacOS:
+                                return "\r";
+                            default:
+                                return Environment.NewLine;
+                        }
+                    }
                 case LineEndings.Windows:
                     return "\r\n";
                 case LineEndings.Unix:
@@ -58,7 +108,7 @@ namespace FileSharperCore.Util
             return lineCount;
         }
 
-        public static DetectedLineEndings GetLineEndings(StreamReader reader, CancellationToken token)
+        public static DetectedLineEndings GetLineEndings(StreamReader reader, bool fast, CancellationToken token)
         {
             int windowsCount = 0;
             int unixCount = 0;
@@ -76,16 +126,28 @@ namespace FileSharperCore.Util
                         {
                             windowsCount++;
                             reader.Read();
+                            if (fast)
+                            {
+                                break;
+                            }
                         }
                         else
                         {
                             oldMacCount++;
+                            if (fast)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
                 else if (c == '\n')
                 {
                     unixCount++;
+                    if (fast)
+                    {
+                        break;
+                    }
                 }
                 int numTypes = 0;
                 if (windowsCount > 0)

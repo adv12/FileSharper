@@ -33,7 +33,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(7, UsageContextEnum.Both)]
         public bool CaseSensitive { get; set; }
         [PropertyOrder(8, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        public LineEndings LineEndings { get; set; } = LineEndings.MatchInput;
         [PropertyOrder(9, UsageContextEnum.Both)]
         public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(10, UsageContextEnum.Both)]
@@ -95,7 +95,7 @@ namespace FileSharperCore.Processors.Text
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, detectedEncoding, m_Parameters.OutputEncoding))
             {
-                writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
+                writer.NewLine = TextUtil.GetNewline(file, m_Parameters.LineEndings);
                 if (!m_Parameters.MatchOnlyWithinSingleLine)
                 {
                     string text = File.ReadAllText(file.FullName, detectedEncoding);

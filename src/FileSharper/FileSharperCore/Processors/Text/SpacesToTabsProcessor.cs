@@ -15,7 +15,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(2, UsageContextEnum.Both)]
         public bool LeadingSpacesOnly { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        public LineEndings LineEndings { get; set; } = LineEndings.MatchInput;
         [PropertyOrder(4, UsageContextEnum.Both)]
         public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(5, UsageContextEnum.Both)]

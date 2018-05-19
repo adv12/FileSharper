@@ -55,8 +55,17 @@ namespace FileSharperCore
         GreaterThan
     }
 
+    public enum LineEndingsNoFile
+    {
+        SystemDefault,
+        Windows,
+        Unix,
+        OldMacOS
+    }
+
     public enum LineEndings
     {
+        MatchInput,
         SystemDefault,
         Windows,
         Unix,

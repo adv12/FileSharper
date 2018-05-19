@@ -12,9 +12,9 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(1, UsageContextEnum.Both)]
         public TextCase Case { get; set; }
         [PropertyOrder(2, UsageContextEnum.Both)]
-        public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
+        public LineEndings LineEndings { get; set; } = LineEndings.MatchInput;
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(4, UsageContextEnum.Both)]
         public string FileName { get; set; } = ProcessorBase.ORIGINAL_FILE_PATH;
         [PropertyOrder(5, UsageContextEnum.Both)]

@@ -21,7 +21,7 @@ namespace FileSharperCore.Processors
         [Editor(typeof(FileSharperMultiLineTextEditor), typeof(FileSharperMultiLineTextEditor))]
         public string Text { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; }
+        public LineEndings LineEndings { get; set; } = LineEndings.MatchInput;
         [PropertyOrder(4, UsageContextEnum.Both)]
         public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(5, UsageContextEnum.Both)]
@@ -52,7 +52,7 @@ namespace FileSharperCore.Processors
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, encoding, m_Parameters.OutputEncoding))
             {
-                writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
+                writer.NewLine = TextUtil.GetNewline(file, m_Parameters.LineEndings);
                 using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(file, encoding))
                 {
                     string text = m_Parameters.Text ?? string.Empty;

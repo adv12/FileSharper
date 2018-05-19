@@ -31,7 +31,7 @@ namespace FileSharperCore.Processors.Text
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, encoding, OutputEncodingType))
             {
-                writer.NewLine = TextUtil.GetNewline(LineEndings);
+                writer.NewLine = TextUtil.GetNewline(file, LineEndings);
                 using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(
                     file, encoding))
                 {

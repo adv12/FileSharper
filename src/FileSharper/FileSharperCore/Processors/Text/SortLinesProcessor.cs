@@ -19,7 +19,7 @@ namespace FileSharperCore.Processors.Text
         [PropertyOrder(2, UsageContextEnum.Both)]
         public bool Reverse { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
-        public LineEndings LineEndings { get; set; } = LineEndings.SystemDefault;
+        public LineEndings LineEndings { get; set; } = LineEndings.MatchInput;
         [PropertyOrder(4, UsageContextEnum.Both)]
         public OutputEncodingType OutputEncoding { get; set; } = OutputEncodingType.MatchInput;
         [PropertyOrder(5, UsageContextEnum.Both)]
@@ -74,7 +74,7 @@ namespace FileSharperCore.Processors.Text
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, detectedEncoding, m_Parameters.OutputEncoding))
             {
-                writer.NewLine = TextUtil.GetNewline(m_Parameters.LineEndings);
+                writer.NewLine = TextUtil.GetNewline(file, m_Parameters.LineEndings);
                 foreach (string line in lines)
                 {
                     writer.WriteLine(line);

@@ -32,7 +32,7 @@ namespace FileSharperCore.FieldSources.Text
             {
                 using (StreamReader reader = new StreamReader(file.FullName))
                 {
-                    lineEndings = TextUtil.GetLineEndings(reader, token);
+                    lineEndings = TextUtil.GetLineEndings(reader, false, token);
                 }
                 value = lineEndings.ToString();
             }
