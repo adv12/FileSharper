@@ -66,7 +66,7 @@ namespace FileSharperCore.FileSources
                     RunInfo.CancellationToken.ThrowIfCancellationRequested();
                     yield return fi;
                 }
-            }            
+            }
         }
 
         private IEnumerable<FileInfo> SearchDirectory(DirectoryInfo directoryInfo)
@@ -74,7 +74,7 @@ namespace FileSharperCore.FileSources
             List<FileInfo> files = new List<FileInfo>();
             if (m_skipDirectoryRegex != null)
             {
-                if (m_skipDirectoryRegex.IsMatch(directoryInfo.Name))
+                if (m_skipDirectoryRegex.IsMatch(directoryInfo.FullName))
                 {
                     yield break;
                 }
