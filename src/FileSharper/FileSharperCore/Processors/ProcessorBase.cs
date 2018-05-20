@@ -57,14 +57,13 @@ namespace FileSharperCore.Processors
             return copied;
         }
 
-        public ProcessingResult GetProcessingResultFromCopyAndDeleteTempFile(FileInfo file, string preReplaceOutFileName,
+        public ProcessingResult GetProcessingResultFromCopyAndDeleteTempFile(FileInfo file, string outFileName,
             string tempFileName, bool overwrite, bool moveOriginalToRecycleBin)
         {
-            string outfile = ReplaceUtil.Replace(preReplaceOutFileName, file);
-            bool wroteFile = CopyAndDeleteTempFile(tempFileName, outfile, overwrite, moveOriginalToRecycleBin);
+            bool wroteFile = CopyAndDeleteTempFile(tempFileName, outFileName, overwrite, moveOriginalToRecycleBin);
             if (wroteFile)
             {
-                return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(outfile) });
+                return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(outFileName) });
             }
             else
             {

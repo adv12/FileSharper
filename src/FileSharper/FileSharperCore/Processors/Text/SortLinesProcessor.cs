@@ -67,6 +67,11 @@ namespace FileSharperCore.Processors.Text
         public override ProcessingResult Process(FileInfo file, string[] values,
             IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
         {
+            string outputFilename = Util.ReplaceUtil.Replace(m_Parameters.FileName, file);
+            if (!m_Parameters.OverwriteExistingFile && File.Exists(outputFilename))
+            {
+                return new ProcessingResult(ProcessingResultType.Failure, "File exists", new FileInfo[0]);
+            }
             Encoding detectedEncoding = TextUtil.DetectEncoding(file);
             string[] lines = File.ReadAllLines(file.FullName, detectedEncoding);
             Array.Sort(lines, m_Comparer);
@@ -80,7 +85,7 @@ namespace FileSharperCore.Processors.Text
                     writer.WriteLine(line);
                 }
             }
-            return GetProcessingResultFromCopyAndDeleteTempFile(file, m_Parameters.FileName, tmpFile,
+            return GetProcessingResultFromCopyAndDeleteTempFile(file, outputFilename, tmpFile,
                 m_Parameters.OverwriteExistingFile, m_Parameters.MoveOriginalToRecycleBin);
         }
     }
