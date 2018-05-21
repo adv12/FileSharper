@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using FileSharperCore.Editors;
 using FileSharperCore.Util;
@@ -101,7 +102,7 @@ namespace FileSharperCore.Processors
 
         public void WriteLines(StreamWriter writer, string text)
         {
-            string[] lines = text?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            string[] lines = Regex.Split(text, "\r\n|\r|\n");
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
@@ -110,10 +111,6 @@ namespace FileSharperCore.Processors
                     writer.WriteLine();
                 }
                 writer.Write(line);
-            }
-            if (text.EndsWith(Environment.NewLine))
-            {
-                writer.WriteLine();
             }
         }
     }
