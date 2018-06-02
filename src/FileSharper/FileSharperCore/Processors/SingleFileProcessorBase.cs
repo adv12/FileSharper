@@ -45,11 +45,7 @@ namespace FileSharperCore.Processors
                                 }
                             }
                         }
-                        catch (OperationCanceledException ex)
-                        {
-                            throw ex;
-                        }
-                        catch (Exception ex)
+                        catch (Exception ex) when (!(ex is OperationCanceledException))
                         {
                             exceptionProgress.Report(new ExceptionInfo(ex, f));
                             if (message.Length > 0)
@@ -81,11 +77,7 @@ namespace FileSharperCore.Processors
                         resultFiles.Add(originalFile);
                     }
                 }
-                catch (OperationCanceledException ex)
-                {
-                    throw ex;
-                }
-                catch
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     resultType = ProcessingResultType.Failure;
                 }

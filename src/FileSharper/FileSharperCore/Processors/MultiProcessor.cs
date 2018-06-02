@@ -71,11 +71,7 @@ namespace FileSharperCore.Processors
                         }
                     }
                 }
-                catch (OperationCanceledException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     exceptionProgress.Report(new ExceptionInfo(ex, originalFile));
                 }
@@ -95,11 +91,7 @@ namespace FileSharperCore.Processors
                 {
                     processor?.ProcessAggregated(exceptionProgress, token);
                 }
-                catch (OperationCanceledException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     exceptionProgress.Report(new ExceptionInfo(ex));
                 }

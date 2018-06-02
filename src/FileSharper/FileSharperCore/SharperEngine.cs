@@ -146,11 +146,7 @@ namespace FileSharperCore
                                 }
                                 matchResultType = result == null ? MatchResultType.NotApplicable : result.Type;
                             }
-                            catch (OperationCanceledException ex)
-                            {
-                                throw ex;
-                            }
-                            catch (Exception ex)
+                            catch (Exception ex) when (!(ex is OperationCanceledException))
                             {
                                 exceptionProgress?.Report(new ExceptionInfo(ex, file));
                             }
@@ -168,11 +164,7 @@ namespace FileSharperCore
                                                 values.AddRange(vals);
                                             }
                                         }
-                                        catch (OperationCanceledException ex)
-                                        {
-                                            throw ex;
-                                        }
-                                        catch (Exception ex)
+                                        catch (Exception ex) when (!(ex is OperationCanceledException))
                                         {
                                             exceptionProgress?.Report(new ExceptionInfo(ex, file));
                                         }
@@ -197,11 +189,7 @@ namespace FileSharperCore
                             DisposeFileCaches(caches, exceptionProgress);
                         }
                     }
-                    catch (OperationCanceledException ex)
-                    {
-                        throw ex;
-                    }
-                    catch (Exception ex)
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
                         exceptionProgress?.Report(new ExceptionInfo(ex, file));
                     }
@@ -213,11 +201,7 @@ namespace FileSharperCore
                 AggregateProcessors(TestedProcessors);
                 AggregateProcessors(MatchedProcessors);
             }
-            catch (OperationCanceledException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is OperationCanceledException))
             {
                 exceptionProgress?.Report(new ExceptionInfo(ex));
             }
@@ -244,11 +228,7 @@ namespace FileSharperCore
                     FileInfo[] outputFiles = result == null ? new FileInfo[0] : result.OutputFiles;
                     lastOutputs = outputFiles == null ? new FileInfo[0] : outputFiles;
                 }
-                catch (OperationCanceledException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     lastOutputs = new FileInfo[0];
                     RunInfo.ExceptionProgress?.Report(new ExceptionInfo(ex, file));
@@ -265,11 +245,7 @@ namespace FileSharperCore
                 {
                     processor?.ProcessAggregated(RunInfo.ExceptionProgress, RunInfo.CancellationToken);
                 }
-                catch (OperationCanceledException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     RunInfo.ExceptionProgress?.Report(new ExceptionInfo(ex, null));
                 }
@@ -301,11 +277,7 @@ namespace FileSharperCore
                         cacheLookup[type] = cache;
                     }
                 }
-                catch (OperationCanceledException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     exceptionProgress.Report(new ExceptionInfo(ex, file));
                 }
