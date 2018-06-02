@@ -43,7 +43,7 @@ namespace FileSharperCore.Processors.Filesystem
             catch (Exception ex)
             {
                 exceptionProgress.Report(new ExceptionInfo(ex, file));
-                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[] { file });
+                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(newPath) });
         }

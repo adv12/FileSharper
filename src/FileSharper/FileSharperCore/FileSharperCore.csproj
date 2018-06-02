@@ -160,6 +160,7 @@
     <Compile Include="Processors\Filesystem\CopyFileProcessor.cs" />
     <Compile Include="Processors\CsvProcessor.cs" />
     <Compile Include="Processors\DoNothingProcessor.cs" />
+    <Compile Include="Processors\Filesystem\CreateOrUpdateFileProcessor.cs" />
     <Compile Include="Processors\Filesystem\FileDateProcessor.cs" />
     <Compile Include="Processors\Image\ImageResizeProcessor.cs" />
     <Compile Include="Processors\MultiProcessor.cs" />
