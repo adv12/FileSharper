@@ -22,7 +22,7 @@ namespace FileSharperCore.FileSources
 
         private FileFileSourceParameters m_Parameters = new FileFileSourceParameters();
         
-        public override string Name => "File";
+        public override string Name => "File of Paths";
 
         public override string Category => "Miscellaneous";
 

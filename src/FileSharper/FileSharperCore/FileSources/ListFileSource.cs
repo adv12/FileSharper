@@ -37,7 +37,7 @@ namespace FileSharperCore.FileSources
             }
         }
 
-        public override string Name => "List";
+        public override string Name => "List of Paths";
 
         public override string Category => "Miscellaneous";
 

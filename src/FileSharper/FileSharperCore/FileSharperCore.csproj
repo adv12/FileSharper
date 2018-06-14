@@ -129,6 +129,7 @@
     <Compile Include="FileSourceCatalog.cs" />
     <Compile Include="FileSourceNode.cs" />
     <Compile Include="FileSources\ListFileSource.cs" />
+    <Compile Include="FileSources\TempFileWithTextFileSource.cs" />
     <Compile Include="ICondition.cs" />
     <Compile Include="IFileCache.cs" />
     <Compile Include="IFileSource.cs" />
