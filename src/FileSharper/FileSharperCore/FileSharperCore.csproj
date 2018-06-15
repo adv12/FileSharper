@@ -169,6 +169,7 @@
     <Compile Include="Processors\Shell\OpenFileProcessor.cs" />
     <Compile Include="Processors\Text\ChangeCaseProcessor.cs" />
     <Compile Include="Processors\Text\ChangeLineEndingsProcessor.cs" />
+    <Compile Include="Processors\Text\FilterLinesProcessor.cs" />
     <Compile Include="Processors\Text\LineProcessor.cs" />
     <Compile Include="Processors\Text\PrependOrAppendTextProcessor.cs" />
     <Compile Include="Processors\ProcessorBase.cs" />

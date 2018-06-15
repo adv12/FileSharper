@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -18,6 +19,7 @@ namespace FileSharperCore.FileSources
     public class TempFileWithTextFileSource : FileSourceBase
     {
         private TempFileWithTextParameters m_Parameters = new TempFileWithTextParameters();
+        private string m_TempFilePath;
 
         public override string Category => "Miscellaneous";
 
@@ -27,14 +29,26 @@ namespace FileSharperCore.FileSources
 
         public override object Parameters => m_Parameters;
 
+        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        {
+            base.LocalInit(exceptionProgress);
+            m_TempFilePath = Path.GetTempFileName();
+            File.WriteAllText(m_TempFilePath, m_Parameters.TempFileText);
+        }
+
         public override IEnumerable<FileInfo> Files
         {
             get
             {
-                string tempFilePath = Path.GetTempFileName();
-                File.WriteAllText(tempFilePath, m_Parameters.TempFileText);
-                yield return new FileInfo(tempFilePath);
+                yield return new FileInfo(m_TempFilePath);
             }
         }
+
+        public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)
+        {
+            File.Delete(m_TempFilePath);
+            base.LocalCleanup(exceptionProgress);
+        }
+
     }
 }

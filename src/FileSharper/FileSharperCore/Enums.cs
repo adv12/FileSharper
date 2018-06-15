@@ -265,4 +265,10 @@ namespace FileSharperCore
         X_MAC_KOREAN = 10003 // Korean (Mac)
     }
 
+    public enum LineFilterType
+    {
+        Keep,
+        Remove
+    }
+
 }
