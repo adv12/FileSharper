@@ -267,8 +267,8 @@ namespace FileSharperCore
 
     public enum LineFilterType
     {
-        Keep,
-        Remove
+        KeepMatchingLines,
+        RemoveMatchingLines
     }
 
 }

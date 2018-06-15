@@ -15,9 +15,9 @@ namespace FileSharperCore.Processors.Text
     public class FilterLinesParameters
     {
         [PropertyOrder(1, UsageContextEnum.Both)]
-        public LineFilterType FilterType { get; set; } = LineFilterType.Keep; 
+        public LineFilterType FilterType { get; set; } = LineFilterType.KeepMatchingLines; 
         [PropertyOrder(2, UsageContextEnum.Both)]
-        public string Text { get; set; }
+        public string TextToMatch { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
         public bool UseRegex { get; set; }
         [PropertyOrder(4, UsageContextEnum.Both)]
@@ -57,11 +57,11 @@ namespace FileSharperCore.Processors.Text
             }
             if (m_Parameters.UseRegex)
             {
-                m_Regex = new Regex(m_Parameters.Text, regexOptions);
+                m_Regex = new Regex(m_Parameters.TextToMatch, regexOptions);
             }
             else
             {
-                m_Regex = new Regex(Regex.Escape(m_Parameters.Text), regexOptions);
+                m_Regex = new Regex(Regex.Escape(m_Parameters.TextToMatch), regexOptions);
             }
         }
 
@@ -85,7 +85,7 @@ namespace FileSharperCore.Processors.Text
                     {
                         string line = reader.ReadLine();
                         bool matches = m_Regex.IsMatch(line);
-                        bool keep = m_Parameters.FilterType == LineFilterType.Keep;
+                        bool keep = m_Parameters.FilterType == LineFilterType.KeepMatchingLines;
                         if (matches == keep)
                         {
                             writer.WriteLine(line);
