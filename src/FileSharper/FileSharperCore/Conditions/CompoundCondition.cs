@@ -56,32 +56,32 @@ namespace FileSharperCore.Conditions
             }
         }
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
             foreach (ICondition condition in Conditions)
             {
                 try
                 {
-                    condition.Init(RunInfo, exceptionProgress);
+                    condition.Init(RunInfo, exceptionInfos);
                 }
                 catch (Exception ex)
                 {
-                    exceptionProgress.Report(new ExceptionInfo(ex));
+                    exceptionInfos.Add(new ExceptionInfo(ex));
                 }
             }
         }
 
-        public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
         {
             foreach (ICondition condition in Conditions)
             {
                 try
                 {
-                    condition.Cleanup(exceptionProgress);
+                    condition.Cleanup(exceptionInfos);
                 }
                 catch (Exception ex)
                 {
-                    exceptionProgress.Report(new ExceptionInfo(ex));
+                    exceptionInfos.Add(new ExceptionInfo(ex));
                 }
             }
         }

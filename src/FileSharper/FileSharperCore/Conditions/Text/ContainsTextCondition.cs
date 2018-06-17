@@ -57,9 +57,9 @@ namespace FileSharperCore.Conditions.Text
             }
         }
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
-            base.LocalInit(exceptionProgress);
+            base.LocalInit(exceptionInfos);
             RegexOptions regexOptions = RegexOptions.None;
             if (!m_Parameters.CaseSensitive)
             {

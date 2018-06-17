@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace FileSharperCore
@@ -53,19 +54,25 @@ namespace FileSharperCore
             private set;
         }
 
-        public IProgress<FileProgressInfo> TestedProgress
-        {
-            get;
-            private set;
-        }
-        
-        public IProgress<FileProgressInfo> MatchedProgress
+        public IProgress<string> FileSourceProgress
         {
             get;
             private set;
         }
 
-        public IProgress<ExceptionInfo> ExceptionProgress
+        public IProgress<IEnumerable<FileProgressInfo>> TestedProgress
+        {
+            get;
+            private set;
+        }
+        
+        public IProgress<IEnumerable<FileProgressInfo>> MatchedProgress
+        {
+            get;
+            private set;
+        }
+
+        public IProgress<IEnumerable<ExceptionInfo>> ExceptionProgress
         {
             get;
             private set;
@@ -99,8 +106,11 @@ namespace FileSharperCore
         public RunInfo(IFileSource fileSource, ICondition condition,
             IFieldSource[] fieldSources, IProcessor[] testedProcessors,
             IProcessor[] matchedProcessors, int maxToMatch, CancellationToken token,
-            IProgress<FileProgressInfo> testedProgress, IProgress<FileProgressInfo> matchedProgress,
-            IProgress<ExceptionInfo> exceptionProgress, IProgress<bool> completeProgress)
+            IProgress<string> fileSourceProgress,
+            IProgress<IEnumerable<FileProgressInfo>> testedProgress,
+            IProgress<IEnumerable<FileProgressInfo>> matchedProgress,
+            IProgress<IEnumerable<ExceptionInfo>> exceptionProgress,
+            IProgress<bool> completeProgress)
         {
             FileSource = fileSource;
             Condition = condition;
@@ -109,6 +119,7 @@ namespace FileSharperCore
             MatchedProcessors = matchedProcessors;
             MaxToMatch = maxToMatch == 0 ? -1 : maxToMatch;
             CancellationToken = token;
+            FileSourceProgress = fileSourceProgress;
             TestedProgress = testedProgress;
             MatchedProgress = matchedProgress;
             ExceptionProgress = exceptionProgress;

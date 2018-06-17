@@ -45,17 +45,27 @@ full text of the license.
             <local:MatchLimitsControl Grid.Row="0" Grid.Column="1"/>
             <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <TabItem Header="Results">
-                    <ListView x:Name="resultsListView" VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" MouseDoubleClick="ListView_MouseDoubleClick">
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Copy Path(s)" Command="{Binding SearchViewModel.CopyPathCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                <MenuItem Header="Copy File(s)" Command="{Binding SearchViewModel.CopyFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                <MenuItem Header="Open File(s)" Command="{Binding SearchViewModel.OpenFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                <MenuItem Header="Open Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                <MenuItem Header="Open Command Prompt(s) to Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommandPromptCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Row="0" Grid.Column="0" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" Visibility="{Binding SearchViewModel.FileSourceStatusText, Converter={StaticResource objectToVisibilityConverter}}" Text="{Binding SearchViewModel.FileSourceStatusText}" IsReadOnly="True" BorderThickness="0"/>
+                        <ListView x:Name="resultsListView" Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" MouseDoubleClick="ListView_MouseDoubleClick">
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Copy Path(s)" Command="{Binding SearchViewModel.CopyPathCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                                    <MenuItem Header="Copy File(s)" Command="{Binding SearchViewModel.CopyFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                                    <MenuItem Header="Open File(s)" Command="{Binding SearchViewModel.OpenFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                                    <MenuItem Header="Open Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                                    <MenuItem Header="Open Command Prompt(s) to Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommandPromptCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                        </ListView>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="{Binding SearchViewModel.ExceptionsHeader, FallbackValue=Exceptions}">
                     <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>

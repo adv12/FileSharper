@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
@@ -20,7 +21,7 @@ namespace FileSharperCore.Processors.Filesystem
         public override object Parameters => null;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
                 UICancelOption.DoNothing);

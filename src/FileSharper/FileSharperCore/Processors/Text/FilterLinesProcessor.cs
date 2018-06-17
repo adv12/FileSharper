@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,7 +16,7 @@ namespace FileSharperCore.Processors.Text
     public class FilterLinesParameters
     {
         [PropertyOrder(1, UsageContextEnum.Both)]
-        public LineFilterType FilterType { get; set; } = LineFilterType.KeepMatchingLines; 
+        public LineFilterType FilterType { get; set; } = LineFilterType.KeepMatchingLines;
         [PropertyOrder(2, UsageContextEnum.Both)]
         public string TextToMatch { get; set; }
         [PropertyOrder(3, UsageContextEnum.Both)]
@@ -47,9 +48,9 @@ namespace FileSharperCore.Processors.Text
 
         public override object Parameters => m_Parameters;
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
-            base.LocalInit(exceptionProgress);
+            base.LocalInit(exceptionInfos);
             RegexOptions regexOptions = RegexOptions.None;
             if (!m_Parameters.CaseSensitive)
             {
@@ -65,7 +66,8 @@ namespace FileSharperCore.Processors.Text
             }
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values, IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values,
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             string outputFilename = Util.ReplaceUtil.Replace(m_Parameters.FileName, file);
             if (!m_Parameters.OverwriteExistingFile && File.Exists(outputFilename))

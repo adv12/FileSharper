@@ -71,6 +71,7 @@ namespace FileSharperCore.FileSources
 
         private IEnumerable<FileInfo> SearchDirectory(DirectoryInfo directoryInfo)
         {
+            RunInfo?.FileSourceProgress?.Report(directoryInfo.FullName);
             List<FileInfo> files = new List<FileInfo>();
             if (m_skipDirectoryRegex != null)
             {
@@ -178,7 +179,7 @@ namespace FileSharperCore.FileSources
             }
         }
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
             m_Reverse = false;
             SearchOrder order = m_Parameters.SearchOrder;

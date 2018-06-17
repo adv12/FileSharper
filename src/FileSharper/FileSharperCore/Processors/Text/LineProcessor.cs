@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace FileSharperCore.Processors.Text
         protected abstract bool OverwriteExistingFile { get; }
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             string outputFilename = Util.ReplaceUtil.Replace(FileName, file);
             if (!OverwriteExistingFile && File.Exists(outputFilename))

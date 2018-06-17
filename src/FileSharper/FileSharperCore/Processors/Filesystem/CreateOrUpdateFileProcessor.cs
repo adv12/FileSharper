@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
@@ -31,7 +32,7 @@ namespace FileSharperCore.Processors.Filesystem
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             ProcessingResultType resultType = ProcessingResultType.Success;
             string message = "Success";
@@ -51,7 +52,7 @@ namespace FileSharperCore.Processors.Filesystem
                     {
                         resultType = ProcessingResultType.Failure;
                         message = $"Failed to update file modification date: {ex.Message}";
-                        exceptionProgress.Report(new ExceptionInfo(ex, file));
+                        exceptionInfos.Add(new ExceptionInfo(ex, file));
                     }
                 }
             }
@@ -67,7 +68,7 @@ namespace FileSharperCore.Processors.Filesystem
                 {
                     resultType = ProcessingResultType.Failure;
                     message = $"Failed to create file: {ex.Message}";
-                    ExceptionProgress.Report(new ExceptionInfo(ex, file));
+                    exceptionInfos.Add(new ExceptionInfo(ex, file));
                 }
             }
             return new ProcessingResult(resultType, message, resultFiles);

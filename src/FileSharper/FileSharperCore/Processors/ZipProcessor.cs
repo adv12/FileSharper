@@ -39,7 +39,7 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)
             {
@@ -51,7 +51,7 @@ namespace FileSharperCore.Processors
         public override ProcessingResult Process(FileInfo file,
             MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             ProcessorScope scope = m_Parameters.OneZipFilePer;
             bool perInput = scope == ProcessorScope.InputFile;
@@ -107,9 +107,9 @@ namespace FileSharperCore.Processors
             }
         }
 
-        public override void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+        public override void ProcessAggregated(IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
-            base.ProcessAggregated(exceptionProgress, token);
+            base.ProcessAggregated(exceptionInfos, token);
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)
             {
                 GenerateZip(null, token);

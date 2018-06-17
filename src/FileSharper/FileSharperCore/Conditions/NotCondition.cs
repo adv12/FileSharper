@@ -61,14 +61,14 @@ namespace FileSharperCore.Conditions
             Condition = condition;
         }
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
-            Condition?.Init(RunInfo, exceptionProgress);
+            Condition?.Init(RunInfo, exceptionInfos);
         }
 
-        public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
         {
-            Condition?.Cleanup(exceptionProgress);
+            Condition?.Cleanup(exceptionInfos);
         }
 
         public override MatchResult Matches(FileInfo file, Dictionary<Type, IFileCache> fileCaches, CancellationToken token)

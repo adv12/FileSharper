@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace FileSharperCore
@@ -28,7 +29,7 @@ namespace FileSharperCore
             get => this.RunInfo.CancellationToken;
         }
 
-        protected IProgress<ExceptionInfo> ExceptionProgress
+        protected IProgress<IEnumerable<ExceptionInfo>> ExceptionProgress
         {
             get => this.RunInfo.ExceptionProgress;
         }
@@ -53,24 +54,24 @@ namespace FileSharperCore
             get;
         }
 
-        public void Init(RunInfo inf, IProgress<ExceptionInfo> exceptionProgress)
+        public void Init(RunInfo inf, IList<ExceptionInfo> exceptionInfos)
         {
             RunInfo = inf;
-            LocalInit(exceptionProgress);
+            LocalInit(exceptionInfos);
         }
 
-        public virtual void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public virtual void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
 
         }
 
-        public void Cleanup(IProgress<ExceptionInfo> exceptionProgress)
+        public void Cleanup(IList<ExceptionInfo> exceptionInfos)
         {
-            LocalCleanup(exceptionProgress);
+            LocalCleanup(exceptionInfos);
             RunInfo = null;
         }
 
-        public virtual void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)
+        public virtual void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
         {
 
         }

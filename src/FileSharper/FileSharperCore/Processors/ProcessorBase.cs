@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
@@ -20,9 +21,9 @@ namespace FileSharperCore.Processors
         public abstract ProcessingResult Process(FileInfo originalFile,
             MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token);
 
-        public virtual void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress,
+        public virtual void ProcessAggregated(IList<ExceptionInfo> exceptionInfos,
             CancellationToken token)
         {
 

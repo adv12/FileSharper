@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -30,7 +31,7 @@ namespace FileSharperCore.Processors.Filesystem
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             switch (m_Parameters.FileDateType)
             {

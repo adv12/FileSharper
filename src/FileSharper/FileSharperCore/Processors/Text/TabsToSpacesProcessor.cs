@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -50,7 +51,7 @@ namespace FileSharperCore.Processors.Text
 
         protected override bool MoveOriginalToRecycleBin => m_Parameters.MoveOriginalToRecycleBin;
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < m_Parameters.SpacesPerTab; i++)

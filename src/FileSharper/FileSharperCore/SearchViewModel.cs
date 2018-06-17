@@ -10,11 +10,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using FileSharperCore.Util;
 
 namespace FileSharperCore
@@ -32,6 +34,10 @@ namespace FileSharperCore
         public DataTable SearchResults { get; } = new DataTable();
 
         public ObservableCollection<ExceptionInfo> ExceptionInfos { get; } = new ObservableCollection<ExceptionInfo>();
+
+        private DispatcherTimer m_Timer;
+
+        private List<FileProgressInfo> m_accumulatedFileProgressInfos = new List<FileProgressInfo>();
 
         private int m_ExceptionCount = 0;
 
@@ -57,31 +63,39 @@ namespace FileSharperCore
             }
         }
 
-        private int m_testedCount = 0;
+        private int m_TestedCount = 0;
         public int TestedCount
         {
-            get => m_testedCount;
+            get => m_TestedCount;
             private set
             {
-                SetField(ref m_testedCount, value);
-                OnPropertyChanged(nameof(StatusText));
+                SetField(ref m_TestedCount, value);
             }
         }
 
-        private int m_matchedCount = 0;
+        private int m_MatchedCount = 0;
         public int MatchedCount
         {
-            get => m_matchedCount;
+            get => m_MatchedCount;
             private set
             {
-                SetField(ref m_matchedCount, value);
-                OnPropertyChanged(nameof(StatusText));
+                SetField(ref m_MatchedCount, value);
             }
         }
 
+        private string m_LatestFileSourceStatusText = null;
+        private string m_FileSourceStatusText = null;
+        public string FileSourceStatusText
+        {
+            get => m_FileSourceStatusText;
+            set => SetField(ref m_FileSourceStatusText, value);
+        }
+
+        private string m_StatusText = null;
         public string StatusText
         {
-            get => "Matched " + MatchedCount + " of " + TestedCount;
+            get => m_StatusText;
+            private set => SetField(ref m_StatusText, value);
         }
 
         private string m_ExceptionText = string.Empty;
@@ -91,11 +105,15 @@ namespace FileSharperCore
             set => SetField(ref m_ExceptionText, value);
         }
 
-        public IProgress<FileProgressInfo> TestedProgress { get; private set; }
+        public IProgress<string> FileSourceProgress { get; private set; }
 
-        public IProgress<FileProgressInfo> MatchedProgress { get; private set; }
+        public IProgress<IEnumerable<FileProgressInfo>> TestedProgress { get; private set; }
 
-        public IProgress<ExceptionInfo> ExceptionProgress { get; private set; }
+        public IProgress<IEnumerable<FileProgressInfo>> MatchedProgress { get; private set; }
+
+        public IProgress<IEnumerable<ExceptionInfo>> ExceptionProgress { get; private set; }
+
+        public IProgress<bool> CompleteProgress { get; private set; }
 
         public string[] ColumnHeaders
         {
@@ -141,6 +159,9 @@ namespace FileSharperCore
 
         public SearchViewModel(SharperEngine engine, int maxResults, int maxExceptions)
         {
+            m_Timer = new DispatcherTimer();
+            m_Timer.Interval = TimeSpan.FromSeconds(0.1);
+            m_Timer.Tick += TimerTick;
             Engine = engine;
             MaxResults = maxResults;
             MaxExceptions = maxExceptions;
@@ -151,48 +172,79 @@ namespace FileSharperCore
             OpenFileCommand = new FileOpener(this);
             OpenContainingFolderCommand = new ContainingFolderOpener(this);
             OpenContainingFolderCommandPromptCommand = new ContainingFolderCommandPromptOpener(this);
+
             foreach (string columnHeader in BindingColumnHeaders)
             {
                 DataColumn column = new DataColumn(columnHeader);
                 SearchResults.Columns.Add(column);
             }
-            TestedProgress = new Progress<FileProgressInfo>(info =>
+            FileSourceProgress = new Progress<string>(message =>
             {
-                TestedCount++;
+                m_LatestFileSourceStatusText = message;
             });
-            MatchedProgress = new Progress<FileProgressInfo>(info =>
+            TestedProgress = new Progress<IEnumerable<FileProgressInfo>>(infos =>
             {
-                MatchedCount++;
-                if (SearchResults.Rows.Count <= maxResults)
+                TestedCount += infos.Count();
+            });
+            MatchedProgress = new Progress<IEnumerable<FileProgressInfo>>(infos =>
+            {
+                int count = infos.Count();
+                if (MatchedCount < maxResults)
                 {
-                    string[] values = info.Values;
-                    string[] result = new string[values.Length + 2];
-                    result[0] = info.File.Name;
-                    result[1] = info.File.DirectoryName;
-                    Array.Copy(values, 0, result, 2, values.Length);
-                    DataRow dataRow = SearchResults.NewRow();
-                    for (int i = 0; i < result.Length; i++)
-                    {
-                        dataRow.SetField(i, result[i]);
-                    }
-                    SearchResults.Rows.Add(dataRow);
+                    int numToTake = Math.Min(maxResults - MatchedCount, count);
+                    m_accumulatedFileProgressInfos.AddRange(infos.Take(numToTake));
                 }
+                MatchedCount += count;
             });
-            ExceptionProgress = new Progress<ExceptionInfo>(info =>
+            ExceptionProgress = new Progress<IEnumerable<ExceptionInfo>>(infos =>
             {
-                if (ExceptionCount <= MaxExceptions)
+                foreach (ExceptionInfo info in infos)
                 {
-                    StringBuilder sb = new StringBuilder(ExceptionText);
-                    if (ExceptionCount > 0)
+                    if (ExceptionCount < MaxExceptions)
                     {
-                        sb.AppendLine();
-                        sb.AppendLine();
+                        StringBuilder sb = new StringBuilder(ExceptionText);
+                        if (ExceptionCount > 0)
+                        {
+                            sb.AppendLine();
+                            sb.AppendLine();
+                        }
+                        sb.AppendFormat("Exception on file {0}: {1}", info.File?.Name, info.Exception.ToString());
+                        ExceptionText = sb.ToString();
+                        ExceptionCount++;
                     }
-                    sb.AppendFormat("Exception on file {0}: {1}", info.File?.Name, info.Exception.ToString());
-                    ExceptionText = sb.ToString();
-                    ExceptionCount++;
+                    else
+                    {
+                        break;
+                    }
                 }
+
             });
+            CompleteProgress = new Progress<bool>(x =>
+            {
+                m_Timer?.Stop();
+                TimerTick(m_Timer, EventArgs.Empty);
+            });
+        }
+
+        private void TimerTick(object sender, EventArgs e)
+        {
+            StatusText = "Matched " + MatchedCount + " of " + TestedCount;
+            FileSourceStatusText = m_LatestFileSourceStatusText;
+            foreach (FileProgressInfo info in m_accumulatedFileProgressInfos)
+            {
+                string[] values = info.Values;
+                string[] result = new string[values.Length + 2];
+                result[0] = info.File.Name;
+                result[1] = info.File.DirectoryName;
+                Array.Copy(values, 0, result, 2, values.Length);
+                DataRow dataRow = SearchResults.NewRow();
+                for (int i = 0; i < result.Length; i++)
+                {
+                    dataRow.SetField(i, result[i]);
+                }
+                SearchResults.Rows.Add(dataRow);
+            }
+            m_accumulatedFileProgressInfos.Clear();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -210,11 +262,12 @@ namespace FileSharperCore
 
         public void Search()
         {
-            Engine.Run(TokenSource.Token, TestedProgress, MatchedProgress, ExceptionProgress, null);
+            Engine.Run(TokenSource.Token, FileSourceProgress, TestedProgress, MatchedProgress, ExceptionProgress, CompleteProgress, m_Timer.Interval);
         }
 
         public Task SearchAsync()
         {
+            m_Timer?.Start();
             return Task.Run((Action)(() => {
                 Search();
             }));

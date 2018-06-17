@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -21,7 +22,7 @@ namespace FileSharperCore.Processors
         public override ProcessingResult Process(FileInfo file,
             MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }

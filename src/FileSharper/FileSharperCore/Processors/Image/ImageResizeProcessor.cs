@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -40,7 +41,7 @@ namespace FileSharperCore.Processors.Image
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             int width;
             int height;
@@ -111,7 +112,7 @@ namespace FileSharperCore.Processors.Image
                 }
                 catch(Exception ex)
                 {
-                    exceptionProgress.Report(new ExceptionInfo(ex, file));
+                    exceptionInfos.Add(new ExceptionInfo(ex, file));
                 }
                 finally
                 {

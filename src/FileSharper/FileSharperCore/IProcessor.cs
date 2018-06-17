@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -13,7 +14,7 @@ namespace FileSharperCore
         InputFileSource InputFileSource { get; set; }
         ProcessingResult Process(FileInfo originalFile, MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
-        void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token);
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token);
+        void ProcessAggregated(IList<ExceptionInfo> exceptionInfos, CancellationToken token);
     }
 }

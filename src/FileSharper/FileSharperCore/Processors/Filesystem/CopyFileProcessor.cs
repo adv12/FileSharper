@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
@@ -31,7 +32,7 @@ namespace FileSharperCore.Processors.Filesystem
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             string newPath = ReplaceUtil.Replace(m_Parameters.NewPath, file);
             try
@@ -42,7 +43,7 @@ namespace FileSharperCore.Processors.Filesystem
             }
             catch (Exception ex)
             {
-                exceptionProgress.Report(new ExceptionInfo(ex, file));
+                exceptionInfos.Add(new ExceptionInfo(ex, file));
                 return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(newPath) });

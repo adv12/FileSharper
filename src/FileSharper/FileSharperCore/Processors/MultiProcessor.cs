@@ -22,18 +22,18 @@ namespace FileSharperCore.Processors
 
         public List<IProcessor> Processors { get; } = new List<IProcessor>();
 
-        public override void LocalInit(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
         {
             foreach (IProcessor processor in Processors)
             {
-                processor.Init(RunInfo, exceptionProgress);
+                processor.Init(RunInfo, exceptionInfos);
             }
         }
 
         public override ProcessingResult Process(FileInfo originalFile,
             MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             StringBuilder message = new StringBuilder();
             List<FileInfo> outputFiles = new List<FileInfo>();
@@ -50,7 +50,7 @@ namespace FileSharperCore.Processors
                         what = ProcessInput.OriginalFile;
                     }
                     ProcessingResult result = processor?.Process(originalFile, matchResultType, values,
-                        generatedFiles ?? new FileInfo[0], what, exceptionProgress, token);
+                        generatedFiles ?? new FileInfo[0], what, exceptionInfos, token);
                     if (result != null)
                     {
                         if (result.OutputFiles != null)
@@ -73,7 +73,7 @@ namespace FileSharperCore.Processors
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
-                    exceptionProgress.Report(new ExceptionInfo(ex, originalFile));
+                    exceptionInfos.Add(new ExceptionInfo(ex, originalFile));
                 }
             }
             if (message.Length == 0)
@@ -83,26 +83,26 @@ namespace FileSharperCore.Processors
             return new ProcessingResult(resultType, message.ToString(), outputFiles.ToArray());
         }
 
-        public override void ProcessAggregated(IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+        public override void ProcessAggregated(IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             foreach (IProcessor processor in Processors)
             {
                 try
                 {
-                    processor?.ProcessAggregated(exceptionProgress, token);
+                    processor?.ProcessAggregated(exceptionInfos, token);
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
-                    exceptionProgress.Report(new ExceptionInfo(ex));
+                    exceptionInfos.Add(new ExceptionInfo(ex));
                 }
             }
         }
 
-        public override void LocalCleanup(IProgress<ExceptionInfo> exceptionProgress)
+        public override void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
         {
             foreach (IProcessor processor in Processors)
             {
-                processor.Cleanup(exceptionProgress);
+                processor.Cleanup(exceptionInfos);
             }
         }
     }

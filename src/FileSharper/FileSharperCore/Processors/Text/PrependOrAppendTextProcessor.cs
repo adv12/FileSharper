@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -46,7 +47,7 @@ namespace FileSharperCore.Processors
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IProgress<ExceptionInfo> exceptionProgress, CancellationToken token)
+            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
         {
             string outputFilename = Util.ReplaceUtil.Replace(m_Parameters.FileName, file);
             if (!m_Parameters.OverwriteExistingFile && File.Exists(outputFilename))
