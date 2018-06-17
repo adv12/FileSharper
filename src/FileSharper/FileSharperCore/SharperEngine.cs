@@ -318,11 +318,6 @@ namespace FileSharperCore
             exceptionProgress.Report(exinfos.ToArray());
         }
 
-        private void ReportSingleException(IProgress<IEnumerable<ExceptionInfo>> exceptionProgress, Exception ex)
-        {
-            exceptionProgress.Report(new ExceptionInfo[] { new ExceptionInfo(ex) });
-        }
-
         private void ReportFilesAndExceptions(List<FileProgressInfo> testedFileProgressInfos,
                             List<FileProgressInfo> matchedFileProgressInfos,
                             List<ExceptionInfo> exceptionInfos)
