@@ -60,7 +60,9 @@ namespace FileSharperCore
                                 {
                                     starterNode.ConditionTypeName = oldCondition.GetType().FullName;
                                     starterNode.ConditionInternal = oldCondition;
+                                    starterNode.Not = this.Not;
                                 }
+                                this.Not = false;
                                 starterNode.Loaded = Loaded;
                                 ChildNodes.Add(starterNode);
                             }
