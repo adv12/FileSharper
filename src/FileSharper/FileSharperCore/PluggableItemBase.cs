@@ -54,24 +54,24 @@ namespace FileSharperCore
             get;
         }
 
-        public void Init(RunInfo inf, IList<ExceptionInfo> exceptionInfos)
+        public void Init(RunInfo inf)
         {
             RunInfo = inf;
-            LocalInit(exceptionInfos);
+            LocalInit();
         }
 
-        public virtual void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public virtual void LocalInit()
         {
 
         }
 
-        public void Cleanup(IList<ExceptionInfo> exceptionInfos)
+        public void Cleanup()
         {
-            LocalCleanup(exceptionInfos);
+            LocalCleanup();
             RunInfo = null;
         }
 
-        public virtual void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
+        public virtual void LocalCleanup()
         {
 
         }

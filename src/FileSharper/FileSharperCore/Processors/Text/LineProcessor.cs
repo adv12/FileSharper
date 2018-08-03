@@ -25,7 +25,7 @@ namespace FileSharperCore.Processors.Text
         protected abstract bool OverwriteExistingFile { get; }
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             string outputFilename = Util.ReplaceUtil.Replace(FileName, file);
             if (!OverwriteExistingFile && File.Exists(outputFilename))

@@ -179,7 +179,7 @@ namespace FileSharperCore.FileSources
             }
         }
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
             m_Reverse = false;
             SearchOrder order = m_Parameters.SearchOrder;

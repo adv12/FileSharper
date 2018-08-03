@@ -43,9 +43,9 @@ namespace FileSharperCore.Processors
 
         private string m_Filename;
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
-            base.LocalInit(exceptionInfos);
+            base.LocalInit();
             m_Filename = ReplaceUtil.Replace(m_Parameters.Filename, (FileInfo)null);
             TextWriter tw = new StreamWriter(m_Filename);
             string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
@@ -77,7 +77,7 @@ namespace FileSharperCore.Processors
         public override ProcessingResult Process(FileInfo originalFile,
             MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             switch (m_Parameters.PathFormat)
             {
@@ -102,10 +102,10 @@ namespace FileSharperCore.Processors
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { originalFile });
         }
 
-        public override void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalCleanup()
         {
             m_CsvWriter?.Dispose();
-            base.LocalCleanup(exceptionInfos);
+            base.LocalCleanup();
             if (m_Parameters.AutoOpen)
             {
                 try

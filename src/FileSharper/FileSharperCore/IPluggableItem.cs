@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace FileSharperCore
@@ -29,9 +30,9 @@ namespace FileSharperCore
             get;
         }
 
-        void Init(RunInfo inf, IList<ExceptionInfo> exceptionInfos);
+        void Init(RunInfo inf);
 
-        void Cleanup(IList<ExceptionInfo> exceptionInfos);
+        void Cleanup();
 
     }
 }

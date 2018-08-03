@@ -61,9 +61,9 @@ namespace FileSharperCore.Processors.Text
 
         public override object Parameters => m_Parameters;
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
-            base.LocalInit(exceptionInfos);
+            base.LocalInit();
             RegexOptions regexOptions = RegexOptions.None;
             if (!m_Parameters.CaseSensitive)
             {
@@ -90,7 +90,7 @@ namespace FileSharperCore.Processors.Text
         }
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             string outputFilename = Util.ReplaceUtil.Replace(m_Parameters.FileName, file);
             if (!m_Parameters.OverwriteExistingFile && File.Exists(outputFilename))

@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -55,6 +56,24 @@ namespace FileSharperCore
         }
 
         public IProgress<string> FileSourceProgress
+        {
+            get;
+            private set;
+        }
+
+        public ConcurrentQueue<FileProgressInfo> TestedFileProgressInfos
+        {
+            get;
+            private set;
+        }
+
+        public ConcurrentQueue<FileProgressInfo> MatchedFileProgressInfos
+        {
+            get;
+            private set;
+        }
+
+        public ConcurrentQueue<ExceptionInfo> ExceptionInfos
         {
             get;
             private set;
@@ -124,6 +143,10 @@ namespace FileSharperCore
             MatchedProgress = matchedProgress;
             ExceptionProgress = exceptionProgress;
             CompleteProgress = completeProgress;
+
+            TestedFileProgressInfos = new ConcurrentQueue<FileProgressInfo>();
+            MatchedFileProgressInfos = new ConcurrentQueue<FileProgressInfo>();
+            ExceptionInfos = new ConcurrentQueue<ExceptionInfo>();
         }
 
         public void RequestStop()

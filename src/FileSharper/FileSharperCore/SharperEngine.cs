@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace FileSharperCore
         public IProcessor[] TestedProcessors { get; set; }
 
         public IProcessor[] MatchedProcessors { get; set; }
+
+        public Timer Timer { get; set; }
 
         public int MaxToMatch { get; set; }
 
@@ -64,9 +67,7 @@ namespace FileSharperCore
             DateTime lastExceptionReportTime = DateTime.Now;
             DateTime lastTestedReportTime = DateTime.Now;
             DateTime lastMatchedReportTime = DateTime.Now;
-            List<FileProgressInfo> testedFileProgressInfos = new List<FileProgressInfo>();
-            List<FileProgressInfo> matchedFileProgressInfos = new List<FileProgressInfo>();
-            List<ExceptionInfo> exceptionInfos = new List<ExceptionInfo>();
+
             try
             {
                 if (fileSourceProgress == null)
@@ -94,26 +95,34 @@ namespace FileSharperCore
                     RunInfo = new RunInfo(FileSource, Condition, FieldSources, TestedProcessors,
                         MatchedProcessors, MaxToMatch, token, fileSourceProgress, testedProgress,
                         matchedProgress, exceptionProgress, completeProgress);
+                    TimeSpan interval = TimeSpan.FromMilliseconds(100);
+                    Timer = new Timer(state => {
+                        ReportFilesAndExceptions();
+                        if (StopRequested)
+                        {
+                            Timer.Dispose();
+                        }
+                    }, null, interval, interval);
                 }
                 token.ThrowIfCancellationRequested();
-                FileSource.Init(RunInfo, exceptionInfos);
+                FileSource.Init(RunInfo);
                 token.ThrowIfCancellationRequested();
-                Condition.Init(RunInfo, exceptionInfos);
+                Condition.Init(RunInfo);
                 token.ThrowIfCancellationRequested();
                 foreach (IFieldSource fieldSource in FieldSources)
                 {
                     token.ThrowIfCancellationRequested();
-                    fieldSource.Init(RunInfo, exceptionInfos);
+                    fieldSource.Init(RunInfo);
                 }
                 foreach (IProcessor processor in TestedProcessors)
                 {
                     token.ThrowIfCancellationRequested();
-                    processor.Init(RunInfo, exceptionInfos);
+                    processor.Init(RunInfo);
                 }
                 foreach (IProcessor processor in MatchedProcessors)
                 {
                     token.ThrowIfCancellationRequested();
-                    processor.Init(RunInfo, exceptionInfos);
+                    processor.Init(RunInfo);
                 }
             }
             catch (OperationCanceledException ex)
@@ -124,8 +133,8 @@ namespace FileSharperCore
             catch(Exception ex)
             {
                 Cleanup(exceptionProgress);
-                exceptionInfos.Add(new ExceptionInfo(ex));
-                ReportFilesAndExceptions(testedFileProgressInfos, matchedFileProgressInfos, exceptionInfos);
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                ReportFilesAndExceptions();
                 completeProgress?.Report(false);
                 return;
             }
@@ -133,12 +142,6 @@ namespace FileSharperCore
             {
                 foreach (FileInfo file in FileSource.Files)
                 {
-                    if (DateTime.Now - lastExceptionReportTime> reportInterval)
-                    {
-                        exceptionProgress.Report(exceptionInfos.ToArray());
-                        exceptionInfos.Clear();
-                        lastExceptionReportTime = DateTime.Now;
-                    }
                     token.ThrowIfCancellationRequested();
                     try
                     {
@@ -167,7 +170,7 @@ namespace FileSharperCore
                             }
                             catch (Exception ex) when (!(ex is OperationCanceledException))
                             {
-                                exceptionInfos.Add(new ExceptionInfo(ex, file));
+                                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                             }
                             if (result != null)
                             {
@@ -185,67 +188,55 @@ namespace FileSharperCore
                                         }
                                         catch (Exception ex) when (!(ex is OperationCanceledException))
                                         {
-                                            exceptionInfos.Add(new ExceptionInfo(ex, file));
+                                            RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                                         }
                                     }
                                 }
 
                                 string[] allValues = values.ToArray();
 
-                                testedFileProgressInfos.Add(new FileProgressInfo(file, result.Type, allValues));
-                                if (DateTime.Now - lastTestedReportTime > reportInterval)
-                                {
-                                    testedProgress.Report(testedFileProgressInfos.ToArray());
-                                    testedFileProgressInfos.Clear();
-                                    lastTestedReportTime = DateTime.Now;
-                                }
-                                RunProcessors(TestedProcessors, file, matchResultType, allValues, exceptionInfos);
+                                RunInfo.TestedFileProgressInfos.Enqueue(new FileProgressInfo(file, result.Type, allValues));
+                                RunProcessors(TestedProcessors, file, matchResultType, allValues);
 
                                 if (result.Type == MatchResultType.Yes)
                                 {
-                                    matchedFileProgressInfos.Add(new FileProgressInfo(file, result.Type, allValues));
-                                    if (DateTime.Now - lastMatchedReportTime > reportInterval)
-                                    {
-                                        matchedProgress.Report(matchedFileProgressInfos.ToArray());
-                                        matchedFileProgressInfos.Clear();
-                                        lastMatchedReportTime = DateTime.Now;
-                                    }
-                                    RunProcessors(MatchedProcessors, file, matchResultType, allValues, exceptionInfos);
+                                    RunInfo.MatchedFileProgressInfos.Enqueue(new FileProgressInfo(file, result.Type, allValues));
+                                    RunProcessors(MatchedProcessors, file, matchResultType, allValues);
                                     numMatched++;
                                 }
                             }
                         }
                         finally
                         {
-                            DisposeFileCaches(caches, exceptionInfos);
+                            DisposeFileCaches(caches, RunInfo.ExceptionInfos);
                         }
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
-                        exceptionInfos.Add(new ExceptionInfo(ex, file));
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                     }
                     if (RunInfo.StopRequested || numMatched == MaxToMatch)
                     {
                         break;
                     }
                 }
-                AggregateProcessors(TestedProcessors, exceptionInfos);
-                AggregateProcessors(MatchedProcessors, exceptionInfos);
+                AggregateProcessors(TestedProcessors);
+                AggregateProcessors(MatchedProcessors);
             }
             catch (Exception ex) when (!(ex is OperationCanceledException))
             {
-                exceptionInfos.Add(new ExceptionInfo(ex));
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
             }
             finally
             {
                 Cleanup(exceptionProgress);
             }
-            ReportFilesAndExceptions(testedFileProgressInfos, matchedFileProgressInfos, exceptionInfos);
+            ReportFilesAndExceptions();
             completeProgress?.Report(false);
         }
 
         private void RunProcessors(IProcessor[] processors, FileInfo file,
-            MatchResultType matchResultType, string[] values, List<ExceptionInfo> exceptionInfos)
+            MatchResultType matchResultType, string[] values)
         {
             FileInfo[] lastOutputs = new FileInfo[0];
             foreach (IProcessor processor in processors)
@@ -256,32 +247,43 @@ namespace FileSharperCore
                     ProcessInput whatToProcess = (processor.InputFileSource == InputFileSource.OriginalFile ?
                         ProcessInput.OriginalFile : ProcessInput.GeneratedFiles);
                     ProcessingResult result = processor?.Process(file, matchResultType, values,
-                        lastOutputs ?? new FileInfo[0], whatToProcess, exceptionInfos, RunInfo.CancellationToken);
+                        lastOutputs ?? new FileInfo[0], whatToProcess, RunInfo.CancellationToken);
                     FileInfo[] outputFiles = result == null ? new FileInfo[0] : result.OutputFiles;
                     lastOutputs = outputFiles == null ? new FileInfo[0] : outputFiles;
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     lastOutputs = new FileInfo[0];
-                    exceptionInfos.Add(new ExceptionInfo(ex, file));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                 }
             }
         }
 
-        private void AggregateProcessors(IProcessor[] processors, List<ExceptionInfo> exceptionInfos)
+        private void AggregateProcessors(IProcessor[] processors)
         {
             foreach (IProcessor processor in processors)
             {
                 RunInfo.CancellationToken.ThrowIfCancellationRequested();
                 try
                 {
-                    processor?.ProcessAggregated(exceptionInfos, RunInfo.CancellationToken);
+                    processor?.ProcessAggregated(RunInfo.CancellationToken);
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
-                    exceptionInfos.Add(new ExceptionInfo(ex, null));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, null));
                 }
             }
+        }
+
+        private T[] DequeueToArray<T>(ConcurrentQueue<T> queue)
+        {
+            List<T> tmp = new List<T>();
+            T item;
+            while (queue.TryDequeue(out item))
+            {
+                tmp.Add(item);
+            }
+            return tmp.ToArray();
         }
 
         private void GetFileCaches(ICondition condition, IFieldSource[] fieldSources, FileInfo file,
@@ -312,22 +314,22 @@ namespace FileSharperCore
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
-                    exinfos.Add(new ExceptionInfo(ex, file));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                 }
             }
-            exceptionProgress.Report(exinfos.ToArray());
         }
 
-        private void ReportFilesAndExceptions(List<FileProgressInfo> testedFileProgressInfos,
-                            List<FileProgressInfo> matchedFileProgressInfos,
-                            List<ExceptionInfo> exceptionInfos)
+        private void ReportFilesAndExceptions()
         {
-            RunInfo.TestedProgress.Report(testedFileProgressInfos.ToArray());
-            RunInfo.MatchedProgress.Report(matchedFileProgressInfos.ToArray());
-            RunInfo.ExceptionProgress.Report(exceptionInfos.ToArray());
+            lock (m_Mutex)
+            {
+                RunInfo.TestedProgress.Report(DequeueToArray(RunInfo.TestedFileProgressInfos));
+                RunInfo.MatchedProgress.Report(DequeueToArray(RunInfo.MatchedFileProgressInfos));
+                RunInfo.ExceptionProgress.Report(DequeueToArray(RunInfo.ExceptionInfos));
+            }
         }
 
-        private void DisposeFileCaches(Dictionary<Type, IFileCache> cacheLookup, List<ExceptionInfo> exceptionInfos)
+        private void DisposeFileCaches(Dictionary<Type, IFileCache> cacheLookup, ConcurrentQueue<ExceptionInfo> exceptionInfos)
         {
             OperationCanceledException canceledException = null;
             foreach (IFileCache cache in cacheLookup.Values)
@@ -342,7 +344,7 @@ namespace FileSharperCore
                 }
                 catch (Exception ex)
                 {
-                    exceptionInfos.Add(new ExceptionInfo(ex));
+                    exceptionInfos.Enqueue(new ExceptionInfo(ex));
                 }
             }
             if (canceledException != null)
@@ -356,55 +358,54 @@ namespace FileSharperCore
             List<ExceptionInfo> exinfos = new List<ExceptionInfo>();
             try
             {
-                FileSource?.Cleanup(exinfos);
+                FileSource?.Cleanup();
             }
             catch (Exception ex)
             {
-                exinfos.Add(new ExceptionInfo(ex));
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
             }
             try
             {
-                Condition?.Cleanup(exinfos);
+                Condition?.Cleanup();
             }
             catch (Exception ex)
             {
-                exinfos.Add(new ExceptionInfo(ex));
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
             }
             foreach (IFieldSource fieldSource in FieldSources)
             {
                 try
                 {
-                    fieldSource?.Cleanup(exinfos);
+                    fieldSource?.Cleanup();
                 }
                 catch (Exception ex)
                 {
-                    exinfos.Add(new ExceptionInfo(ex));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
                 }
             }
             foreach (IProcessor processor in TestedProcessors)
             {
                 try
                 {
-                    processor?.Cleanup(exinfos);
+                    processor?.Cleanup();
                 }
                 catch (Exception ex)
                 {
-                    exinfos.Add(new ExceptionInfo(ex));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
                 }
             }
             foreach (IProcessor processor in MatchedProcessors)
             {
                 try
                 {
-                    processor?.Cleanup(exinfos);
+                    processor?.Cleanup();
                 }
                 catch (Exception ex)
                 {
-                    exinfos.Add(new ExceptionInfo(ex));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
                 }
             }
-
-            exceptionProgress?.Report(exinfos);
+            ReportFilesAndExceptions();
         }
 
         public void RequestStop()

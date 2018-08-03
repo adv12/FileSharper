@@ -41,7 +41,7 @@ namespace FileSharperCore.Processors.Image
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             int width;
             int height;
@@ -112,7 +112,7 @@ namespace FileSharperCore.Processors.Image
                 }
                 catch(Exception ex)
                 {
-                    exceptionInfos.Add(new ExceptionInfo(ex, file));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                 }
                 finally
                 {

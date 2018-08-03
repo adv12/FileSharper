@@ -51,7 +51,7 @@ namespace FileSharperCore.Processors.Text
 
         protected override bool MoveOriginalToRecycleBin => m_Parameters.MoveOriginalToRecycleBin;
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < m_Parameters.SpacesPerTab; i++)

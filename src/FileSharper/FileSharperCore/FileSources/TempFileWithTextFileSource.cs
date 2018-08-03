@@ -29,9 +29,9 @@ namespace FileSharperCore.FileSources
 
         public override object Parameters => m_Parameters;
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
-            base.LocalInit(exceptionInfos);
+            base.LocalInit();
             m_TempFilePath = Path.GetTempFileName();
             File.WriteAllText(m_TempFilePath, m_Parameters.TempFileText);
         }
@@ -44,10 +44,10 @@ namespace FileSharperCore.FileSources
             }
         }
 
-        public override void LocalCleanup(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalCleanup()
         {
             File.Delete(m_TempFilePath);
-            base.LocalCleanup(exceptionInfos);
+            base.LocalCleanup();
         }
 
     }

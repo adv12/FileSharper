@@ -21,7 +21,7 @@ namespace FileSharperCore.Processors.Filesystem
         public override object Parameters => null;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
                 UICancelOption.DoNothing);

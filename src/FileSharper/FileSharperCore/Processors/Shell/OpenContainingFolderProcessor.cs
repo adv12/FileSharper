@@ -21,13 +21,13 @@ namespace FileSharperCore.Processors.Shell
 
         public override object Parameters => null;
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
             m_OpenedFolders.Clear();
         }
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             if (!m_OpenedFolders.Contains(file.DirectoryName))
             {

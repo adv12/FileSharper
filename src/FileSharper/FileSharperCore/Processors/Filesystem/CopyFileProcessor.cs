@@ -32,7 +32,7 @@ namespace FileSharperCore.Processors.Filesystem
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             string newPath = ReplaceUtil.Replace(m_Parameters.NewPath, file);
             try
@@ -43,7 +43,7 @@ namespace FileSharperCore.Processors.Filesystem
             }
             catch (Exception ex)
             {
-                exceptionInfos.Add(new ExceptionInfo(ex, file));
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                 return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(newPath) });

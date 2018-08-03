@@ -48,9 +48,9 @@ namespace FileSharperCore.Conditions.Filesystem
             }
         }
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
-            base.LocalInit(exceptionInfos);
+            base.LocalInit();
             RegexOptions regexOptions = RegexOptions.None;
             if (!m_Parameters.CaseSensitive)
             {

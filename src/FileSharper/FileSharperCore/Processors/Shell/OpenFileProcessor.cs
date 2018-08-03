@@ -20,7 +20,7 @@ namespace FileSharperCore.Processors.Shell
         public override object Parameters => null;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             System.Diagnostics.Process.Start(file.FullName);
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });

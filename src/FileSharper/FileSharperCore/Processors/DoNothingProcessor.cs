@@ -22,7 +22,7 @@ namespace FileSharperCore.Processors
         public override ProcessingResult Process(FileInfo file,
             MatchResultType matchResultType, string[] values,
             FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }

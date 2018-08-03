@@ -29,7 +29,7 @@ namespace FileSharperCore.Processors
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace FileSharperCore.Processors
             }
             catch (Exception ex)
             {
-                exceptionInfos.Add(new ExceptionInfo(ex, file));
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                 return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[] { file });
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });

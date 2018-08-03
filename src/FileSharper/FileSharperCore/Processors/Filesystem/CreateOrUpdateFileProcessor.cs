@@ -32,7 +32,7 @@ namespace FileSharperCore.Processors.Filesystem
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {
             ProcessingResultType resultType = ProcessingResultType.Success;
             string message = "Success";
@@ -52,7 +52,7 @@ namespace FileSharperCore.Processors.Filesystem
                     {
                         resultType = ProcessingResultType.Failure;
                         message = $"Failed to update file modification date: {ex.Message}";
-                        exceptionInfos.Add(new ExceptionInfo(ex, file));
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                     }
                 }
             }
@@ -68,7 +68,7 @@ namespace FileSharperCore.Processors.Filesystem
                 {
                     resultType = ProcessingResultType.Failure;
                     message = $"Failed to create file: {ex.Message}";
-                    exceptionInfos.Add(new ExceptionInfo(ex, file));
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
                 }
             }
             return new ProcessingResult(resultType, message, resultFiles);

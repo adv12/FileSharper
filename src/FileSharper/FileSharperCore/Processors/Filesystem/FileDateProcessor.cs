@@ -31,7 +31,7 @@ namespace FileSharperCore.Processors.Filesystem
         public override object Parameters => m_Parameters;
 
         public override ProcessingResult Process(FileInfo file, string[] values,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token)
+            CancellationToken token)
         {
             switch (m_Parameters.FileDateType)
             {

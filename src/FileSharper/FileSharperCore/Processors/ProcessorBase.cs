@@ -20,11 +20,9 @@ namespace FileSharperCore.Processors
 
         public abstract ProcessingResult Process(FileInfo originalFile,
             MatchResultType matchResultType, string[] values,
-            FileInfo[] generatedFiles, ProcessInput whatToProcess,
-            IList<ExceptionInfo> exceptionInfos, CancellationToken token);
+            FileInfo[] generatedFiles, ProcessInput whatToProcess, CancellationToken token);
 
-        public virtual void ProcessAggregated(IList<ExceptionInfo> exceptionInfos,
-            CancellationToken token)
+        public virtual void ProcessAggregated(CancellationToken token)
         {
 
         }

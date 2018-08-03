@@ -40,9 +40,9 @@ namespace FileSharperCore.FieldSources.Xml
 
         public override object Parameters => m_Parameters;
 
-        public override void LocalInit(IList<ExceptionInfo> exceptionInfos)
+        public override void LocalInit()
         {
-            base.LocalInit(exceptionInfos);
+            base.LocalInit();
             m_Expression = XPathExpression.Compile("string(" + m_Parameters.XPath + ")");
         }
 
