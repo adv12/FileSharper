@@ -208,7 +208,16 @@ namespace FileSharperCore
                             sb.AppendLine();
                             sb.AppendLine();
                         }
-                        sb.AppendFormat("Exception on file {0}: {1}", info.File?.Name, info.Exception.ToString());
+                        string name = null;
+                        try
+                        {
+                            name = info.File?.Name;
+                        }
+                        catch (Exception ex) // particularly PathTooLongException
+                        {
+                            
+                        }
+                        sb.AppendFormat("Exception on file {0}: {1}", name ?? string.Empty, info.Exception.ToString());
                         ExceptionText = sb.ToString();
                         ExceptionCount++;
                     }
@@ -232,17 +241,24 @@ namespace FileSharperCore
             FileSourceStatusText = m_LatestFileSourceStatusText;
             foreach (FileProgressInfo info in m_accumulatedFileProgressInfos)
             {
-                string[] values = info.Values;
-                string[] result = new string[values.Length + 2];
-                result[0] = info.File.Name;
-                result[1] = info.File.DirectoryName;
-                Array.Copy(values, 0, result, 2, values.Length);
-                DataRow dataRow = SearchResults.NewRow();
-                for (int i = 0; i < result.Length; i++)
+                try
                 {
-                    dataRow.SetField(i, result[i]);
+                    string[] values = info.Values;
+                    string[] result = new string[values.Length + 2];
+                    result[0] = info.File.Name;
+                    result[1] = info.File.DirectoryName;
+                    Array.Copy(values, 0, result, 2, values.Length);
+                    DataRow dataRow = SearchResults.NewRow();
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        dataRow.SetField(i, result[i]);
+                    }
+                    SearchResults.Rows.Add(dataRow);
                 }
-                SearchResults.Rows.Add(dataRow);
+                catch (Exception ex)
+                {
+                    Engine.RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, info.File));
+                }
             }
             m_accumulatedFileProgressInfos.Clear();
         }

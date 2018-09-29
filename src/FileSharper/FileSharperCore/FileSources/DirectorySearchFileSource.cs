@@ -75,7 +75,16 @@ namespace FileSharperCore.FileSources
             List<FileInfo> files = new List<FileInfo>();
             if (m_skipDirectoryRegex != null)
             {
-                if (m_skipDirectoryRegex.IsMatch(directoryInfo.FullName))
+                bool exclude = false;
+                try
+                {
+                    exclude = m_skipDirectoryRegex.IsMatch(directoryInfo.FullName);
+                }
+                catch (Exception ex)
+                {
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                }
+                if (exclude)
                 {
                     yield break;
                 }
@@ -90,7 +99,15 @@ namespace FileSharperCore.FileSources
                         yield break;
                     }
                     RunInfo.CancellationToken.ThrowIfCancellationRequested();
-                    FileInfo[] results = directoryInfo.GetFiles(filePattern);
+                    FileInfo[] results = new FileInfo[0];
+                    try
+                    {
+                        results = directoryInfo.GetFiles(filePattern);
+                    }
+                    catch (Exception ex)
+                    {
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                    }
                     foreach (FileInfo file in results)
                     {
                         if (RunInfo.StopRequested)
@@ -98,26 +115,40 @@ namespace FileSharperCore.FileSources
                             yield break;
                         }
                         RunInfo.CancellationToken.ThrowIfCancellationRequested();
-                        if (!fileSet.Contains(file))
+                        try
                         {
-                            if ((m_Parameters.IncludeHidden || !file.Attributes.HasFlag(FileAttributes.Hidden)) &&
-                                (m_Parameters.IncludeSystem || !file.Attributes.HasFlag(FileAttributes.System)))
+                            if (!fileSet.Contains(file))
                             {
-                                fileSet.Add(file);
-                                files.Add(file);
+                                if ((m_Parameters.IncludeHidden || !file.Attributes.HasFlag(FileAttributes.Hidden)) &&
+                                    (m_Parameters.IncludeSystem || !file.Attributes.HasFlag(FileAttributes.System)))
+                                {
+                                    fileSet.Add(file);
+                                    files.Add(file);
+                                }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
                         }
                     }
                 }
                 if (m_FileSorter != null)
                 {
-                    if (m_Reverse)
+                    try
                     {
-                        files = files.OrderByDescending(m_FileSorter).ToList();
+                        if (m_Reverse)
+                        {
+                            files = files.OrderByDescending(m_FileSorter).ToList();
+                        }
+                        else
+                        {
+                            files = files.OrderBy(m_FileSorter).ToList();
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        files = files.OrderBy(m_FileSorter).ToList();
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
                     }
                 }
             }
@@ -140,7 +171,14 @@ namespace FileSharperCore.FileSources
                 try
                 {
                     subdirs = directoryInfo.GetDirectories();
-                    if (m_DirectorySorter != null)
+                }
+                catch (Exception ex)
+                {
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                }
+                if (m_DirectorySorter != null)
+                {
+                    try
                     {
                         if (m_Reverse)
                         {
@@ -151,9 +189,10 @@ namespace FileSharperCore.FileSources
                             subdirs = subdirs.OrderBy(m_DirectorySorter).ToArray();
                         }
                     }
-                }
-                catch (UnauthorizedAccessException)
-                {
+                    catch (Exception ex)
+                    {
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                    }
                 }
                 foreach (DirectoryInfo subdir in subdirs)
                 {
@@ -162,8 +201,17 @@ namespace FileSharperCore.FileSources
                         yield break;
                     }
                     RunInfo.CancellationToken.ThrowIfCancellationRequested();
-                    if ((m_Parameters.IncludeHidden || !subdir.Attributes.HasFlag(FileAttributes.Hidden)) &&
-                        (m_Parameters.IncludeSystem || !subdir.Attributes.HasFlag(FileAttributes.System)))
+                    bool proceed = false;
+                    try
+                    {
+                        proceed = (m_Parameters.IncludeHidden || !subdir.Attributes.HasFlag(FileAttributes.Hidden)) &&
+                        (m_Parameters.IncludeSystem || !subdir.Attributes.HasFlag(FileAttributes.System));
+                    }
+                    catch (Exception ex)
+                    {
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                    }
+                    if (proceed)
                     {
                         foreach (FileInfo fi in SearchDirectory(subdir))
                         {
