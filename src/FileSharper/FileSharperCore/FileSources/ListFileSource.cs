@@ -2,6 +2,7 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using FileSharperCore.Util;
@@ -32,7 +33,19 @@ namespace FileSharperCore.FileSources
                     RunInfo.CancellationToken.ThrowIfCancellationRequested();
                     string name = filename;
                     name = ReplaceUtil.Replace(name, (FileInfo)null);
-                    yield return new FileInfo(name);
+                    FileInfo fi = null;
+                    try
+                    {
+                        fi = new FileInfo(name);
+                    }
+                    catch (Exception ex)
+                    {
+                        RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex));
+                    }
+                    if (fi != null)
+                    {
+                        yield return fi;
+                    }
                 }
             }
         }
