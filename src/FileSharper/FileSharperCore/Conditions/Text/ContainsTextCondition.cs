@@ -39,7 +39,7 @@ namespace FileSharperCore.Conditions.Text
 
         public override string Category => "Text";
 
-        public override string Description => "Whether the file contains the specififed text";
+        public override string Description => "Whether the file contains the specified text";
 
         public override object Parameters => m_Parameters;
 
