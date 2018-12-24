@@ -50,15 +50,23 @@ namespace FileSharperCore.Conditions.Binary
                         bytes.Add(Convert.ToByte(s, 16));
                     }
                     break;
-                case BinaryInputFormat.CommaDelimitedDecimal:
-                    string[] vals = m_Parameters.Bytes.Split(',');
-
+                case BinaryInputFormat.DelimitedDecimal:
+                    string[] vals = Regex.Split(m_Parameters.Bytes, "[^\\d]+");
                     foreach (string val in vals)
                     {
-                        string newval = Regex.Replace(val, "[^\\d]", "");
-                        if (newval.Length > 0)
+                        if (val.Length > 0)
                         {
-                            bytes.Add(byte.Parse(newval));
+                            bytes.Add(byte.Parse(val));
+                        }
+                    }
+                    break;
+                case BinaryInputFormat.DelimitedBinary:
+                    vals = Regex.Split(m_Parameters.Bytes, "[^01]+");
+                    foreach (string val in vals)
+                    {
+                        if (val.Length > 0)
+                        {
+                            bytes.Add(Convert.ToByte(val, 2));
                         }
                     }
                     break;

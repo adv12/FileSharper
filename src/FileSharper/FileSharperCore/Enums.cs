@@ -314,7 +314,8 @@ namespace FileSharperCore
     public enum BinaryInputFormat
     {
         Hexadecimal,
-        CommaDelimitedDecimal
+        DelimitedDecimal,
+        DelimitedBinary
     }
 
 }

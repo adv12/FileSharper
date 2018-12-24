@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
-using FileSharperCore.Util;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace FileSharperCore.Conditions.Binary
 {
