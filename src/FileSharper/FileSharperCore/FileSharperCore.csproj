@@ -87,6 +87,9 @@
     <Compile Include="ConditionNode.cs" />
     <Compile Include="Conditions\AllCondition.cs" />
     <Compile Include="Conditions\AnyCondition.cs" />
+    <Compile Include="Conditions\Binary\BinaryDataContainsByteSequenceCondition.cs" />
+    <Compile Include="Conditions\Binary\BinaryDataContainsTextCondition.cs" />
+    <Compile Include="Conditions\Binary\BinaryDataSearchCondition.cs" />
     <Compile Include="Conditions\CompoundCondition.cs" />
     <Compile Include="Conditions\ConditionBase.cs" />
     <Compile Include="Conditions\Filesystem\FileAgeCondition.cs" />

@@ -333,9 +333,21 @@ namespace FileSharperCore.Util
             }
             catch (Exception)
             {
-                // just return null;
+                return null;
             }
-            return null;
+        }
+
+        public static Encoding GetSearchTextEncoding(SearchTextEncodingType searchTextEncodingType)
+        {
+            try
+            {
+                return Encoding.GetEncoding((int)searchTextEncodingType);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
         }
 
     }
