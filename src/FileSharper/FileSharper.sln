@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSharperUIHelpers", "Fil
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FileSharperSetup", "FileSharperSetup\FileSharperSetup.vdproj", "{97D6A3D4-EC00-481B-BB43-B6E5A8B6348E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSharperCore.Tests", "FileSharperCore.Tests\FileSharperCore.Tests.csproj", "{5C535CF6-2B91-450E-9E53-B8160C2DD6B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{A7BDC2EB-5010-47CE-A2EB-1825AFD92CA7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97D6A3D4-EC00-481B-BB43-B6E5A8B6348E}.Debug|Any CPU.ActiveCfg = Debug
 		{97D6A3D4-EC00-481B-BB43-B6E5A8B6348E}.Release|Any CPU.ActiveCfg = Release
+		{5C535CF6-2B91-450E-9E53-B8160C2DD6B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C535CF6-2B91-450E-9E53-B8160C2DD6B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C535CF6-2B91-450E-9E53-B8160C2DD6B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C535CF6-2B91-450E-9E53-B8160C2DD6B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

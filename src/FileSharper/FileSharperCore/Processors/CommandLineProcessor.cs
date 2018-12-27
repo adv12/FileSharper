@@ -3,9 +3,9 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 using FileSharperCore.Util;
 
 namespace FileSharperCore.Processors
@@ -14,6 +14,7 @@ namespace FileSharperCore.Processors
     public class CommandLineParameters
     {
         public string CommandLine { get; set; } = "echo \"{FullName}\"";
+        public bool WaitForTaskToFinish { get; set; } = false;
     }
 
     public class CommandLineProcessor : SingleFileProcessorBase
@@ -34,7 +35,11 @@ namespace FileSharperCore.Processors
             try
             {
                 string comandLine = ReplaceUtil.Replace(m_Parameters.CommandLine, file);
-                System.Diagnostics.Process.Start("cmd", "/c " + comandLine);
+                Process process = System.Diagnostics.Process.Start("cmd", "/c " + comandLine);
+                if (m_Parameters.WaitForTaskToFinish)
+                {
+                    process.WaitForExit();
+                }
             }
             catch (Exception ex)
             {

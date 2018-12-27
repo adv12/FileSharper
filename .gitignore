@@ -17,3 +17,5 @@
 /src/FileSharper/FileSharper/Thumbs.db
 /src/FileSharper/FileSharperSetup/Debug
 /src/FileSharper/FileSharperSetup/Release
+/src/FileSharper/FileSharperCore.Tests/bin/Debug
+/src/FileSharper/FileSharperCore.Tests/obj/Debug

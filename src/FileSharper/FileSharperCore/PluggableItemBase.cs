@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Reflection;
 
 namespace FileSharperCore
 {
@@ -63,6 +64,14 @@ namespace FileSharperCore
         public virtual void LocalInit()
         {
 
+        }
+
+        public void SetParameter(string name, object value)
+        {
+            object parameters = this.Parameters;
+            Type t = parameters.GetType();
+            PropertyInfo property = t.GetProperty(name);
+            property.SetValue(parameters, value);
         }
 
         public void Cleanup()
