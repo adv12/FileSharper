@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) 2018 Andrew Vardeman.  Published under the MIT license.
+// See license.txt in the FileSharper distribution or repository for the
+// full text of the license.
+
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FileSharperCore.Tests
 {

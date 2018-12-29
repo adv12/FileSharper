@@ -1,4 +1,9 @@
-﻿<UserControl x:Class="FileSharperUI.SearchDocumentSetupControl"
+﻿<!--
+Copyright (c) 2018 Andrew Vardeman.  Published under the MIT license.
+See license.txt in the FileSharper distribution or repository for the
+full text of the license.
+-->
+<UserControl x:Class="FileSharperUI.SearchDocumentSetupControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
