@@ -60,7 +60,7 @@ namespace FileSharperCore
         SystemDefault,
         Windows,
         Unix,
-        OldMacOS
+        ClassicMacOS
     }
 
     public enum LineEndings
@@ -69,7 +69,7 @@ namespace FileSharperCore
         SystemDefault,
         Windows,
         Unix,
-        OldMacOS
+        ClassicMacOS
     }
 
     public enum DetectedLineEndings
@@ -77,7 +77,7 @@ namespace FileSharperCore
         NotApplicable,
         Windows,
         Unix,
-        OldMacOS,
+        ClassicMacOS,
         Mixed
     }
 

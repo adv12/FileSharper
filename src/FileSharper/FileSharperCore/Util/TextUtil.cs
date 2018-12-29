@@ -27,8 +27,8 @@ namespace FileSharperCore.Util
                 case LineEndingsNoFile.Unix:
                     endings = LineEndings.Unix;
                     break;
-                case LineEndingsNoFile.OldMacOS:
-                    endings = LineEndings.OldMacOS;
+                case LineEndingsNoFile.ClassicMacOS:
+                    endings = LineEndings.ClassicMacOS;
                     break;
                 default:
                     endings = LineEndings.SystemDefault;
@@ -60,7 +60,7 @@ namespace FileSharperCore.Util
                                 return "\r\n";
                             case DetectedLineEndings.Unix:
                                 return "\n";
-                            case DetectedLineEndings.OldMacOS:
+                            case DetectedLineEndings.ClassicMacOS:
                                 return "\r";
                             default:
                                 return Environment.NewLine;
@@ -70,7 +70,7 @@ namespace FileSharperCore.Util
                     return "\r\n";
                 case LineEndings.Unix:
                     return "\n";
-                case LineEndings.OldMacOS:
+                case LineEndings.ClassicMacOS:
                     return "\r";
                 default:
                     return Environment.NewLine;
@@ -210,7 +210,7 @@ namespace FileSharperCore.Util
             }
             else if (windowsCount == 0 && unixCount == 0 && oldMacCount > 0)
             {
-                return DetectedLineEndings.OldMacOS;
+                return DetectedLineEndings.ClassicMacOS;
             }
             else
             {
