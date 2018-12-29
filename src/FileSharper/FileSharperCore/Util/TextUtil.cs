@@ -77,6 +77,35 @@ namespace FileSharperCore.Util
             }
         }
 
+        public static bool FileEndsWithNewline(FileInfo file, Encoding encoding)
+        {
+            byte[] carriageReturn = encoding.GetBytes(new char[] { '\r' });
+            byte[] lineFeed = encoding.GetBytes(new char[] { '\n' });
+            byte[][] newlineBytes = new byte[][] { carriageReturn, lineFeed };
+
+            using (FileStream fileStream = file.OpenRead())
+            {
+                foreach (byte[] bytes in newlineBytes)
+                {
+                    bool match = true;
+                    fileStream.Seek(-bytes.Length, SeekOrigin.End);
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        if (bytes[i] != fileStream.ReadByte())
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public static int GetWordCount(StreamReader reader, CancellationToken token)
         {
             int wordCount = 0;

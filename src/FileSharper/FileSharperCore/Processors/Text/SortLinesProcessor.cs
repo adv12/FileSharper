@@ -76,13 +76,20 @@ namespace FileSharperCore.Processors.Text
             string[] lines = File.ReadAllLines(file.FullName, detectedEncoding);
             Array.Sort(lines, m_Comparer);
             string tmpFile = Path.GetTempFileName();
+            bool endsWithNewLine = TextUtil.FileEndsWithNewline(file, detectedEncoding);
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, detectedEncoding, m_Parameters.OutputEncoding))
             {
                 writer.NewLine = TextUtil.GetNewline(file, m_Parameters.LineEndings);
+                int i = 0;
                 foreach (string line in lines)
                 {
-                    writer.WriteLine(line);
+                    writer.Write(line);
+                    if (i < lines.Length - 1 || endsWithNewLine)
+                    {
+                        writer.WriteLine();
+                    }
+                    i++;
                 }
             }
             return GetProcessingResultFromCopyAndDeleteTempFile(file, outputFilename, tmpFile,
