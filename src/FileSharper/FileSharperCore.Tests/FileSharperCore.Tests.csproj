@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="ExpectedResults\RunsCommandLine\BasicTextFile.txt" />
+    <Content Include="ExpectedResults\CommandLineProcessor_RunsCommandLine\BasicTextFile.txt" />
     <Content Include="TestFiles\BasicTextFile.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

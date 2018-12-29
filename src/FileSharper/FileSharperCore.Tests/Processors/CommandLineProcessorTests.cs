@@ -14,7 +14,7 @@ namespace FileSharperCore.Tests.Processors
     {
 
         [TestMethod]
-        public void RunsCommandLine()
+        public void CommandLineProcessor_RunsCommandLine()
         {
             CommandLineProcessor p = new CommandLineProcessor();
             p.SetParameter("CommandLine", $"copy \"{{FullName}}\" \"{CurrentTestResultsDirectoryPath}\"");
