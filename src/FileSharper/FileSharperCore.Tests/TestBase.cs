@@ -119,7 +119,7 @@ namespace FileSharperCore.Tests
 
         public string GetTestFilePath(string relativePath)
         {
-            return Path.Combine(this.CurrentTestExpectedResultsDirectoryPath, relativePath);
+            return Path.Combine(this.TestFilesDirectoryPath, relativePath);
         }
 
         public FileInfo GetTestFile(string relativePath)
