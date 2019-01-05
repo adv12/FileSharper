@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace FileSharperCore
 {
-    public class RunInfo
+    public class RunInfo : IRunInfo
     {
         private object m_Mutex = new object();
 

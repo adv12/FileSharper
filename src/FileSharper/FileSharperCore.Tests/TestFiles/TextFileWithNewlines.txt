@@ -1,0 +1,14 @@
+﻿This line is the first line.
+This line is the second line.
+
+There was an empty line.
+Here is the fourth non-empty line.
+
+
+Above are two empty lines.
+
+Empty lines again.
+Two lines together.
+
+This file ends in two newlines.
+

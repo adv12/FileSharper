@@ -11,28 +11,21 @@ namespace FileSharperCore
 {
     public abstract class PluggableItemBase : MarshalByRefObject, IPluggableItem
     {
-        private RunInfo m_RunInfo = null;
 
-        protected RunInfo RunInfo
+        protected IRunInfo RunInfo
         {
-            get
-            {
-                return m_RunInfo;
-            }
-            private set
-            {
-                m_RunInfo = value;
-            }
+            get;
+            private set;
         }
 
         protected CancellationToken CancellationToken
         {
-            get => this.RunInfo.CancellationToken;
+            get => RunInfo.CancellationToken;
         }
 
         protected IProgress<IEnumerable<ExceptionInfo>> ExceptionProgress
         {
-            get => this.RunInfo.ExceptionProgress;
+            get => RunInfo.ExceptionProgress;
         }
 
         public abstract string Category
@@ -55,7 +48,7 @@ namespace FileSharperCore
             get;
         }
 
-        public void Init(RunInfo inf)
+        public void Init(IRunInfo inf)
         {
             RunInfo = inf;
             LocalInit();
@@ -68,7 +61,7 @@ namespace FileSharperCore
 
         public void SetParameter(string name, object value)
         {
-            object parameters = this.Parameters;
+            object parameters = Parameters;
             Type t = parameters.GetType();
             PropertyInfo property = t.GetProperty(name);
             property.SetValue(parameters, value);

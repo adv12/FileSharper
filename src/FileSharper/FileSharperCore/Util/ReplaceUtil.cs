@@ -25,13 +25,16 @@ namespace FileSharperCore.Util
                 replacements[nameof(file.Extension)] = file.Extension;
                 replacements["NameWithoutExtension"] = Path.GetFileNameWithoutExtension(file.Name);
                 replacements["NameMinusExtension"] = replacements["NameWithoutExtension"];
-                replacements[nameof(file.Length)] = file.Length.ToString();
-                replacements[nameof(file.CreationTime)] = file.CreationTime.ToString(FilenameDateFormat);
-                replacements[nameof(file.CreationTimeUtc)] = file.CreationTimeUtc.ToString(FilenameDateFormat);
-                replacements[nameof(file.LastWriteTime)] = file.LastWriteTime.ToString(FilenameDateFormat);
-                replacements[nameof(file.LastWriteTimeUtc)] = file.LastWriteTimeUtc.ToString(FilenameDateFormat);
-                replacements[nameof(file.LastAccessTime)] = file.LastAccessTime.ToString(FilenameDateFormat);
-                replacements[nameof(file.LastAccessTimeUtc)] = file.LastAccessTimeUtc.ToString(FilenameDateFormat);
+                if (file.Exists)
+                {
+                    replacements[nameof(file.Length)] = file.Length.ToString();
+                    replacements[nameof(file.CreationTime)] = file.CreationTime.ToString(FilenameDateFormat);
+                    replacements[nameof(file.CreationTimeUtc)] = file.CreationTimeUtc.ToString(FilenameDateFormat);
+                    replacements[nameof(file.LastWriteTime)] = file.LastWriteTime.ToString(FilenameDateFormat);
+                    replacements[nameof(file.LastWriteTimeUtc)] = file.LastWriteTimeUtc.ToString(FilenameDateFormat);
+                    replacements[nameof(file.LastAccessTime)] = file.LastAccessTime.ToString(FilenameDateFormat);
+                    replacements[nameof(file.LastAccessTimeUtc)] = file.LastAccessTimeUtc.ToString(FilenameDateFormat);
+                }
             }
             replacements[nameof(DateTime.Now)] = DateTime.Now.ToString(FilenameDateFormat);
             foreach (Environment.SpecialFolder folder in Enum.GetValues(typeof(Environment.SpecialFolder)))

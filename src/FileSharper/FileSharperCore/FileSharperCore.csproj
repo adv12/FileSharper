@@ -141,6 +141,7 @@
     <Compile Include="IPluggableItemWithColumns.cs" />
     <Compile Include="IPluggableItemWithColumnsAndCacheTypes.cs" />
     <Compile Include="IProcessor.cs" />
+    <Compile Include="IRunInfo.cs" />
     <Compile Include="MatchResult.cs" />
     <Compile Include="Conditions\NotCondition.cs" />
     <Compile Include="FieldSourceCatalog.cs" />

@@ -119,12 +119,32 @@ namespace FileSharperCore.Tests
 
         public string GetTestFilePath(string relativePath)
         {
-            return Path.Combine(this.TestFilesDirectoryPath, relativePath);
+            return Path.Combine(TestFilesDirectoryPath, relativePath);
         }
 
         public FileInfo GetTestFile(string relativePath)
         {
             return new FileInfo(GetTestFilePath(relativePath));
+        }
+
+        public string GetCurrentTestExpectedResultsFilePath(string relativePath)
+        {
+            return Path.Combine(CurrentTestExpectedResultsDirectoryPath, relativePath);
+        }
+
+        public FileInfo GetCurrentTestExpectedResultsFile(string relativePath)
+        {
+            return new FileInfo(GetCurrentTestExpectedResultsFilePath(relativePath));
+        }
+
+        public string GetCurrentTestResultsFilePath(string relativePath)
+        {
+            return Path.Combine(CurrentTestResultsDirectoryPath, relativePath);
+        }
+
+        public FileInfo GetCurrentTestResultsFile(string relativePath)
+        {
+            return new FileInfo(GetCurrentTestResultsFilePath(relativePath));
         }
 
         [TestCleanup]

@@ -2,10 +2,6 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-
 namespace FileSharperCore
 {
     public interface IPluggableItem
@@ -30,7 +26,7 @@ namespace FileSharperCore
             get;
         }
 
-        void Init(RunInfo inf);
+        void Init(IRunInfo inf);
 
         void Cleanup();
 
