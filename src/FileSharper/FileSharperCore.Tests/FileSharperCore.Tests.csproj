@@ -69,7 +69,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ExpectedResults\CsvProcessor_LogsData\out.csv" />
+    <None Include="ExpectedResults\CsvProcessor_ClassicMacOS\ClassicMacOS.csv" />
+    <None Include="ExpectedResults\CsvProcessor_FullPath\FullPath.csv" />
+    <None Include="ExpectedResults\CsvProcessor_NameThenDirectory\NameThenDirectory.csv" />
+    <None Include="ExpectedResults\CsvProcessor_Unix\Unix.csv" />
+    <None Include="ExpectedResults\CsvProcessor_Windows\Windows.csv" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

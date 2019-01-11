@@ -14,7 +14,37 @@ namespace FileSharperCore.Tests.Processors
     public class CsvProcessorTests : TestBase
     {
         [TestMethod]
-        public void CsvProcessor_LogsData()
+        public void CsvProcessor_Windows()
+        {
+            TestSubcase("Windows.csv", PathFormat.DirectoryThenName, LineEndingsNoFile.Windows, false);
+        }
+
+        [TestMethod]
+        public void CsvProcessor_Unix()
+        {
+            TestSubcase("Unix.csv", PathFormat.DirectoryThenName, LineEndingsNoFile.Unix, false);
+        }
+
+        [TestMethod]
+        public void CsvProcessor_ClassicMacOS()
+        {
+            TestSubcase("ClassicMacOS.csv", PathFormat.DirectoryThenName, LineEndingsNoFile.ClassicMacOS, false);
+        }
+
+        [TestMethod]
+        public void CsvProcessor_FullPath()
+        {
+            TestSubcase("FullPath.csv", PathFormat.FullPath, LineEndingsNoFile.Windows, false);
+        }
+
+        [TestMethod]
+        public void CsvProcessor_NameThenDirectory()
+        {
+            TestSubcase("NameThenDirectory.csv", PathFormat.NameThenDirectory, LineEndingsNoFile.Windows, false);
+        }
+
+        public void TestSubcase(string outputFilename, PathFormat pathFormat,
+            LineEndingsNoFile lineEndings, bool autoOpen)
         {
             Mock<ICondition> mockCondition = new Mock<ICondition>();
             Mock<IFieldSource> mockFieldSource = new Mock<IFieldSource>();
@@ -26,7 +56,10 @@ namespace FileSharperCore.Tests.Processors
             mockRunInfo.Setup(r => r.Condition).Returns(mockCondition.Object);
             mockRunInfo.Setup(r => r.FieldSources).Returns(new IFieldSource[] { mockFieldSource.Object });
             CsvProcessor csvProcessor = new CsvProcessor();
-            csvProcessor.SetParameter("Filename", GetCurrentTestResultsFilePath("out.csv"));
+            csvProcessor.SetParameter("Filename", GetCurrentTestResultsFilePath(outputFilename));
+            csvProcessor.SetParameter("PathFormat", pathFormat);
+            csvProcessor.SetParameter("LineEndings", lineEndings);
+            csvProcessor.SetParameter("AutoOpen", autoOpen);
             csvProcessor.Init(mockRunInfo.Object);
             FileInfo file1 = GetTestFile("BasicTextFile.txt");
             FileInfo file2 = GetTestFile("TextFileWithNewlines.txt");

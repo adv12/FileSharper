@@ -49,6 +49,7 @@ namespace FileSharperCore.Processors
             m_Filename = ReplaceUtil.Replace(m_Parameters.Filename, (FileInfo)null);
             TextWriter tw = new StreamWriter(m_Filename);
             string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
+            tw.NewLine = lineEnding;
             m_CsvWriter = new CsvWriter(tw);
             List<string> headers = new List<string>();
             switch (m_Parameters.PathFormat)
