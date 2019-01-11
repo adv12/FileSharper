@@ -3,10 +3,8 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using FileSharperCore.Util;
 using Microsoft.VisualBasic.FileIO;
 
 namespace FileSharperCore.Processors
@@ -34,7 +32,6 @@ namespace FileSharperCore.Processors
             {
                 FileSystem.DeleteFile(outFile, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
                 UICancelOption.DoNothing);
-                copied = true;
             }
             try
             {

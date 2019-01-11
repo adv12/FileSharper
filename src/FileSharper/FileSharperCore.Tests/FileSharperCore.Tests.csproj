@@ -64,6 +64,7 @@
     <Compile Include="Processors\CommandLineProcessorTests.cs" />
     <Compile Include="Processors\CsvProcessorTests.cs" />
     <Compile Include="Processors\DoNothingProcessorTests.cs" />
+    <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -80,6 +81,12 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="ExpectedResults\CommandLineProcessor_RunsCommandLine\BasicTextFile.txt" />
+    <Content Include="ExpectedResults\ProcessorBase_CopyAndDeleteTempFile_DoesNotOverwrite\out.txt" />
+    <Content Include="ExpectedResults\ProcessorBase_CopyAndDeleteTempFile_MovesToRecycleBin\out.txt" />
+    <Content Include="ExpectedResults\ProcessorBase_CopyAndDeleteTempFile_Overwrites\out.txt" />
+    <Content Include="ExpectedResults\ProcessorBase_CopyAndDeleteTempFile_Success\out.txt" />
+    <Content Include="ExpectedResults\ProcessorBase_GetProcessingResultFromCopyAndDeleteTempFile_Failure\out.txt" />
+    <Content Include="ExpectedResults\ProcessorBase_GetProcessingResultFromCopyAndDeleteTempFile_Successs\out.txt" />
     <Content Include="TestFiles\BasicTextFile.txt" />
     <Content Include="TestFiles\TextFileWithNewlines.txt" />
   </ItemGroup>
