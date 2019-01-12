@@ -67,6 +67,7 @@
     <Compile Include="Processors\MultiProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
+    <Compile Include="Processors\ZipProcessorTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +77,20 @@
     <None Include="ExpectedResults\CsvProcessor_NameThenDirectory\NameThenDirectory.csv" />
     <None Include="ExpectedResults\CsvProcessor_Unix\Unix.csv" />
     <None Include="ExpectedResults\CsvProcessor_Windows\Windows.csv" />
+    <None Include="ExpectedResults\ZipProcessor_GeneratedFiles_PerGeneratedFile\TextFile1ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_GeneratedFiles_PerGeneratedFile\TextFile2ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_GeneratedFiles_PerGeneratedFile\TextFile3ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_GeneratedFiles_PerInputFile\BasicTextFile.zip" />
+    <None Include="ExpectedResults\ZipProcessor_OneZipPerSearch\output.zip" />
+    <None Include="ExpectedResults\ZipProcessor_OneZipPerSearch_AddContainingFolder\output.zip" />
+    <None Include="ExpectedResults\ZipProcessor_OneZipPerSearch_DoesNotOverwrite\output.zip" />
+    <None Include="ExpectedResults\ZipProcessor_OneZipPerSearch_Overwrites\output.zip" />
+    <None Include="ExpectedResults\ZipProcessor_SingleFiles\TextFile1ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_SingleFiles\TextFile2ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_SingleFiles\TextFile3ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_SingleFiles_AddContainingFolder\TextFile1ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_SingleFiles_AddContainingFolder\TextFile2ForZip.zip" />
+    <None Include="ExpectedResults\ZipProcessor_SingleFiles_AddContainingFolder\TextFile3ForZip.zip" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +111,9 @@
     <Content Include="TestFiles\BasicTextFile.txt" />
     <Content Include="TestFiles\Lipsum.txt" />
     <Content Include="TestFiles\TextFileWithNewlines.txt" />
+    <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\Subdir3\TextFile2ForZip.txt" />
+    <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\Subdir3\TextFile3ForZip.txt" />
+    <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\TextFile1ForZip.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

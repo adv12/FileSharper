@@ -112,7 +112,11 @@ namespace FileSharperCore.Processors
             base.ProcessAggregated(token);
             if (m_Parameters.OneZipFilePer == ProcessorScope.Search)
             {
-                GenerateZip(null, token);
+                FileInfo generatedFile = GenerateZip(null, token);
+                if (generatedFile == null)
+                {
+                    throw new IOException("File already existed");
+                }
             }
         }
 
@@ -180,8 +184,12 @@ namespace FileSharperCore.Processors
                         }
                     }
                 }
+                return new FileInfo(outputPath);
             }
-            return new FileInfo(outputPath);
+            else
+            {
+                return null;
+            }
         }
     }
 }
