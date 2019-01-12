@@ -65,7 +65,7 @@ namespace FileSharperCore.Processors
                         {
                             if (message.Length > 0)
                             {
-                                message.Append(" ");
+                                message.Append(" | ");
                             }
                             message.Append(result.Message);
                         }
@@ -73,12 +73,18 @@ namespace FileSharperCore.Processors
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
+                    resultType = ProcessingResultType.Failure;
+                    if (message.Length > 0)
+                    {
+                        message.Append(" | ");
+                    }
+                    message.Append(ex.Message);
                     RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, originalFile));
                 }
             }
             if (message.Length == 0)
             {
-                message.Append("Success");
+                message.Append(resultType.ToString());
             }
             return new ProcessingResult(resultType, message.ToString(), outputFiles.ToArray());
         }

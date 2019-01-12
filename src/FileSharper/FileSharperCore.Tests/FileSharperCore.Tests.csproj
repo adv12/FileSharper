@@ -64,6 +64,7 @@
     <Compile Include="Processors\CommandLineProcessorTests.cs" />
     <Compile Include="Processors\CsvProcessorTests.cs" />
     <Compile Include="Processors\DoNothingProcessorTests.cs" />
+    <Compile Include="Processors\MultiProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
     <Compile Include="TestBase.cs" />

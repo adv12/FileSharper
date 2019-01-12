@@ -49,7 +49,7 @@ namespace FileSharperCore.Processors
                                 }
                                 if (message.Length > 0)
                                 {
-                                    message.Append(" ");
+                                    message.Append(" | ");
                                 }
                                 message.Append(result.Message);
                             }
@@ -59,7 +59,7 @@ namespace FileSharperCore.Processors
                             RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, f));
                             if (message.Length > 0)
                             {
-                                message.Append(" ");
+                                message.Append(" | ");
                             }
                             message.Append(ex.Message);
                             resultType = ProcessingResultType.Failure;

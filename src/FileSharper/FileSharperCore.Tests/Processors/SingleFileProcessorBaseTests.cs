@@ -104,7 +104,7 @@ namespace FileSharperCore.Tests.Processors
                 values, generatedFiles, ProcessInput.GeneratedFiles, CancellationToken.None);
             processor.Cleanup();
             Assert.AreEqual(ProcessingResultType.Success, result.Type);
-            Assert.AreEqual("Success! Success! Success!", result.Message);
+            Assert.AreEqual("Success! | Success! | Success!", result.Message);
             Assert.AreEqual(9, result.OutputFiles.Length);
             for (int i = 1; i < 9; i++)
             {
@@ -131,7 +131,7 @@ namespace FileSharperCore.Tests.Processors
                 values, generatedFiles, ProcessInput.GeneratedFiles, CancellationToken.None);
             processor.Cleanup();
             Assert.AreEqual(ProcessingResultType.Failure, result.Type);
-            Assert.AreEqual("Failure! Failure! Failure!", result.Message);
+            Assert.AreEqual("Failure! | Failure! | Failure!", result.Message);
             Assert.AreEqual(9, result.OutputFiles.Length);
             for (int i = 1; i < 9; i++)
             {
@@ -158,8 +158,8 @@ namespace FileSharperCore.Tests.Processors
                 values, generatedFiles, ProcessInput.GeneratedFiles, CancellationToken.None);
             processor.Cleanup();
             Assert.AreEqual(ProcessingResultType.Failure, result.Type);
-            Assert.AreEqual("Something went wrong in Process()! " + 
-                "Something went wrong in Process()! " + 
+            Assert.AreEqual("Something went wrong in Process()! | " + 
+                "Something went wrong in Process()! | " + 
                 "Something went wrong in Process()!", result.Message);
             Assert.AreEqual(0, result.OutputFiles.Length);
         }
