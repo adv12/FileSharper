@@ -35,6 +35,10 @@ namespace FileSharperCore.Processors
                             ProcessingResult result = Process(f, values, token);
                             if (result != null)
                             {
+                                if (result.Type == ProcessingResultType.Failure)
+                                {
+                                    resultType = ProcessingResultType.Failure;
+                                }
                                 if (result.OutputFiles != null && result.OutputFiles.Length > 0)
                                 {
                                     resultFiles.AddRange(result.OutputFiles);
@@ -43,6 +47,11 @@ namespace FileSharperCore.Processors
                                 {
                                     resultFiles.Add(f);
                                 }
+                                if (message.Length > 0)
+                                {
+                                    message.Append(" ");
+                                }
+                                message.Append(result.Message);
                             }
                         }
                         catch (Exception ex) when (!(ex is OperationCanceledException))
@@ -76,15 +85,18 @@ namespace FileSharperCore.Processors
                     {
                         resultFiles.Add(originalFile);
                     }
+                    message.Append(tmp.Message);
                 }
                 catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     resultType = ProcessingResultType.Failure;
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, originalFile));
+                    message.Append(ex.Message);
                 }
             }
             if (message.Length == 0)
             {
-                message.Append("Success");
+                message.Append(resultType.ToString());
             }
             return new ProcessingResult(resultType, message.ToString(), resultFiles.ToArray());
         }

@@ -65,6 +65,7 @@
     <Compile Include="Processors\CsvProcessorTests.cs" />
     <Compile Include="Processors\DoNothingProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
+    <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -92,6 +93,7 @@
     <Content Include="ExpectedResults\ProcessorBase_GetProcessingResultFromCopyAndDeleteTempFile_Failure\out.txt" />
     <Content Include="ExpectedResults\ProcessorBase_GetProcessingResultFromCopyAndDeleteTempFile_Successs\out.txt" />
     <Content Include="TestFiles\BasicTextFile.txt" />
+    <Content Include="TestFiles\Lipsum.txt" />
     <Content Include="TestFiles\TextFileWithNewlines.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
