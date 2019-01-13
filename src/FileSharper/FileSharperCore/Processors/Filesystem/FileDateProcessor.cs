@@ -50,7 +50,7 @@ namespace FileSharperCore.Processors.Filesystem
             catch (Exception ex)
             {
                 RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
-                return new ProcessingResult(ProcessingResultType.Failure, "Failure", new FileInfo[0]);
+                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }
