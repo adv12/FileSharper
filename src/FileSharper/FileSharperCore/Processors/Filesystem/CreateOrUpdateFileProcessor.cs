@@ -3,7 +3,6 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
@@ -60,7 +59,7 @@ namespace FileSharperCore.Processors.Filesystem
             {
                 try
                 {
-                    File.Create(newPath);
+                    File.Create(newPath).Close();
                     resultFiles = new FileInfo[] { new FileInfo(newPath) };
                     message = "Successfully created file";
                 }

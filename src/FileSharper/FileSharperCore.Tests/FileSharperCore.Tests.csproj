@@ -65,6 +65,7 @@
     <Compile Include="Processors\CsvProcessorTests.cs" />
     <Compile Include="Processors\DoNothingProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\CopyFileProcessorTests.cs" />
+    <Compile Include="Processors\Filesystem\CreateOrUpdateFileProcessorTests.cs" />
     <Compile Include="Processors\MultiProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
@@ -106,6 +107,9 @@
     <Content Include="ExpectedResults\CopyFileProcessorTests\DoesNotOverwrite\out.txt" />
     <Content Include="ExpectedResults\CopyFileProcessorTests\Overwrites\out.txt" />
     <Content Include="ExpectedResults\CopyFileProcessorTests\Success\out.txt" />
+    <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\CreatesFile\out.txt" />
+    <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\DoesNotUpdateDate\out.txt" />
+    <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\UpdatesDate\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_DoesNotOverwrite\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_MovesToRecycleBin\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_Overwrites\out.txt" />
