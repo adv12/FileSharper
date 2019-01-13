@@ -13,7 +13,7 @@ namespace FileSharperCore.Tests.Processors
     public class ProcessorBaseTests : TestBase
     {
         [TestMethod]
-        public void ProcessorBase_CopyAndDeleteTempFile_Success()
+        public void CopyAndDeleteTempFile_Success()
         {
             Mock<ProcessorBase> mockProcessor = new Mock<ProcessorBase>();
             ProcessorBase processor = mockProcessor.Object;
@@ -24,7 +24,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ProcessorBase_CopyAndDeleteTempFile_Overwrites()
+        public void CopyAndDeleteTempFile_Overwrites()
         {
             Mock<ProcessorBase> mockProcessor = new Mock<ProcessorBase>();
             ProcessorBase processor = mockProcessor.Object;
@@ -38,7 +38,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ProcessorBase_CopyAndDeleteTempFile_DoesNotOverwrite()
+        public void CopyAndDeleteTempFile_DoesNotOverwrite()
         {
             Mock<ProcessorBase> mockProcessor = new Mock<ProcessorBase>();
             ProcessorBase processor = mockProcessor.Object;
@@ -53,7 +53,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ProcessorBase_CopyAndDeleteTempFile_MovesToRecycleBin()
+        public void CopyAndDeleteTempFile_MovesToRecycleBin()
         {
             Mock<ProcessorBase> mockProcessor = new Mock<ProcessorBase>();
             ProcessorBase processor = mockProcessor.Object;
@@ -68,7 +68,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ProcessorBase_GetProcessingResultFromCopyAndDeleteTempFile_Successs()
+        public void GetProcessingResultFromCopyAndDeleteTempFile_Successs()
         {
             Mock<ProcessorBase> mockProcessor = new Mock<ProcessorBase>();
             ProcessorBase processor = mockProcessor.Object;
@@ -82,7 +82,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ProcessorBase_GetProcessingResultFromCopyAndDeleteTempFile_Failure()
+        public void GetProcessingResultFromCopyAndDeleteTempFile_Failure()
         {
             Mock<ProcessorBase> mockProcessor = new Mock<ProcessorBase>();
             ProcessorBase processor = mockProcessor.Object;

@@ -77,13 +77,9 @@ namespace FileSharperCore.Processors
                     {
                         resultType = ProcessingResultType.Failure;
                     }
-                    if (tmp.OutputFiles != null && tmp.OutputFiles.Length > 0)
+                    if (tmp.OutputFiles != null)
                     {
                         resultFiles.AddRange(tmp.OutputFiles);
-                    }
-                    else
-                    {
-                        resultFiles.Add(originalFile);
                     }
                     message.Append(tmp.Message);
                 }

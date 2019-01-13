@@ -27,7 +27,7 @@ namespace FileSharperCore.Tests
 
         public DirectoryInfo ExpectedResultsDirectory => new DirectoryInfo(ExpectedResultsDirectoryPath);
 
-        public string CurrentTestExpectedResultsDirectoryPath => Path.Combine(ExpectedResultsDirectoryPath, TestContext.TestName);
+        public string CurrentTestExpectedResultsDirectoryPath => Path.Combine(ExpectedResultsDirectoryPath, this.GetType().Name, TestContext.TestName);
 
         public DirectoryInfo CurrentTestExpectedResultsDirectory => new DirectoryInfo(CurrentTestExpectedResultsDirectoryPath);
 
@@ -35,7 +35,7 @@ namespace FileSharperCore.Tests
 
         public DirectoryInfo ResultsDirectory => new DirectoryInfo(ResultsDirectoryPath);
 
-        public string CurrentTestResultsDirectoryPath => Path.Combine(ResultsDirectoryPath, TestContext.TestName);
+        public string CurrentTestResultsDirectoryPath => Path.Combine(ResultsDirectoryPath, this.GetType().Name, TestContext.TestName);
 
         public DirectoryInfo CurrentTestResultsDirectory => new DirectoryInfo(CurrentTestResultsDirectoryPath);
 
@@ -76,7 +76,7 @@ namespace FileSharperCore.Tests
 
         public void AssertDirectoryEquality(DirectoryInfo expected, DirectoryInfo result)
         {
-            if (expected.Exists)
+            if (expected.Exists || (result.Exists && DirectoryHasFiles(result)))
             {
                 Assert.IsTrue(result.Exists, $"Missing matching results directory {result.FullName} for expected directory {expected.FullName}");
                 FileInfo[] expectedFiles = expected.GetFiles();
@@ -98,6 +98,11 @@ namespace FileSharperCore.Tests
                     AssertDirectoryEquality(expectedDirectory, resultDirectory);
                 }
             }
+        }
+
+        public bool DirectoryHasFiles(DirectoryInfo dir)
+        {
+            return Directory.EnumerateFileSystemEntries(dir.FullName).Any();
         }
 
         public void AssertFileEquality(FileInfo expected, FileInfo result)

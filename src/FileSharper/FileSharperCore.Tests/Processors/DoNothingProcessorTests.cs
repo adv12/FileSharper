@@ -13,7 +13,7 @@ namespace FileSharperCore.Tests.Processors
     public class DoNothingProcessorTests: TestBase
     {
         [TestMethod]
-        public void DoNothingProcessor_Succeeds()
+        public void Succeeds()
         {
             DoNothingProcessor p = new DoNothingProcessor();
             p.Init(RunInfo);

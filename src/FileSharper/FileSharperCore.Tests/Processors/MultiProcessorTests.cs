@@ -16,7 +16,7 @@ namespace FileSharperCore.Tests.Processors
     public class MultiProcessorTests : TestBase
     {
         [TestMethod]
-        public void MultiProcessor_AllSuccess()
+        public void AllSuccess()
         {
             Mock<IProcessor> mockProcessor1 = new Mock<IProcessor>();
             Mock<IProcessor> mockProcessor2 = new Mock<IProcessor>();
@@ -66,7 +66,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void MultiProcessor_SingleFailure()
+        public void SingleFailure()
         {
             Mock<IProcessor> mockProcessor1 = new Mock<IProcessor>();
             Mock<IProcessor> mockProcessor2 = new Mock<IProcessor>();
@@ -116,7 +116,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void MultiProcessor_SingleException()
+        public void SingleException()
         {
             Mock<IProcessor> mockProcessor1 = new Mock<IProcessor>();
             Mock<IProcessor> mockProcessor2 = new Mock<IProcessor>();
@@ -165,7 +165,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void MultiProcessor_OriginalFile()
+        public void OriginalFile()
         {
             Mock<IProcessor> mockProcessor1 = new Mock<IProcessor>();
             Mock<IProcessor> mockProcessor2 = new Mock<IProcessor>();

@@ -15,7 +15,7 @@ namespace FileSharperCore.Tests.Processors
     public class SingleFileProcessorBaseTests : TestBase
     {
         [TestMethod]
-        public void SingleFileProcessorBase_OriginalFile_Success()
+        public void OriginalFile_Success()
         {
             Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
             mockProcessor.CallBase = true;
@@ -40,7 +40,28 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void SingleFileProcessorBase_OriginalFile_Failure()
+        public void OriginalFile_NoOutputFiles()
+        {
+            Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
+            mockProcessor.CallBase = true;
+            string[] values = new string[] { "foo", "bar", "baz" };
+            FileInfo file1 = GetTestFile("BasicTextFile.txt");
+            FileInfo file2 = GetTestFile("TextFileWithNewlines.txt");
+            FileInfo[] outputFiles = new FileInfo[] { file2, file2, file2 };
+            mockProcessor.Setup(p => p.Process(file1, values, CancellationToken.None))
+                .Returns(new ProcessingResult(ProcessingResultType.Success, "Success!", new FileInfo[0]));
+            SingleFileProcessorBase processor = mockProcessor.Object;
+            processor.Init(RunInfo);
+            ProcessingResult result = processor.Process(file1, MatchResultType.Yes,
+                values, new FileInfo[0], ProcessInput.OriginalFile, CancellationToken.None);
+            processor.Cleanup();
+            Assert.AreEqual(ProcessingResultType.Success, result.Type);
+            Assert.AreEqual("Success!", result.Message);
+            Assert.AreEqual(0, result.OutputFiles.Length);
+        }
+
+        [TestMethod]
+        public void OriginalFile_Failure()
         {
             Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
             mockProcessor.CallBase = true;
@@ -65,7 +86,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void SingleFileProcessorBase_OriginalFile_Exception()
+        public void OriginalFile_Exception()
         {
             Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
             mockProcessor.CallBase = true;
@@ -86,7 +107,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void SingleFileProcessorBase_GeneratedFiles_Success()
+        public void GeneratedFiles_Success()
         {
             Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
             mockProcessor.CallBase = true;
@@ -113,7 +134,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void SingleFileProcessorBase_GeneratedFiles_Failure()
+        public void GeneratedFiles_Failure()
         {
             Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
             mockProcessor.CallBase = true;
@@ -140,7 +161,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void SingleFileProcessorBase_GeneratedFiles_Exception()
+        public void GeneratedFiles_Exception()
         {
             Mock<SingleFileProcessorBase> mockProcessor = new Mock<SingleFileProcessorBase>();
             mockProcessor.CallBase = true;

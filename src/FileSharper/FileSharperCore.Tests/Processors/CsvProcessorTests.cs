@@ -14,31 +14,31 @@ namespace FileSharperCore.Tests.Processors
     public class CsvProcessorTests : TestBase
     {
         [TestMethod]
-        public void CsvProcessor_Windows()
+        public void Windows()
         {
             TestSubcase("Windows.csv", PathFormat.DirectoryThenName, LineEndingsNoFile.Windows, false);
         }
 
         [TestMethod]
-        public void CsvProcessor_Unix()
+        public void Unix()
         {
             TestSubcase("Unix.csv", PathFormat.DirectoryThenName, LineEndingsNoFile.Unix, false);
         }
 
         [TestMethod]
-        public void CsvProcessor_ClassicMacOS()
+        public void ClassicMacOS()
         {
             TestSubcase("ClassicMacOS.csv", PathFormat.DirectoryThenName, LineEndingsNoFile.ClassicMacOS, false);
         }
 
         [TestMethod]
-        public void CsvProcessor_FullPath()
+        public void FullPath()
         {
             TestSubcase("FullPath.csv", PathFormat.FullPath, LineEndingsNoFile.Windows, false);
         }
 
         [TestMethod]
-        public void CsvProcessor_NameThenDirectory()
+        public void NameThenDirectory()
         {
             TestSubcase("NameThenDirectory.csv", PathFormat.NameThenDirectory, LineEndingsNoFile.Windows, false);
         }

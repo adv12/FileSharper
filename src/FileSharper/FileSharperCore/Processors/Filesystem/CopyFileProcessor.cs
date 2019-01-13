@@ -3,7 +3,6 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using FileSharperCore.Util;
@@ -35,16 +34,25 @@ namespace FileSharperCore.Processors.Filesystem
             CancellationToken token)
         {
             string newPath = ReplaceUtil.Replace(m_Parameters.NewPath, file);
+            string message = "Success";
+            FileInfo result = null;
             try
             {
                 string dirPath = Path.GetDirectoryName(newPath);
                 Directory.CreateDirectory(dirPath);
-                file.CopyTo(newPath, m_Parameters.Overwrite);
+                if (m_Parameters.Overwrite || !File.Exists(newPath))
+                {
+                    result = file.CopyTo(newPath, m_Parameters.Overwrite);
+                }
             }
             catch (Exception ex)
             {
                 RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
-                return new ProcessingResult(ProcessingResultType.Failure, ex.Message, new FileInfo[0]);
+                message = ex.Message;
+            }
+            if (result == null)
+            {
+                return new ProcessingResult(ProcessingResultType.Failure, message ?? "Failure", new FileInfo[0]);
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { new FileInfo(newPath) });
         }

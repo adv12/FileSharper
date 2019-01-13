@@ -15,7 +15,7 @@ namespace FileSharperCore.Tests.Processors
     {
 
         [TestMethod]
-        public void CommandLineProcessor_RunsCommandLine()
+        public void RunsCommandLine()
         {
             CommandLineProcessor p = new CommandLineProcessor();
             p.SetParameter("CommandLine", $"copy \"{{FullName}}\" \"{CurrentTestResultsDirectoryPath}\"");
@@ -29,7 +29,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void CommandLineProcessor_WaitsOrNot()
+        public void WaitsOrNot()
         {
             CommandLineProcessor p = new CommandLineProcessor();
             // File isn't used; just a dummy.

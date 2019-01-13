@@ -14,7 +14,7 @@ namespace FileSharperCore.Tests.Processors
     public class ZipProcessorTests : TestBase
     {
         [TestMethod]
-        public void ZipProcessor_SingleFiles()
+        public void SingleFiles()
         {
             ZipProcessor processor = new ZipProcessor();
             processor.SetParameter("OneZipFilePer", ProcessorScope.InputFile);
@@ -39,7 +39,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_SingleFiles_AddContainingFolder()
+        public void SingleFiles_AddContainingFolder()
         {
             ZipProcessor processor = new ZipProcessor();
             processor.SetParameter("OneZipFilePer", ProcessorScope.InputFile);
@@ -64,7 +64,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_OneZipPerSearch()
+        public void OneZipPerSearch()
         {
             ZipProcessor processor = new ZipProcessor();
             processor.SetParameter("OneZipFilePer", ProcessorScope.Search);
@@ -89,7 +89,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_OneZipPerSearch_AddContainingFolder()
+        public void OneZipPerSearch_AddContainingFolder()
         {
             ZipProcessor processor = new ZipProcessor();
             processor.SetParameter("OneZipFilePer", ProcessorScope.Search);
@@ -114,7 +114,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_OneZipPerSearch_Overwrites()
+        public void OneZipPerSearch_Overwrites()
         {
             ZipProcessor processor = new ZipProcessor();
             string outputPath = Path.Combine(CurrentTestResultsDirectoryPath, "output.zip");
@@ -140,7 +140,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_OneZipPerSearch_DoesNotOverwrite()
+        public void OneZipPerSearch_DoesNotOverwrite()
         {
             ZipProcessor processor = new ZipProcessor();
             string outputPath = Path.Combine(CurrentTestResultsDirectoryPath, "output.zip");
@@ -175,7 +175,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_GeneratedFiles_PerInputFile()
+        public void GeneratedFiles_PerInputFile()
         {
             ZipProcessor processor = new ZipProcessor();
             processor.SetParameter("OneZipFilePer", ProcessorScope.InputFile);
@@ -197,7 +197,7 @@ namespace FileSharperCore.Tests.Processors
         }
 
         [TestMethod]
-        public void ZipProcessor_GeneratedFiles_PerGeneratedFile()
+        public void GeneratedFiles_PerGeneratedFile()
         {
             ZipProcessor processor = new ZipProcessor();
             processor.SetParameter("OneZipFilePer", ProcessorScope.GeneratedOutputFile);
