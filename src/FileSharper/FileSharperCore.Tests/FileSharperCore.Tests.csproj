@@ -109,6 +109,7 @@
     <Content Include="ExpectedResults\CopyFileProcessorTests\Success\out.txt" />
     <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\CreatesFile\out.txt" />
     <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\DoesNotUpdateDate\out.txt" />
+    <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\ExceptionUpdatingDate\out.txt" />
     <Content Include="ExpectedResults\CreateOrUpdateFileProcessorTests\UpdatesDate\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_DoesNotOverwrite\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_MovesToRecycleBin\out.txt" />

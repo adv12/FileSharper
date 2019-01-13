@@ -68,5 +68,29 @@ namespace FileSharperCore.Tests.Processors.Filesystem
             Assert.AreEqual(0, result.OutputFiles.Length);
             Assert.AreNotEqual(DateTime.Now.Year, File.GetLastWriteTime(outputPath).Year);
         }
+
+        [TestMethod]
+        public void ExceptionUpdatingDate()
+        {
+            CreateOrUpdateFileProcessor processor = new CreateOrUpdateFileProcessor();
+            string outputPath = GetCurrentTestResultsFilePath("out.txt");
+            File.WriteAllText(outputPath, "This file will have its date updated.");
+            File.SetLastWriteTime(outputPath, DateTime.Now.AddYears(-2));
+            processor.SetParameter("FileName", outputPath);
+            processor.SetParameter("UpdateModificationDateIfExists", true);
+            ProcessingResult result;
+            using (FileStream stream = File.OpenRead(outputPath))
+            {
+                processor.Init(RunInfo);
+                // File is irrelevant
+                FileInfo file = GetTestFile("BasicTextFile.txt");
+                result = processor.Process(file, MatchResultType.Yes,
+                    new string[0], new FileInfo[0], ProcessInput.OriginalFile, CancellationToken.None);
+                processor.Cleanup();
+            }
+            Assert.AreEqual(ProcessingResultType.Failure, result.Type);
+            Assert.AreEqual(0, result.OutputFiles.Length);
+            Assert.AreNotEqual(DateTime.Now.Year, File.GetLastWriteTime(outputPath).Year);
+        }
     }
 }
