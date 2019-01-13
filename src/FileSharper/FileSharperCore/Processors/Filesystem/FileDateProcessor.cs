@@ -3,7 +3,6 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -33,17 +32,25 @@ namespace FileSharperCore.Processors.Filesystem
         public override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
-            switch (m_Parameters.FileDateType)
+            try
             {
-                case FileDateType.Accessed:
-                    File.SetLastAccessTime(file.FullName, m_Parameters.Date);
-                    break;
-                case FileDateType.Created:
-                    File.SetCreationTime(file.FullName, m_Parameters.Date);
-                    break;
-                case FileDateType.Modified:
-                    File.SetLastWriteTime(file.FullName, m_Parameters.Date);
-                    break;
+                switch (m_Parameters.FileDateType)
+                {
+                    case FileDateType.Accessed:
+                        File.SetLastAccessTime(file.FullName, m_Parameters.Date);
+                        break;
+                    case FileDateType.Created:
+                        File.SetCreationTime(file.FullName, m_Parameters.Date);
+                        break;
+                    case FileDateType.Modified:
+                        File.SetLastWriteTime(file.FullName, m_Parameters.Date);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
+                return new ProcessingResult(ProcessingResultType.Failure, "Failure", new FileInfo[0]);
             }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
         }

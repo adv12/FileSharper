@@ -23,8 +23,16 @@ namespace FileSharperCore.Processors.Filesystem
         public override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
-            FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
-                UICancelOption.DoNothing);
+            try
+            {
+                FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
+                    UICancelOption.DoNothing);
+            }
+            catch (Exception ex)
+            {
+                RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
+                return new ProcessingResult(ProcessingResultType.Failure, "Failure", new FileInfo[0]);
+            }
             return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[0]);
         }
     }
