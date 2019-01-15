@@ -105,7 +105,7 @@ namespace FileSharperCore.Tests
             return Directory.EnumerateFileSystemEntries(dir.FullName).Any();
         }
 
-        public void AssertFileEquality(FileInfo expected, FileInfo result)
+        public virtual void AssertFileEquality(FileInfo expected, FileInfo result)
         {
             Assert.AreEqual(expected.Length, result.Length, $"Expected and result file have different lengths.  Expected: {expected.FullName}; Result: {result.FullName}");
             using (FileStream expectedStream = expected.OpenRead())

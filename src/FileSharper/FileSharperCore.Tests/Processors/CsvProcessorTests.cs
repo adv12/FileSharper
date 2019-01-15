@@ -2,8 +2,10 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
+using System;
 using System.IO;
 using System.Threading;
+using CsvHelper;
 using FileSharperCore.Processors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -80,6 +82,55 @@ namespace FileSharperCore.Tests.Processors
             }
             Assert.AreEqual(ProcessingResultType.Success, result1.Type);
             Assert.AreEqual(ProcessingResultType.Success, result2.Type);
+        }
+
+        public override void AssertFileEquality(FileInfo expected, FileInfo result)
+        {
+            using (CsvReader expectedReader = new CsvReader(new StreamReader(expected.FullName)))
+            using (CsvReader resultReader = new CsvReader(new StreamReader(result.FullName)))
+            {
+                expectedReader.Read();
+                expectedReader.ReadHeader();
+                resultReader.Read();
+                resultReader.ReadHeader();
+                try
+                {
+                    int numCols = expectedReader.Context.HeaderRecord.Length;
+                    int pathIndex = Array.IndexOf(expectedReader.Context.HeaderRecord, "Path");
+                    if (pathIndex == -1)
+                    {
+                        pathIndex = Array.IndexOf(expectedReader.Context.HeaderRecord, "Filename");
+                    }
+                    Assert.AreEqual(numCols, resultReader.Context.HeaderRecord.Length);
+                    while (expectedReader.Read())
+                    {
+                        Assert.IsTrue(resultReader.Read());
+
+                        for (int i = 0; i < numCols; i++)
+                        {
+                            string expectedVal = expectedReader.GetField(i);
+                            string resultVal = resultReader.GetField(i);
+                            if (i == pathIndex)
+                            {
+                                int expectedIndex = expectedVal.LastIndexOf("TestFiles");
+                                int resultIndex = resultVal.LastIndexOf("TestFiles");
+                                Assert.AreNotEqual(-1, expectedIndex);
+                                Assert.AreNotEqual(-1, resultIndex);
+                                Assert.AreEqual(expectedVal.Substring(expectedIndex),
+                                    resultVal.Substring(resultIndex));
+                            }
+                            else
+                            {
+                                Assert.AreEqual(expectedVal, resultVal);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) when (!(ex is AssertFailedException))
+                {
+                    Assert.Fail();
+                }
+            }
         }
     }
 }
