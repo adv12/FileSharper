@@ -111,14 +111,7 @@ namespace FileSharperCore.Tests
             using (FileStream expectedStream = expected.OpenRead())
             using (FileStream resultStream = result.OpenRead())
             {
-                int expectedVal = 0;
-                int resultVal = 0;
-                while (expectedVal != -1)
-                {
-                    expectedVal = expectedStream.ReadByte();
-                    resultVal = resultStream.ReadByte();
-                    Assert.AreEqual(expectedVal, resultVal);
-                }
+                Assert.IsTrue(TestUtil.AreStreamsEqual(expectedStream, resultStream));
             }
         }
 

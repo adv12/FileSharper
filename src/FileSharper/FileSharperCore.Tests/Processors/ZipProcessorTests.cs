@@ -217,5 +217,17 @@ namespace FileSharperCore.Tests.Processors
             processor.ProcessAggregated(CancellationToken.None);
             processor.Cleanup();
         }
+
+        public override void AssertFileEquality(FileInfo expected, FileInfo result)
+        {
+            try
+            {
+                base.AssertFileEquality(expected, result);
+            }
+            catch (AssertFailedException ex)
+            {
+                TestUtil.AssertZipEquality(expected, result);
+            }
+        }
     }
 }
