@@ -39,6 +39,8 @@ namespace FileSharperCore.FileSources
 
         private Func<FileInfo, IComparable> m_FileSorter;
         private Func<DirectoryInfo, IComparable> m_DirectorySorter;
+        private Dictionary<FileInfo, int> m_randomFileNumbers;
+        private Dictionary<DirectoryInfo, int> m_randomDirectoryNumbers;
         private bool m_Reverse = false;
         private Random m_Random = new Random();
         private string[] m_FilePatterns;
@@ -145,6 +147,7 @@ namespace FileSharperCore.FileSources
                         {
                             files = files.OrderBy(m_FileSorter).ToList();
                         }
+                        m_randomFileNumbers?.Clear();
                     }
                     catch (Exception ex)
                     {
@@ -188,6 +191,7 @@ namespace FileSharperCore.FileSources
                         {
                             subdirs = subdirs.OrderBy(m_DirectorySorter).ToArray();
                         }
+                        m_randomDirectoryNumbers?.Clear();
                     }
                     catch (Exception ex)
                     {
@@ -255,8 +259,36 @@ namespace FileSharperCore.FileSources
                     m_Reverse = order == SearchOrder.ReverseModifiedDate;
                     break;
                 case SearchOrder.Random:
-                    m_FileSorter = fi => m_Random.Next();
-                    m_DirectorySorter = di => m_Random.Next();
+                    m_randomFileNumbers = new Dictionary<FileInfo, int>();
+                    m_randomDirectoryNumbers = new Dictionary<DirectoryInfo, int>();
+                    m_FileSorter = fi =>
+                    {
+                        int val;
+                        if (!m_randomFileNumbers.ContainsKey(fi))
+                        {
+                            val = m_Random.Next();
+                            m_randomFileNumbers[fi] = val;
+                        }
+                        else
+                        {
+                            val = m_randomFileNumbers[fi];
+                        }
+                        return val;
+                    };
+                    m_DirectorySorter = di =>
+                    {
+                        int val;
+                        if (!m_randomDirectoryNumbers.ContainsKey(di))
+                        {
+                            val = m_Random.Next();
+                            m_randomDirectoryNumbers[di] = val;
+                        }
+                        else
+                        {
+                            val = m_randomDirectoryNumbers[di];
+                        }
+                        return val;
+                    };
                     break;
                 default:
                     m_FileSorter = null;
