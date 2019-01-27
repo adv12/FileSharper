@@ -57,7 +57,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-		<Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -76,6 +76,7 @@
     <Compile Include="Processors\Filesystem\CreateOrUpdateFileProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\FileDateProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\RecycleProcessorTests.cs" />
+    <Compile Include="Processors\Image\ImageResizeProcessorTests.cs" />
     <Compile Include="Processors\MultiProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
@@ -91,6 +92,7 @@
     <None Include="ExpectedResults\CsvProcessorTests\NameThenDirectory\NameThenDirectory.csv" />
     <None Include="ExpectedResults\CsvProcessorTests\Unix\Unix.csv" />
     <None Include="ExpectedResults\CsvProcessorTests\Windows\Windows.csv" />
+    <None Include="ExpectedResults\ImageResizeProcessorTests\Width100Exif\out.exif" />
     <None Include="ExpectedResults\ZipProcessorTests\GeneratedFiles_PerGeneratedFile\TextFile1ForZip.zip" />
     <None Include="ExpectedResults\ZipProcessorTests\GeneratedFiles_PerGeneratedFile\TextFile2ForZip.zip" />
     <None Include="ExpectedResults\ZipProcessorTests\GeneratedFiles_PerGeneratedFile\TextFile3ForZip.zip" />
@@ -127,6 +129,17 @@
     <Content Include="ExpectedResults\FileDateProcessorTests\SetsAccessedDate\out.txt" />
     <Content Include="ExpectedResults\FileDateProcessorTests\SetsCreatedDate\out.txt" />
     <Content Include="ExpectedResults\FileDateProcessorTests\SetsModificationDate\out.txt" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Height100Jpeg\out.jpg" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Height900Jpeg\out.jpg" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\ResizeBeetleOverwriteFalse\out.jpg" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\ResizeBeetleOverwriteTrueFailure\out.jpg" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\ResizeBeetleOverwriteTrueSuccess\out.jpg" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Bmp\out.bmp" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Gif\out.gif" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Jpeg\out.jpg" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Png\out.png" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Tiff\out.tif" />
+    <Content Include="ExpectedResults\ImageResizeProcessorTests\Width1200Jpeg\out.jpg" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_DoesNotOverwrite\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_MovesToRecycleBin\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_Overwrites\out.txt" />
@@ -135,6 +148,7 @@
     <Content Include="ExpectedResults\ProcessorBaseTests\GetProcessingResultFromCopyAndDeleteTempFile_Successs\out.txt" />
     <Content Include="ExpectedResults\RecycleProcessorTests\FailsWhenFileInUse\out.txt" />
     <Content Include="TestFiles\BasicTextFile.txt" />
+    <Content Include="TestFiles\beetle.jpg" />
     <Content Include="TestFiles\Lipsum.txt" />
     <Content Include="TestFiles\TextFileWithNewlines.txt" />
     <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\Subdir3\TextFile2ForZip.txt" />

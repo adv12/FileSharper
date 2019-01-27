@@ -19,3 +19,5 @@
 /src/FileSharper/FileSharperSetup/Release
 /src/FileSharper/FileSharperCore.Tests/bin/Debug
 /src/FileSharper/FileSharperCore.Tests/obj/Debug
+/src/FileSharper/FileSharperCore.Tests/bin/Release
+/src/FileSharper/FileSharperCore.Tests/obj/Release

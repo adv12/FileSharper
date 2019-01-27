@@ -67,6 +67,14 @@ namespace FileSharperCore
             property.SetValue(parameters, value);
         }
 
+        public object GetParameter(string name)
+        {
+            object parameters = Parameters;
+            Type t = parameters.GetType();
+            PropertyInfo property = t.GetProperty(name);
+            return property.GetValue(parameters);
+        }
+
         public void Cleanup()
         {
             LocalCleanup();

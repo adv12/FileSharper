@@ -3,7 +3,6 @@
 // full text of the license.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -50,7 +49,7 @@ namespace FileSharperCore.Processors.Image
             FileInfo[] generatedFiles = new FileInfo[0];
 
             ProcessingResultType resultType = ProcessingResultType.Failure;
-            string message = "";
+            string message = "Success";
             Bitmap b = null;
             try
             {
@@ -105,14 +104,24 @@ namespace FileSharperCore.Processors.Image
                             string outDirPath = Path.GetDirectoryName(outPath);
                             Directory.CreateDirectory(outDirPath);
                             bout.Save(outPath, format);
+                            resultType = ProcessingResultType.Success;
+                            generatedFiles = new FileInfo[] { new FileInfo(outPath) };
                         }
-                        resultType = ProcessingResultType.Success;
-                        generatedFiles = new FileInfo[] { new FileInfo(outPath) };
+                        else
+                        {
+                            resultType = ProcessingResultType.Failure;
+                            message = "Target file exists";
+                            generatedFiles = new FileInfo[0];
+                        }
+                        
+                        
                     }
                 }
                 catch(Exception ex)
                 {
                     RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
+                    message = ex.Message;
+                    resultType = ProcessingResultType.Failure;
                 }
                 finally
                 {
