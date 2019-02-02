@@ -41,15 +41,15 @@ namespace FileSharperCore.Processors.Text
 
         public override object Parameters => m_Parameters;
 
-        protected override LineEndings LineEndings => m_Parameters.LineEndings;
+        protected internal override LineEndings LineEndings => m_Parameters.LineEndings;
 
-        protected override OutputEncodingType OutputEncodingType => m_Parameters.OutputEncoding;
+        protected internal override OutputEncodingType OutputEncodingType => m_Parameters.OutputEncoding;
 
-        protected override string FileName => m_Parameters.FileName;
+        protected internal override string FileName => m_Parameters.FileName;
 
-        protected override bool OverwriteExistingFile => m_Parameters.OverwriteExistingFile;
+        protected internal override bool OverwriteExistingFile => m_Parameters.OverwriteExistingFile;
 
-        protected override bool MoveOriginalToRecycleBin => m_Parameters.MoveOriginalToRecycleBin;
+        protected internal override bool MoveOriginalToRecycleBin => m_Parameters.MoveOriginalToRecycleBin;
 
         public override void LocalInit()
         {
@@ -61,7 +61,7 @@ namespace FileSharperCore.Processors.Text
             m_Spaces = sb.ToString();
         }
 
-        protected override string TransformLine(string line)
+        protected internal override string TransformLine(string line)
         {
             if (m_Parameters.LeadingTabsOnly)
             {

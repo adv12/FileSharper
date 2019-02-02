@@ -11,15 +11,15 @@ namespace FileSharperCore.Processors.Text
 {
     public abstract class LineProcessor : SingleFileProcessorBase
     {
-        protected abstract bool MoveOriginalToRecycleBin { get; }
+        protected internal abstract bool MoveOriginalToRecycleBin { get; }
 
-        protected abstract LineEndings LineEndings { get; }
+        protected internal abstract LineEndings LineEndings { get; }
 
-        protected abstract OutputEncodingType OutputEncodingType { get; }
+        protected internal abstract OutputEncodingType OutputEncodingType { get; }
 
-        protected abstract string FileName { get; }
+        protected internal abstract string FileName { get; }
 
-        protected abstract bool OverwriteExistingFile { get; }
+        protected internal abstract bool OverwriteExistingFile { get; }
 
         public override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
@@ -58,6 +58,6 @@ namespace FileSharperCore.Processors.Text
                 OverwriteExistingFile, MoveOriginalToRecycleBin);
         }
 
-        protected abstract string TransformLine(string line);
+        protected internal abstract string TransformLine(string line);
     }
 }

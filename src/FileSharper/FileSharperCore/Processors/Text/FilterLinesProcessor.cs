@@ -74,6 +74,9 @@ namespace FileSharperCore.Processors.Text
             }
             Encoding encoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
+
+            bool endsWithNewLine = TextUtil.FileEndsWithNewline(file, encoding);
+
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, encoding, m_Parameters.OutputEncoding))
             {
@@ -81,15 +84,26 @@ namespace FileSharperCore.Processors.Text
                 using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(
                     file, encoding))
                 {
+                    bool keep = m_Parameters.FilterType == LineFilterType.KeepMatchingLines;
+                    bool anyWritten = false;
                     while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
                         bool matches = m_Regex.IsMatch(line);
-                        bool keep = m_Parameters.FilterType == LineFilterType.KeepMatchingLines;
+                        
                         if (matches == keep)
                         {
-                            writer.WriteLine(line);
+                            if (anyWritten)
+                            {
+                                writer.WriteLine();
+                            }
+                            writer.Write(line);
+                            anyWritten = true;
                         }
+                    }
+                    if (endsWithNewLine)
+                    {
+                        writer.WriteLine();
                     }
                 }
             }

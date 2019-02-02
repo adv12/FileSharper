@@ -150,15 +150,15 @@ namespace FileSharperCore.Tests.Processors.Text
 
         public override object Parameters => null;
 
-        protected override bool MoveOriginalToRecycleBin => m_MoveOriginalToRecyclingBin;
+        protected internal override bool MoveOriginalToRecycleBin => m_MoveOriginalToRecyclingBin;
 
-        protected override LineEndings LineEndings => m_LineEndings;
+        protected internal override LineEndings LineEndings => m_LineEndings;
 
-        protected override OutputEncodingType OutputEncodingType => m_OutputEncodingType;
+        protected internal override OutputEncodingType OutputEncodingType => m_OutputEncodingType;
 
-        protected override string FileName => m_FileName;
+        protected internal override string FileName => m_FileName;
 
-        protected override bool OverwriteExistingFile => m_OverwriteExistingFile;
+        protected internal override bool OverwriteExistingFile => m_OverwriteExistingFile;
 
         public TestLineProcessor(string filename, LineEndings lineEndings,
             OutputEncodingType outputEncodingType, bool overwriteExistingFile,
@@ -171,7 +171,7 @@ namespace FileSharperCore.Tests.Processors.Text
             m_MoveOriginalToRecyclingBin = moveOriginalToRecyclingBin;
         }
 
-        protected override string TransformLine(string line)
+        protected internal override string TransformLine(string line)
         {
             return "The transformed line";
         }

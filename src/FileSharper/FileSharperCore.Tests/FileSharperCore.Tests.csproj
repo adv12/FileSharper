@@ -80,6 +80,8 @@
     <Compile Include="Processors\MultiProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
+    <Compile Include="Processors\Text\ChangeCaseProcessorTests.cs" />
+    <Compile Include="Processors\Text\ChangeLineEndingsProcessorTests.cs" />
     <Compile Include="Processors\Text\LineProcessorTests.cs" />
     <Compile Include="Processors\ZipProcessorTests.cs" />
     <Compile Include="TestBase.cs" />
