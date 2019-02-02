@@ -2,8 +2,6 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -48,6 +46,7 @@ namespace FileSharperCore.Processors.Text
             }
             Encoding encoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
+            bool endsWithNewLine = TextUtil.FileEndsWithNewline(file, encoding);
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, encoding, m_Parameters.OutputEncoding))
             {
@@ -56,14 +55,24 @@ namespace FileSharperCore.Processors.Text
                     file, encoding))
                 {
                     string lastLine = null;
+                    bool writtenAny = false;
                     while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
                         if (lastLine != line)
                         {
-                            writer.WriteLine(line);
+                            if (writtenAny)
+                            {
+                                writer.WriteLine();
+                            }
+                            writer.Write(line);
+                            writtenAny = true;
                         }
                         lastLine = line;
+                    }
+                    if (endsWithNewLine)
+                    {
+                        writer.WriteLine();
                     }
                 }
             }

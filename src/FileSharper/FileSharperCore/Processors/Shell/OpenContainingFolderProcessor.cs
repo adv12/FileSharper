@@ -29,12 +29,23 @@ namespace FileSharperCore.Processors.Shell
         public override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
+            ProcessingResultType type = ProcessingResultType.Failure;
+            string message = "Success";
             if (!m_OpenedFolders.Contains(file.DirectoryName))
             {
-                m_OpenedFolders.Add(file.DirectoryName);
-                System.Diagnostics.Process.Start(file.DirectoryName);
+                try
+                {
+                    System.Diagnostics.Process.Start(file.DirectoryName);
+                    m_OpenedFolders.Add(file.DirectoryName);
+                    type = ProcessingResultType.Success;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                    RunInfo.ExceptionInfos.Enqueue(new ExceptionInfo(ex, file));
+                }
             }
-            return new ProcessingResult(ProcessingResultType.Success, "Success", new FileInfo[] { file });
+            return new ProcessingResult(type, message, new FileInfo[] { file });
         }
     }
 }

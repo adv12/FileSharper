@@ -56,6 +56,7 @@ namespace FileSharperCore.Processors
             }
             Encoding encoding = TextUtil.DetectEncoding(file);
             string tmpFile = Path.GetTempFileName();
+            bool endsWithNewLine = TextUtil.FileEndsWithNewline(file, encoding);
             using (StreamWriter writer = TextUtil.CreateStreamWriterWithAppropriateEncoding(
                 tmpFile, encoding, m_Parameters.OutputEncoding))
             {
@@ -79,17 +80,9 @@ namespace FileSharperCore.Processors
                         writtenAnyFromFile = true;
                     }
                     // Add a trailing line ending if the original file ended in one
-                    using (FileStream s = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                    if (endsWithNewLine)
                     {
-                        if (s.CanSeek && s.Length > 0)
-                        {
-                            s.Seek(-1, SeekOrigin.End);
-                            int b = s.ReadByte();
-                            if (b == 10 || b == 13)
-                            {
-                                writer.WriteLine();
-                            }
-                        }
+                        writer.WriteLine();
                     }
                     if (m_Parameters.PrependOrAppend == PrependAppend.Append)
                     {

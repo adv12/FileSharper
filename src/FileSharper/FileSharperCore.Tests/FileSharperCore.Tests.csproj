@@ -80,6 +80,7 @@
     <Compile Include="Processors\MultiProcessorTests.cs" />
     <Compile Include="Processors\ProcessorBaseTests.cs" />
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
+    <Compile Include="Processors\Text\LineProcessorTests.cs" />
     <Compile Include="Processors\ZipProcessorTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,6 +141,16 @@
     <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Png\out.png" />
     <Content Include="ExpectedResults\ImageResizeProcessorTests\Width100Tiff\out.tif" />
     <Content Include="ExpectedResults\ImageResizeProcessorTests\Width1200Jpeg\out.jpg" />
+    <Content Include="ExpectedResults\LineProcessorTests\FailsExistingFile\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\FailsFileInUse\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SucceedsExistingFile\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SuccessClassicMacOS\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SuccessMatchInput\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SuccessNoTrailingNewline\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SuccessUnix\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SuccessUtf16\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\SuccessWindows\out.txt" />
+    <Content Include="ExpectedResults\LineProcessorTests\Success\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_DoesNotOverwrite\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_MovesToRecycleBin\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_Overwrites\out.txt" />
@@ -151,6 +162,7 @@
     <Content Include="TestFiles\beetle.jpg" />
     <Content Include="TestFiles\Lipsum.txt" />
     <Content Include="TestFiles\TextFileWithNewlines.txt" />
+    <Content Include="TestFiles\TextFileWithNoTrailingNewline.txt" />
     <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\Subdir3\TextFile2ForZip.txt" />
     <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\Subdir3\TextFile3ForZip.txt" />
     <Content Include="TestFiles\ZipHierarchy\Subdir1\Subdir2\TextFile1ForZip.txt" />
