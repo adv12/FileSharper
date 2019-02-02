@@ -82,6 +82,7 @@
     <Compile Include="Processors\SingleFileProcessorBaseTests.cs" />
     <Compile Include="Processors\Text\ChangeCaseProcessorTests.cs" />
     <Compile Include="Processors\Text\ChangeLineEndingsProcessorTests.cs" />
+    <Compile Include="Processors\Text\FilterLinesProcessorTests.cs" />
     <Compile Include="Processors\Text\LineProcessorTests.cs" />
     <Compile Include="Processors\ZipProcessorTests.cs" />
     <Compile Include="TestBase.cs" />
@@ -132,6 +133,17 @@
     <Content Include="ExpectedResults\FileDateProcessorTests\SetsAccessedDate\out.txt" />
     <Content Include="ExpectedResults\FileDateProcessorTests\SetsCreatedDate\out.txt" />
     <Content Include="ExpectedResults\FileDateProcessorTests\SetsModificationDate\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\FailsFileExists\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\FailsFileInUse\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessCaseInsensitiveNoRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessCaseInsensitiveRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessCaseSensitiveNoRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessCaseSensitiveRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessKeepNoRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessKeepRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessNoTrailingNewline\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessRemoveNoRegex\out.txt" />
+    <Content Include="ExpectedResults\FilterLinesProcessorTests\SuccessRemoveRegex\out.txt" />
     <Content Include="ExpectedResults\ImageResizeProcessorTests\Height100Jpeg\out.jpg" />
     <Content Include="ExpectedResults\ImageResizeProcessorTests\Height900Jpeg\out.jpg" />
     <Content Include="ExpectedResults\ImageResizeProcessorTests\ResizeBeetleOverwriteFalse\out.jpg" />

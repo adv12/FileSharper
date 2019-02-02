@@ -67,7 +67,7 @@ namespace FileSharperCore.Processors.Text
         public override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
-            string outputFilename = Util.ReplaceUtil.Replace(m_Parameters.FileName, file);
+            string outputFilename = ReplaceUtil.Replace(m_Parameters.FileName, file);
             if (!m_Parameters.OverwriteExistingFile && File.Exists(outputFilename))
             {
                 return new ProcessingResult(ProcessingResultType.Failure, "File exists", new FileInfo[0]);
