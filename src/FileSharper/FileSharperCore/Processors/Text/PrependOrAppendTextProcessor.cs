@@ -2,8 +2,6 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -46,10 +44,10 @@ namespace FileSharperCore.Processors
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        protected internal override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
-            string outputFilename = Util.ReplaceUtil.Replace(m_Parameters.FileName, file);
+            string outputFilename = ReplaceUtil.Replace(m_Parameters.FileName, file);
             if (!m_Parameters.OverwriteExistingFile && File.Exists(outputFilename))
             {
                 return new ProcessingResult(ProcessingResultType.Failure, "File exists", new FileInfo[0]);

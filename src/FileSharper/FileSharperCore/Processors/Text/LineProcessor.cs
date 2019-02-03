@@ -21,7 +21,7 @@ namespace FileSharperCore.Processors.Text
 
         protected internal abstract bool OverwriteExistingFile { get; }
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        protected internal override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
             string outputFilename = Util.ReplaceUtil.Replace(FileName, file);

@@ -31,7 +31,7 @@ namespace FileSharperCore.Processors.Filesystem
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
+        protected internal override ProcessingResult Process(FileInfo file, string[] values, CancellationToken token)
         {
             ProcessingResultType resultType = ProcessingResultType.Success;
             string message = "Success";

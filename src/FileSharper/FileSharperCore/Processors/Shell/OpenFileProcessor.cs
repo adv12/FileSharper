@@ -19,7 +19,7 @@ namespace FileSharperCore.Processors.Shell
 
         public override object Parameters => null;
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        protected internal override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
             ProcessingResultType type = ProcessingResultType.Failure;

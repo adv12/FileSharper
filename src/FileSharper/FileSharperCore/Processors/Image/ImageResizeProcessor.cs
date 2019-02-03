@@ -39,7 +39,7 @@ namespace FileSharperCore.Processors.Image
 
         public override object Parameters => m_Parameters;
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        protected internal override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
             int width;

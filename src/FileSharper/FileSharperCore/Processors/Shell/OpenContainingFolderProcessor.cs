@@ -26,7 +26,7 @@ namespace FileSharperCore.Processors.Shell
             m_OpenedFolders.Clear();
         }
 
-        public override ProcessingResult Process(FileInfo file, string[] values,
+        protected internal override ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token)
         {
             ProcessingResultType type = ProcessingResultType.Failure;

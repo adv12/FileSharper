@@ -12,7 +12,7 @@ namespace FileSharperCore.Processors
 {
     public abstract class SingleFileProcessorBase : ProcessorBase
     {
-        public abstract ProcessingResult Process(FileInfo file, string[] values,
+        protected internal abstract ProcessingResult Process(FileInfo file, string[] values,
             CancellationToken token);
 
         public override ProcessingResult Process(FileInfo originalFile,
