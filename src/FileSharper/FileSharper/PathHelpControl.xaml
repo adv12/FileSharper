@@ -39,6 +39,7 @@ full text of the license.
             <Run>LastWriteTimeUtc</Run><LineBreak/>
             <Run>LastAccessTime</Run><LineBreak/>
             <Run>LastAccessTimeUtc</Run><LineBreak/>
+            <Run>ParentName1, ParentName2, ... ParentNameN</Run><LineBreak/>
         </TextBlock>
         <TextBlock FontSize="18" Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">Special Folders Supported</TextBlock>
         <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold"><Run FontWeight="Normal">The following special folder names are supported:</Run><LineBreak/><LineBreak/>
@@ -92,6 +93,8 @@ full text of the license.
         <TextBlock FontSize="18" Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap">Miscellaneous Other Variables Supported</TextBlock>
         <TextBlock Margin="10" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold"><Run FontWeight="Normal">The following variables are also supported:</Run><LineBreak/><LineBreak/>
             <Run>Now</Run><LineBreak/>
+            <Run>Today</Run><LineBreak/>
+            <Run>Date (synonym for Today)</Run><LineBreak/>
         </TextBlock>
     </StackPanel>
 </UserControl>

@@ -2,13 +2,8 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using FileSharperCore.Processors.Filesystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
