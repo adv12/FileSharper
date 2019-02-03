@@ -73,6 +73,7 @@
     <Compile Include="Processors\CsvProcessorTests.cs" />
     <Compile Include="Processors\DoNothingProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\CopyFileProcessorTests.cs" />
+    <Compile Include="Processors\Filesystem\CreateDirectoryProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\CreateOrUpdateFileProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\FileDateProcessorTests.cs" />
     <Compile Include="Processors\Filesystem\RecycleProcessorTests.cs" />
@@ -119,7 +120,9 @@
       <Name>FileSharperCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ExpectedResults\CreateDirectoryProcessorTests\Success\Subdir\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="ExpectedResults\CommandLineProcessorTests\RunsCommandLine\BasicTextFile.txt" />
     <Content Include="ExpectedResults\CopyFileProcessorTests\DoesNotOverwrite\out.txt" />
