@@ -11,7 +11,7 @@ using FileSharperCore.Editors;
 using FileSharperCore.Util;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace FileSharperCore.Processors
+namespace FileSharperCore.Processors.Text
 {
     public class TextParameter
     {
