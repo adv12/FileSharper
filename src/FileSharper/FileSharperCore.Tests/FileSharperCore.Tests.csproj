@@ -85,6 +85,7 @@
     <Compile Include="Processors\Text\ChangeLineEndingsProcessorTests.cs" />
     <Compile Include="Processors\Text\FilterLinesProcessorTests.cs" />
     <Compile Include="Processors\Text\LineProcessorTests.cs" />
+    <Compile Include="Processors\Text\PrependOrAppendTextProcessorTests.cs" />
     <Compile Include="Processors\ZipProcessorTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -168,6 +169,17 @@
     <Content Include="ExpectedResults\LineProcessorTests\SuccessUtf16\out.txt" />
     <Content Include="ExpectedResults\LineProcessorTests\SuccessWindows\out.txt" />
     <Content Include="ExpectedResults\LineProcessorTests\Success\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\AppendOneNewlineSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\AppendSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\AppendTwoNewlineSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\FailsFileExists\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\FailsFileInUse\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\PrependClassicMacOSSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\PrependOneNewlineSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\PrependSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\PrependTwoNewlineSuccess\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\PrependUtf16Success\out.txt" />
+    <Content Include="ExpectedResults\PrependOrAppendTextProcessorTests\SucceedsFileExists\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_DoesNotOverwrite\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_MovesToRecycleBin\out.txt" />
     <Content Include="ExpectedResults\ProcessorBaseTests\CopyAndDeleteTempFile_Overwrites\out.txt" />
