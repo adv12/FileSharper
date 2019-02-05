@@ -1,0 +1,2 @@
+﻿This text file has two lines of text
+and no trailing newline.
