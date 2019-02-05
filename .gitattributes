@@ -4,3 +4,4 @@
 # Many test files and test outputs have non-Windows line endings
 # that should be preserved.
 *.txt binary
+*.csv binary
