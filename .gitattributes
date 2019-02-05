@@ -5,3 +5,5 @@
 # that should be preserved.
 *.txt binary
 *.csv binary
+*.jpg binary
+*.png binary
