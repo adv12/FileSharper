@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Many test files and test outputs have non-Windows line endings
+# that should be preserved.
+*.txt binary
