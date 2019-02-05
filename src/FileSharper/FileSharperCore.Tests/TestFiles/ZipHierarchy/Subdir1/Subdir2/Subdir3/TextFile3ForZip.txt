@@ -1,1 +1,0 @@
-﻿This is the third text file for testing the ZipProcessor.  There is nothing special about it.

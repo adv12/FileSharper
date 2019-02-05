@@ -1,3 +1,0 @@
-Filename,Path,Matches,foo,bar,baz,hello,world
-BasicTextFile.txt,\\Mac\Home\Documents\GitHub\FileSharper\src\FileSharper\FileSharperCore.Tests\TestFiles,Yes,a,b,c,d,e
-TextFileWithNewlines.txt,\\Mac\Home\Documents\GitHub\FileSharper\src\FileSharper\FileSharperCore.Tests\TestFiles,No,q,w,e,r,t
