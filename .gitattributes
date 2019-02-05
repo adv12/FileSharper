@@ -7,3 +7,7 @@
 *.csv binary
 *.jpg binary
 *.png binary
+*.gif binary
+*.bmp binary
+*.exif binary
+*.zip binary
