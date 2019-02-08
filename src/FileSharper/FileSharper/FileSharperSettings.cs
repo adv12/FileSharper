@@ -46,6 +46,7 @@ namespace FileSharper
             {
                 string json = File.ReadAllText(SettingsPath);
                 settings = JsonConvert.DeserializeObject<FileSharperSettings>(json);
+                settings.Loaded = true;
             }
             catch (Exception)
             {
@@ -120,11 +121,40 @@ namespace FileSharper
         public ObservableCollection<SearchTemplateInfo> Templates { get; } =
             new ObservableCollection<SearchTemplateInfo>();
 
+        private bool Loaded { get; set; }
+
         private bool m_EulaAccepted;
         public bool EulaAccepted
         {
             get => m_EulaAccepted;
             set => SetField(ref m_EulaAccepted, value);
+        }
+
+        private bool m_MadeHorizontalThisSession = false;
+        private bool m_Horizontal = false;
+        public bool Horizontal
+        {
+            get => m_Horizontal;
+            set
+            {
+                bool oldValue = m_Horizontal;
+                SetField(ref m_Horizontal, value);
+                if (Loaded && value && !oldValue)
+                {
+                    if (Width < 1100 && !m_MadeHorizontalThisSession)
+                    {
+                        Width = 1100;
+                    }
+                    m_MadeHorizontalThisSession = true;
+                }
+            }
+        }
+
+        private int m_Width = 600;
+        public int Width
+        {
+            get => m_Width;
+            set => SetField(ref m_Width, value);
         }
 
         public void AddRecentDocument(string path)

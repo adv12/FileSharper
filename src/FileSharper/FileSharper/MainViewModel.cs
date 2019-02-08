@@ -36,7 +36,7 @@ namespace FileSharper
         private string m_SaveTemplateDisplayName = "";
 
         public FileSharperSettings Settings { get; }
-
+        
         public ObservableCollection<SearchDocument> SearchDocuments { get; } =
             new ObservableCollection<SearchDocument>();
 
@@ -107,6 +107,7 @@ namespace FileSharper
         public ICommand MoveTemplatesUpCommand { get; private set; }
         public ICommand MoveTemplatesDownCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
+        public ICommand SetHorizontalCommand { get; private set; }
 
         public ICommand SetSelectedScreenIndexCommand { get; private set; }
 
@@ -118,6 +119,8 @@ namespace FileSharper
         public MainViewModel()
         {
             Settings = FileSharperSettings.Load();
+
+            Settings.PropertyChanged += Settings_PropertyChanged;
 
             Settings.RecentDocuments.CollectionChanged += RecentDocuments_CollectionChanged;
             AnyRecentDocuments = Settings.RecentDocuments.Count > 0;
@@ -165,10 +168,22 @@ namespace FileSharper
             MoveTemplatesUpCommand = new MainViewModelCommand(this, MoveTemplatesUp);
             MoveTemplatesDownCommand = new MainViewModelCommand(this, MoveTemplatesDown);
             ExitCommand = new MainViewModelCommand(this, p => { Application.Current.Shutdown(); });
+            SetHorizontalCommand = new MainViewModelCommand(this, SetHorizontal);
 
             SetSelectedScreenIndexCommand = new MainViewModelCommand(this, SetSelectedScreenIndex, false, p => true );
             
             NavigateCommand = new MainViewModelCommand(this, Navigate);
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Horizontal))
+            {
+                foreach (SearchDocument document in SearchDocuments)
+                {
+                    document.Horizontal = Settings.Horizontal;
+                }
+            }
         }
 
         private void Templates_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -191,6 +206,7 @@ namespace FileSharper
             if (!AddNewSearchFromTemplate(FileSharperSettings.DefaultTemplatePath))
             {
                 SearchDocument doc = new SearchDocument(true);
+                doc.Horizontal = Settings.Horizontal;
                 SearchDocuments.Add(doc);
                 SelectedIndex = SearchDocuments.Count - 1;
             }
@@ -334,6 +350,7 @@ namespace FileSharper
             }
             if (doc != null)
             {
+                doc.Horizontal = Settings.Horizontal;
                 SearchDocuments.Add(doc);
                 SelectedIndex = SearchDocuments.Count - 1;
                 return true;
@@ -493,6 +510,18 @@ namespace FileSharper
             }
         }
 
+        public void SetHorizontal(object parameter)
+        {
+            if (parameter == null)
+            {
+                Settings.Horizontal = false;
+            }
+            else if (parameter is bool horizontal)
+            {
+                Settings.Horizontal = horizontal;
+            }
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -529,13 +558,13 @@ namespace FileSharper
             {
                 ViewModel = viewModel;
                 ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-                ViewModel.Settings.PropertyChanged += Settings_PropertyChanged;
+                ViewModel.Settings.PropertyChanged += ViewModel_Settings_PropertyChanged;
                 m_CommandExecutor = commandExecutor;
                 m_CanExecuteTester = canExecuteTester;
                 m_RequiresOpenFile = requiresOpenFile;
             }
 
-            private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            private void ViewModel_Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
             {
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }

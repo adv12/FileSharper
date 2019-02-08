@@ -17,10 +17,12 @@ full text of the license.
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="ThisWindow"
-        Title="FileSharper" Height="700" Width="600">
+        Title="FileSharper" Height="700" Width="{Binding Settings.Width, Mode=TwoWay}">
     <Window.Resources>
         <sys:Boolean x:Key="True">True</sys:Boolean>
+        <sys:Boolean x:Key="False">False</sys:Boolean>
         <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <helpers:InverseBooleanConverter x:Key="inverseBooleanConverter" />
         <sys:Int32 x:Key="zero">0</sys:Int32>
         <sys:Int32 x:Key="one">1</sys:Int32>
         <sys:Int32 x:Key="two">2</sys:Int32>
@@ -106,8 +108,14 @@ full text of the license.
                     <MenuItem Header="_Close" Command="{Binding CloseSearchCommand}" InputGestureText="Ctrl+W"/>
                 <Separator />
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
-            </MenuItem>
-            <MenuItem Header="_Help">
+                </MenuItem>
+                <MenuItem Header="_View">
+                    <MenuItem Header="_Layout">
+                        <MenuItem Header="_Horizontal" IsChecked="{Binding Settings.Horizontal}" Command="{Binding SetHorizontalCommand}" CommandParameter="{StaticResource True}"/>
+                        <MenuItem Header="_Vertical" IsChecked="{Binding Settings.Horizontal, Converter={StaticResource inverseBooleanConverter}}" Command="{Binding SetHorizontalCommand}" CommandParameter="{StaticResource False}"/>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="_Help">
                 <MenuItem Header="_About FileSharper" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource one}"/>
                 <MenuItem Header="Specifying _Paths in FileSharper" Command="{Binding SetSelectedScreenIndexCommand}" CommandParameter="{StaticResource two}"/>
             </MenuItem>

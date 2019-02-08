@@ -42,6 +42,16 @@ namespace FileSharperCore
         [JsonIgnore]
         public bool EverRun { get; set; } = false;
 
+        private bool m_Horizontal = false;
+        public bool Horizontal
+        {
+            get => m_Horizontal;
+            set
+            {
+                SetField(ref m_Horizontal, value);
+            }
+        }
+
         private int m_ResultsPaneHeight = 40;
         [JsonIgnore]
         public int ResultsPaneHeight
@@ -50,6 +60,17 @@ namespace FileSharperCore
             private set
             {
                 SetField(ref m_ResultsPaneHeight, value);
+            }
+        }
+
+        private int m_DocumentPaneWidth = 500;
+        [JsonIgnore]
+        public int DocumentPaneWidth
+        {
+            get => m_DocumentPaneWidth;
+            set
+            {
+                SetField(ref m_DocumentPaneWidth, value);
             }
         }
 

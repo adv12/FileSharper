@@ -90,6 +90,9 @@
     <Compile Include="SearchDocumentSetupControl.xaml.cs">
       <DependentUpon>SearchDocumentSetupControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SearchViewModelControl.xaml.cs">
+      <DependentUpon>SearchViewModelControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FileSharperCore\FileSharperCore.csproj">
@@ -151,6 +154,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SearchDocumentSetupControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SearchViewModelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

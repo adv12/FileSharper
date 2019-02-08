@@ -8,87 +8,49 @@ full text of the license.
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:FileSharperUI"
              xmlns:helpers="clr-namespace:FileSharperUIHelpers;assembly=FileSharperUIHelpers"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+
     <UserControl.Resources>
-        <helpers:SearchViewModelToDynamicGridViewConverter x:Key="listViewGridViewConverter" />
         <helpers:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
-        <helpers:ObjectToVisibilityConverter x:Key="objectToVisibilityConverter" />
         <sys:Boolean x:Key="True">True</sys:Boolean>
     </UserControl.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="4"/>
-            <RowDefinition Height="{Binding ResultsPaneHeight}"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0" Padding="10">
-            <local:SearchDocumentSetupControl Width="Auto" Height="Auto" />
-        </ScrollViewer>
-        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="0" Grid.Column="0" Visibility="{Binding Horizontal, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="{Binding ResultsPaneHeight}"/>
             </Grid.RowDefinitions>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0" Padding="10">
+                <local:SearchDocumentSetupControl Width="Auto" Height="Auto" />
+            </ScrollViewer>
+            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
+            <local:SearchViewModelControl Grid.Row="2"/>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="0" Visibility="{Binding Horizontal, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding DocumentPaneWidth}"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
-            <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding RequestStopCommand}" Visibility="{Binding CanRequestStop, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
-            <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding CanCancel, Converter={StaticResource boolToVisibilityConverter}}">Kill</Button>
-            <local:MatchLimitsControl Grid.Row="0" Grid.Column="1"/>
-            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                <TabItem Header="Results">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Row="0" Grid.Column="0" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" Visibility="{Binding SearchViewModel.FileSourceStatusText, Converter={StaticResource objectToVisibilityConverter}}" Text="{Binding SearchViewModel.FileSourceStatusText}" IsReadOnly="True" BorderThickness="0"/>
-                        <ListView x:Name="resultsListView" Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=SearchViewModel.SearchResults.DefaultView}" View="{Binding SearchViewModel, Converter={StaticResource listViewGridViewConverter}}" MouseDoubleClick="ListView_MouseDoubleClick">
-                            <ListView.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Copy Path(s)" Command="{Binding SearchViewModel.CopyPathCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                    <MenuItem Header="Copy File(s)" Command="{Binding SearchViewModel.CopyFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                    <MenuItem Header="Open File(s)" Command="{Binding SearchViewModel.OpenFileCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                    <MenuItem Header="Open Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                    <MenuItem Header="Open Command Prompt(s) to Containing Folder(s)" Command="{Binding SearchViewModel.OpenContainingFolderCommandPromptCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
-                                </ContextMenu>
-                            </ListView.ContextMenu>
-                        </ListView>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="{Binding SearchViewModel.ExceptionsHeader, FallbackValue=Exceptions}">
-                    <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>
-                </TabItem>
-            </TabControl>
-            <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-                <StatusBar.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                        </Grid>
-                    </ItemsPanelTemplate>
-                </StatusBar.ItemsPanel>
-                <StatusBarItem Height="Auto" Width="Auto" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Visibility="{Binding SearchViewModel, Converter={StaticResource objectToVisibilityConverter}}">
-                    <Label Content="{Binding SearchViewModel.StatusText, FallbackValue=Ready}" />
-                </StatusBarItem>
-                <StatusBarItem Height="Auto" Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Stretch" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}}">
-                    <ProgressBar Height="15" IsIndeterminate="True"/>
-                </StatusBarItem>
-            </StatusBar>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Column="0" Padding="10">
+                <local:SearchDocumentSetupControl Width="Auto" Height="Auto" />
+            </ScrollViewer>
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+            <local:SearchViewModelControl Grid.Column="2"/>
         </Grid>
     </Grid>
 </UserControl>

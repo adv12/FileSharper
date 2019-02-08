@@ -47,6 +47,7 @@
     <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="CountToVisibilityConverter.cs" />
     <Compile Include="HowOftenToVisibilityConverter.cs" />
+    <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="SearchViewModelToDynamicGridViewConverter.cs" />
     <Compile Include="SubtractNumberConverter.cs" />
     <Compile Include="TypeNameToConditionConverter.cs" />

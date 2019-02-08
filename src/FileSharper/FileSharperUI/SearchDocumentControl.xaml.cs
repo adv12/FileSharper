@@ -3,7 +3,6 @@
 // full text of the license.
 
 using System.Windows.Controls;
-using FileSharperCore;
 
 namespace FileSharperUI
 {
@@ -15,15 +14,6 @@ namespace FileSharperUI
         public SearchDocumentControl()
         {
             InitializeComponent();
-        }
-
-        private void ListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            SearchDocument doc = DataContext as SearchDocument;
-            if (doc != null)
-            {
-                doc.SearchViewModel?.OpenFileCommand?.Execute(resultsListView.SelectedItems);
-            }
         }
     }
 }
