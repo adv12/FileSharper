@@ -17,7 +17,7 @@ full text of the license.
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="ThisWindow"
-        Title="FileSharper" Height="700" Width="{Binding Settings.Width, Mode=TwoWay}">
+        Title="FileSharper" Height="{Binding Settings.Height, Mode=TwoWay}" Width="{Binding Settings.Width, Mode=TwoWay}">
     <Window.Resources>
         <sys:Boolean x:Key="True">True</sys:Boolean>
         <sys:Boolean x:Key="False">False</sys:Boolean>

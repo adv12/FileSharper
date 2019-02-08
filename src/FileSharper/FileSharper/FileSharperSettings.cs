@@ -157,6 +157,13 @@ namespace FileSharper
             set => SetField(ref m_Width, value);
         }
 
+        private int m_Height = 700;
+        public int Height
+        {
+            get => m_Height;
+            set => SetField(ref m_Height, value);
+        }
+
         public void AddRecentDocument(string path)
         {
             RecentDocuments.Remove(path);
