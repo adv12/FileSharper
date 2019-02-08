@@ -2,8 +2,6 @@
 // See license.txt in the FileSharper distribution or repository for the
 // full text of the license.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -111,6 +109,7 @@ namespace FileSharperCore.Processors.Text
                 }
                 else
                 {
+                    bool endsWithNewLine = TextUtil.FileEndsWithNewline(file, detectedEncoding);
                     using (StreamReader reader = TextUtil.CreateStreamReaderWithAppropriateEncoding(
                         file, detectedEncoding))
                     {
@@ -118,7 +117,14 @@ namespace FileSharperCore.Processors.Text
                         {
                             string line = reader.ReadLine();
                             line = m_Regex.Replace(line, m_ReplacementText);
-                            writer.WriteLine(line);
+                            if (!reader.EndOfStream || endsWithNewLine)
+                            {
+                                writer.WriteLine(line);
+                            }
+                            else
+                            {
+                                writer.Write(line);
+                            }
                         }
                     }
                 }
