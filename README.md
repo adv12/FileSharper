@@ -1,6 +1,65 @@
 # FileSharper
 
-FileSharper is a C#/WPF file search and processing application designed to be quickly extended with new functionality.  It's published under the MIT license so you can grab the source and add your own domain-specific code.  For a demo, see [this video](https://youtu.be/fp4KZXTEaZE) or [this video](https://youtu.be/ACOryNATedE) on YouTube.  To try it out yourself, grab a possibly-somewhat-recent installer [here](http://www.flamingtortoise.com/FileSharper/Download).  For a tutorial of how to use FileSharper, see [Using FileSharper](https://github.com/adv12/FileSharper/wiki/Using-FileSharper).
+FileSharper is a C#/WPF file search and processing application for developers and power users.  It allows you to search for files matching certain conditions (length, content, etc.) and take action on them, for instance replacing certain text content or adding a file to a zip archive.  It provides a GUI alternative to command-line workflows based on UNIX tools like `find`, `grep`, `sed`, `sort`, etc.  Search conditions currently include:
+
+* Compound
+  * All
+  * Any
+* Binary
+  * Binary Data Contains Byte Sequence
+  * Binary Data Contains Text
+* Filesystem
+  * File Age
+  * File Date
+  * File Length
+  * File Path Contains Text
+  * Read-Only
+* Image
+  * Image Aspect Ratio
+  * Image Size
+* Text
+  * Contains Text
+  * Line Count
+  * Line Endings
+  * Text Encoding Matches
+  * Word Count
+* XML
+  * XPath Node Count
+  * XPath Result String Value Contains Text
+
+File Processors currently include:
+
+* Report
+  * Write to CSV
+* Compound
+  * Collect output files
+* Filesystem
+  * Copy file
+  * Create directory
+  * Create or update file
+  * Move to Recycle Bin
+  * Set file date
+* Image
+  * Create resized image
+* Miscellaneous
+  * Execute command line
+  * Zip file(s)
+* Shell
+  * Open containing folder
+  * Open file
+* Text
+  * Change line endings
+  * Convert case
+  * Filter lines
+  * Prepend or append text
+  * Remove repeated lines
+  * Replace text
+  * Sort lines
+  * Spaces to tabs
+  * Tabs to spaces
+  * Trim whitespace
+
+FileSharper is designed to be quickly extended with new functionality.  It's published under the MIT license so you can grab the source and add your own domain-specific code.  For a demo, see [this video](https://youtu.be/fp4KZXTEaZE) or [this video](https://youtu.be/ACOryNATedE) on YouTube.  To try it out yourself, grab a possibly-somewhat-recent installer [here](http://www.flamingtortoise.com/FileSharper/Download).  For a tutorial of how to use FileSharper, see [Using FileSharper](https://github.com/adv12/FileSharper/wiki/Using-FileSharper).
 
 You can extend FileSharper's functionality by writing classes that implement any of the four main interfaces:
 
