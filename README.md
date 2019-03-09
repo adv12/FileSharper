@@ -1,6 +1,6 @@
 # FileSharper
 
-[![FileSharper](https://raw.githubusercontent.com/adv12/FileSharper/master/docs/images/screenshotSmall.png)](https://raw.githubusercontent.com/adv12/FileSharper/master/docs/images/screenshotSmall.png)
+[![FileSharper](https://raw.githubusercontent.com/adv12/FileSharper/master/docs/images/screenshotSmall.png)](https://raw.githubusercontent.com/adv12/FileSharper/master/docs/images/screenshot.png)
 
 
 FileSharper is a C#/WPF file search and processing application for developers and power users.  It allows you to search for files matching certain conditions (length, content, etc.) and take action on them, for instance replacing certain text content or adding a file to a zip archive.  It provides a GUI alternative to command-line workflows based on UNIX tools like `find`, `grep`, `sed`, `sort`, etc.  Search conditions currently include:
