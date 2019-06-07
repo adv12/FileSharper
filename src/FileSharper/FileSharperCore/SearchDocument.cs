@@ -188,6 +188,18 @@ namespace FileSharperCore
             set => SetField(ref m_MaxExceptionsDisplayed, value);
         }
 
+        private bool m_Trusted = false;
+        public bool Trusted
+        {
+            get => m_Trusted;
+            set
+            {
+                SetField(ref m_Trusted, value);
+                OnPropertyChanged(nameof(CanDryRun));
+                OnPropertyChanged(nameof(CanSearch));
+            }
+        }
+
         private bool m_Searching = false;
         [JsonIgnore]
         public bool Searching
@@ -197,6 +209,8 @@ namespace FileSharperCore
             {
                 SetField(ref m_Searching, value);
                 OnPropertyChanged(nameof(NotSearching));
+                OnPropertyChanged(nameof(CanDryRun));
+                OnPropertyChanged(nameof(CanSearch));
                 OnPropertyChanged(nameof(CanRequestStop));
                 OnPropertyChanged(nameof(CanCancel));
             }
@@ -219,6 +233,18 @@ namespace FileSharperCore
                 OnPropertyChanged(nameof(CanRequestStop));
                 OnPropertyChanged(nameof(CanCancel));
             }
+        }
+
+        [JsonIgnore]
+        public bool CanDryRun
+        {
+            get => !Searching && !Trusted;
+        }
+
+        [JsonIgnore]
+        public bool CanSearch
+        {
+            get => !Searching && Trusted;
         }
 
         [JsonIgnore]
@@ -284,11 +310,13 @@ namespace FileSharperCore
         [JsonIgnore]
         public ICommand CancelCommand { get; private set; }
 
-        public SharperEngine GetEngine()
+        public SharperEngine GetEngine(bool dryRun = false)
         {
+            IProcessor[] noProcessors = { };
             return new SharperEngine(FileSourceNode.GetFileSource(),
                 ConditionNode.BuildCondition(), FieldSourcesNode.GetFieldSources(),
-                TestedProcessorsNode.GetProcessors(), MatchedProcessorsNode.GetProcessors(),
+                dryRun ? noProcessors : TestedProcessorsNode.GetProcessors(),
+                dryRun ? noProcessors : MatchedProcessorsNode.GetProcessors(),
                 MaxToMatchInternal);
         }
 
@@ -345,7 +373,12 @@ namespace FileSharperCore
 
             public async void Execute(object parameter)
             {
-                SharperEngine engine = Document.GetEngine();
+                bool dryRun = false;
+                if (parameter != null)
+                {
+                    dryRun = (bool)parameter;
+                }
+                SharperEngine engine = Document.GetEngine(dryRun);
                 if (engine == null)
                 {
                     return;

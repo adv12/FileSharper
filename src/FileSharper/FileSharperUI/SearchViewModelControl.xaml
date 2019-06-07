@@ -27,13 +27,16 @@ full text of the license.
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding Searching, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter={StaticResource True}}">Search</Button>
+        <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" CommandParameter="{StaticResource True}" Visibility="{Binding CanDryRun, Converter={StaticResource boolToVisibilityConverter}}">Dry Run</Button>
+        <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding SearchCommand}" Visibility="{Binding CanSearch, Converter={StaticResource boolToVisibilityConverter}}">Search</Button>
         <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding RequestStopCommand}" Visibility="{Binding CanRequestStop, Converter={StaticResource boolToVisibilityConverter}}">Stop</Button>
         <Button Margin="4" Padding="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Command="{Binding CancelCommand}" Visibility="{Binding CanCancel, Converter={StaticResource boolToVisibilityConverter}}">Kill</Button>
-        <local:MatchLimitsControl Grid.Row="0" Grid.Column="1"/>
-        <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <CheckBox Margin="4" Width="60" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" IsChecked="{Binding Trusted}">Trusted</CheckBox>
+        <local:MatchLimitsControl Grid.Row="0" Grid.Column="2"/>
+        <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <TabItem Header="Results">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -61,7 +64,7 @@ full text of the license.
                 <TextBox HorizontalAlignment="Stretch" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=SearchViewModel.ExceptionText}"/>
             </TabItem>
         </TabControl>
-        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
