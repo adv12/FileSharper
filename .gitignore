@@ -21,3 +21,10 @@
 /src/FileSharper/FileSharperCore.Tests/obj/Debug
 /src/FileSharper/FileSharperCore.Tests/bin/Release
 /src/FileSharper/FileSharperCore.Tests/obj/Release
+
+# Visual Studio / Rider per-user state and upgrade leftovers
+.vs/
+*.DotSettings.user
+/src/FileSharper/FileSharperCore.Tests/obj
+/src/FileSharper/MigrationBackup
+/src/FileSharper/UpgradeLog*.htm
