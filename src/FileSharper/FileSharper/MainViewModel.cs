@@ -130,6 +130,8 @@ namespace FileSharper
 
             SearchDocuments.CollectionChanged += SearchDocuments_CollectionChanged;
 
+            RestoreSession();
+
             FileInfo[] startupFiles = App.StartupFiles;
             if (startupFiles != null && startupFiles.Length > 0)
             {
@@ -148,7 +150,7 @@ namespace FileSharper
                     }
                 }
             }
-            else
+            if (SearchDocuments.Count == 0)
             {
                 AddNewSearch();
             }
@@ -360,9 +362,62 @@ namespace FileSharper
 
         public void OpenFile(string filename)
         {
-            SearchDocuments.Add(SearchDocument.FromFile(filename));
-            SelectedIndex = SearchDocuments.Count - 1;
+            // If the file is already open (e.g. restored from the last session), just select it
+            int existingIndex = SearchDocuments.ToList().FindIndex(d =>
+                d.FileName != null && string.Equals(Path.GetFullPath(d.FileName),
+                    Path.GetFullPath(filename), StringComparison.OrdinalIgnoreCase));
+            if (existingIndex >= 0)
+            {
+                SelectedIndex = existingIndex;
+            }
+            else
+            {
+                SearchDocuments.Add(SearchDocument.FromFile(filename));
+                SelectedIndex = SearchDocuments.Count - 1;
+            }
             Settings.AddRecentDocument(filename);
+        }
+
+        private void RestoreSession()
+        {
+            foreach (SessionDocumentInfo info in Settings.SessionDocuments)
+            {
+                try
+                {
+                    SearchDocument doc = SearchDocument.FromFile(info.SessionFileFullName, true);
+                    if (info.FileName != null)
+                    {
+                        doc.FileName = info.FileName;
+                    }
+                    doc.Horizontal = Settings.Horizontal;
+                    SearchDocuments.Add(doc);
+                }
+                catch (Exception)
+                {
+                    // skip tabs whose session file is missing or unreadable
+                }
+            }
+            if (SearchDocuments.Count > 0)
+            {
+                SelectedIndex = Math.Max(0, Math.Min(Settings.SessionSelectedIndex, SearchDocuments.Count - 1));
+            }
+        }
+
+        public void SaveSession()
+        {
+            Directory.CreateDirectory(FileSharperSettings.SessionDirectoryPath);
+            foreach (FileInfo file in new DirectoryInfo(FileSharperSettings.SessionDirectoryPath).GetFiles("*.fsh"))
+            {
+                file.Delete();
+            }
+            Settings.SessionDocuments.Clear();
+            for (int i = 0; i < SearchDocuments.Count; i++)
+            {
+                SessionDocumentInfo info = new SessionDocumentInfo($"Tab{i}.fsh", SearchDocuments[i].FileName);
+                SearchDocuments[i].Save(info.SessionFileFullName);
+                Settings.SessionDocuments.Add(info);
+            }
+            Settings.SessionSelectedIndex = SelectedIndex;
         }
 
         public void SaveDefaultSearchTemplate(object parameter)

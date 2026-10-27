@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using CsvHelper;
@@ -50,7 +51,7 @@ namespace FileSharperCore.Processors
             TextWriter tw = new StreamWriter(m_Filename);
             string lineEnding = TextUtil.GetNewline(m_Parameters.LineEndings);
             tw.NewLine = lineEnding;
-            m_CsvWriter = new CsvWriter(tw);
+            m_CsvWriter = new CsvWriter(tw, CultureInfo.CurrentCulture);
             List<string> headers = new List<string>();
             switch (m_Parameters.PathFormat)
             {

@@ -31,6 +31,8 @@ namespace FileSharper
 
         public static string DefaultTemplatePath => Path.Combine(SettingsDirectoryPath, "defaultTemplate.fsh");
 
+        public static string SessionDirectoryPath => Path.Combine(SettingsDirectoryPath, "Session");
+
         public static FileSharperSettings Load()
         {
             FileSharperSettings settings = null;
@@ -120,6 +122,11 @@ namespace FileSharper
 
         public ObservableCollection<SearchTemplateInfo> Templates { get; } =
             new ObservableCollection<SearchTemplateInfo>();
+
+        public List<SessionDocumentInfo> SessionDocuments { get; } =
+            new List<SessionDocumentInfo>();
+
+        public int SessionSelectedIndex { get; set; }
 
         private bool Loaded { get; set; }
 

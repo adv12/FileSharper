@@ -3,6 +3,7 @@
 // full text of the license.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using CsvHelper;
@@ -86,8 +87,8 @@ namespace FileSharperCore.Tests.Processors
 
         public override void AssertFileEquality(FileInfo expected, FileInfo result)
         {
-            using (CsvReader expectedReader = new CsvReader(new StreamReader(expected.FullName)))
-            using (CsvReader resultReader = new CsvReader(new StreamReader(result.FullName)))
+            using (CsvReader expectedReader = new CsvReader(new StreamReader(expected.FullName), CultureInfo.CurrentCulture))
+            using (CsvReader resultReader = new CsvReader(new StreamReader(result.FullName), CultureInfo.CurrentCulture))
             {
                 expectedReader.Read();
                 expectedReader.ReadHeader();
@@ -95,13 +96,13 @@ namespace FileSharperCore.Tests.Processors
                 resultReader.ReadHeader();
                 try
                 {
-                    int numCols = expectedReader.Context.HeaderRecord.Length;
-                    int pathIndex = Array.IndexOf(expectedReader.Context.HeaderRecord, "Path");
+                    int numCols = expectedReader.Context.Reader.ColumnCount;
+                    int pathIndex = Array.IndexOf(expectedReader.Context.Reader.HeaderRecord, "Path");
                     if (pathIndex == -1)
                     {
-                        pathIndex = Array.IndexOf(expectedReader.Context.HeaderRecord, "Filename");
+                        pathIndex = Array.IndexOf(expectedReader.Context.Reader.HeaderRecord, "Filename");
                     }
-                    Assert.AreEqual(numCols, resultReader.Context.HeaderRecord.Length);
+                    Assert.AreEqual(numCols, resultReader.Context.Reader.HeaderRecord.Length);
                     while (expectedReader.Read())
                     {
                         Assert.IsTrue(resultReader.Read());

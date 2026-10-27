@@ -23,9 +23,18 @@ namespace FileSharper
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
+            MainViewModel viewModel = DataContext as MainViewModel;
             try
             {
-                ((MainViewModel)DataContext)?.Settings?.Save();
+                viewModel?.SaveSession();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Error saving open tabs: " + ex.ToString());
+            }
+            try
+            {
+                viewModel?.Settings?.Save();
             }
             catch (Exception ex)
             {
